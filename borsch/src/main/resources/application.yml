@@ -13,3 +13,11 @@ spring:
     maximumPoolSize: 2
 server:
   port: 8090
+
+swagger:
+  config:
+    basePackage: "com.nayax.borsch"
+    appName: "application/vnd.borsch.v%s+json"
+    title: "Borsch Services API"
+    description: "Nayax Borsch Services API v%s"
+    version: "0.1"
