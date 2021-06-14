@@ -4,19 +4,12 @@ import java.math.BigDecimal;
 
 public class EmployeeAddDto {
 
-    private Long id;
+
     private String FName;
     private String LName;
     private BigDecimal salary;
 
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getFName() {
         return FName;
@@ -45,7 +38,7 @@ public class EmployeeAddDto {
     @Override
     public String toString() {
         return "EmployeeDto{" +
-                "id=" + id +
+
                 ", FName='" + FName + '\'' +
                 ", LName='" + LName + '\'' +
                 ", salary=" + salary +

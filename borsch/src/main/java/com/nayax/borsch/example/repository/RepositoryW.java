@@ -7,6 +7,6 @@ import java.util.Optional;
 
 public interface RepositoryW {
 
-    Employee add(EmployeeAddDto dto);
+    Employee add(Employee dto);
     Optional<Employee> get (Long index);
 }

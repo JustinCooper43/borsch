@@ -26,9 +26,10 @@ public class ServiceWImpl implements ServiceW {
     @Override
     public ResponseDto<EmployeeResponseDto> add(EmployeeAddDto employee) {
         System.out.println("Service method add entry");
-
+        Employee entity = repository.add(Mappers.getMapper(EmployeeMapper.class).toEntity(employee));
+        EmployeeResponseDto employeeResponseDto = Mappers.getMapper(EmployeeMapper.class).toDto(entity);
         System.out.println("Service method add exit");
-        return new ResponseDto<>(null);
+        return new ResponseDto<>(employeeResponseDto);
     }
 
     @Override
