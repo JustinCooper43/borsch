@@ -21,9 +21,12 @@ public class ServiceImpl implements Service {
     @Override
     public ResponseDto<EmployeeResponseDto> add(EmployeeAddDto dto) {
         System.out.println("####### Started service.add #######");
-
+        Employee requestEntity = Mappers.getMapper(EmployeeMapper.class).toAddEntity(dto);
+        Employee responseEntity = repository.add(requestEntity);
+        ResponseDto<EmployeeResponseDto> response = new ResponseDto<>();
+        response.setData(Mappers.getMapper(EmployeeMapper.class).toDto(responseEntity));
         System.out.println("####### Returning from service.add #######");
-        return null;
+        return response;
     }
 
     @Override
