@@ -6,13 +6,13 @@ public class UserUpdateDto {
     private String name;
     private Long roleId;
     private String phoneNumber;
-    private Character deleted;
+    private String deleted;
 
-    public Character getDeleted() {
+    public String getDeleted() {
         return deleted;
     }
 
-    public void setDeleted(Character deleted) {
+    public void setDeleted(String deleted) {
         this.deleted = deleted;
     }
 
