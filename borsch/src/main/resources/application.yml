@@ -2,7 +2,7 @@ spring:
   application:
     name: borsch-srv
   datasource:
-    url: jdbc:sqlserver://172.21.10.64\MSSQL19;DatabaseName=DBkost
+    url: jdbc:sqlserver://172.21.10.64\MSSQL19;DatabaseName=BORSCHT
     driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
     username: sa
     password: test123A#

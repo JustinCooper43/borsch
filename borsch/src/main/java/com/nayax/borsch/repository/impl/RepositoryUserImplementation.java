@@ -9,7 +9,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -31,7 +30,7 @@ public class RepositoryUserImplementation implements GenericCrudRepository<UserE
                 "[User].Email , [User].FirstName , \n" +
                 "[User].LastName , \n" +
                 "[User].PhoneNumber)\n" +
-                "output inserted.* values  (?, ?, ?, ?. ?, ?, ?)";
+                "output inserted.* values  (?, ?, ?, ?, ?, ?)";
 
         return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(UserEntity.class),
                 entity.getDeleted(), entity.getRoleId(),
@@ -59,14 +58,14 @@ public class RepositoryUserImplementation implements GenericCrudRepository<UserE
                 @Override
                 public UserEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
                     UserEntity userEntity = new UserEntity();
-                    userEntity.setUserId((Long) rs.getObject(" userId"));
+                    userEntity.setId((Long) rs.getObject("userId"));
                     userEntity.setRoleId((Long) rs.getObject("roleId"));
                     userEntity.seteMail(rs.getNString("userEmail"));
                     userEntity.setFirstName(rs.getNString("fName"));
                     userEntity.setLastName(rs.getNString("lName"));
-                    userEntity.setDeleted((Character) rs.getObject("deletedUser"));
+                    userEntity.setDeleted( rs.getString("deletedUser"));
                     userEntity.setPhoneNumber(rs.getNString("phNumber"));
-                    userEntity.setRoleName(rs.getNString(" roleName"));
+                    userEntity.setRoleName(rs.getNString("roleName"));
                     return userEntity;
                 }
             }, id);
@@ -101,7 +100,7 @@ public class RepositoryUserImplementation implements GenericCrudRepository<UserE
     }
 
     @Override
-    public List<? extends UserEntity> getAllByFilter(Object filter) {
+    public List<UserEntity> getAllByFilter(Object filter) {
         return null;
     }
 }

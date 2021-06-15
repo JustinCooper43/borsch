@@ -2,21 +2,22 @@ package com.nayax.borsch.model.entity;
 
 public class UserEntity {
 
-    private Long userId;
-    private Long roleId;
+    private Long id;
+//    mock
+    private Long roleId = 3L;
     private String roleName;
     private String eMail;
     private String firstName;
     private String lastName;
-    private Character deleted;
+    private String deleted;
     private String phoneNumber;
 
-    public Long getUserId() {
-        return userId;
+    public Long getId() {
+        return id;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Long getRoleId() {
@@ -51,11 +52,11 @@ public class UserEntity {
         this.lastName = lastName;
     }
 
-    public Character getDeleted() {
+    public String getDeleted() {
         return deleted;
     }
 
-    public void setDeleted(Character deleted) {
+    public void setDeleted(String deleted) {
         this.deleted = deleted;
     }
 

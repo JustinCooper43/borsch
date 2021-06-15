@@ -11,6 +11,6 @@ public interface GenericCrudRepository <T,V> {
     List<T> findAll();
     boolean delete(Long id);
     boolean delete(T entity);
-    List< ? extends T> getAllByFilter(V filter);
+    List< T> getAllByFilter(V filter);
 
 }
