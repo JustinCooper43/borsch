@@ -3,12 +3,12 @@ package com.nayax.borsch.example.service.impl;
 
 import com.nayax.borsch.example.mapper.EmployeeMapper;
 import com.nayax.borsch.example.model.Employee;
-import com.nayax.borsch.example.model.dto.EmployeeAddDto;
 import com.nayax.borsch.example.model.EmployeeResponseDto;
+import com.nayax.borsch.example.model.dto.EmployeeAddDto;
 import com.nayax.borsch.example.model.response.ResponseDto;
 import com.nayax.borsch.example.repository.impl.RepositoryWImpl;
 import com.nayax.borsch.example.service.ServiceW;
-import com.nayax.borsch.model.dto.response.ErrorDto;
+import com.nayax.borsch.model.dto.ErrorDto;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,11 +40,10 @@ public class ServiceWImpl implements ServiceW {
         Optional<Employee> employee = repository.get(index);
         List<ErrorDto> listError;
 
-        if (employee.isPresent()){
+        if (employee.isPresent()) {
             EmployeeResponseDto employeeResponseDto = Mappers.getMapper(EmployeeMapper.class).toDto(employee.get());
             responseDto = new ResponseDto<>(employeeResponseDto);
-        }
-        else {
+        } else {
             ErrorDto e = new ErrorDto();
             e.setCause("Employee this id " + index + " not found");
             listError = List.of(e);

@@ -6,7 +6,7 @@ import com.nayax.borsch.exampleselezniov.model.dto.EmployeeResponseDto;
 import com.nayax.borsch.exampleselezniov.model.dto.ResponseDto;
 import com.nayax.borsch.exampleselezniov.model.entity.Employee;
 import com.nayax.borsch.exampleselezniov.repository.Repository;
-import com.nayax.borsch.model.dto.response.ErrorDto;
+import com.nayax.borsch.model.dto.ErrorDto;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 

@@ -2,12 +2,12 @@ package com.nayax.borsch.service.impl;
 
 
 import com.nayax.borsch.mapper.UserMapper;
-import com.nayax.borsch.model.dto.request.UserAddDto;
-import com.nayax.borsch.model.dto.request.UserFilterDto;
-import com.nayax.borsch.model.dto.request.UserUpdateDto;
-import com.nayax.borsch.model.dto.response.ErrorDto;
-import com.nayax.borsch.model.dto.response.ResponseDto;
-import com.nayax.borsch.model.dto.response.user.UserResponseDto;
+import com.nayax.borsch.model.dto.ErrorDto;
+import com.nayax.borsch.model.dto.ResponseDto;
+import com.nayax.borsch.model.dto.user.request.UserAddDto;
+import com.nayax.borsch.model.dto.user.request.UserFilterDto;
+import com.nayax.borsch.model.dto.user.request.UserUpdateDto;
+import com.nayax.borsch.model.dto.user.response.UserResponseDto;
 import com.nayax.borsch.model.entity.UserEntity;
 import com.nayax.borsch.repository.impl.RepositoryUserImplementation;
 import com.nayax.borsch.service.UserServiceInterface;
@@ -56,16 +56,16 @@ public class UserService implements UserServiceInterface {
 
     @Override
     public ResponseDto<UserResponseDto> delete(Long id) {
-        Optional <UserEntity> responseEntity = repository.findById(id);
+        Optional<UserEntity> responseEntity = repository.findById(id);
         ResponseDto<UserResponseDto> response = new ResponseDto<>();
-        if (responseEntity.isPresent() &&  repository.delete(id)) {
+        if (responseEntity.isPresent() && repository.delete(id)) {
             response.setData(Mappers.getMapper(UserMapper.class).toDto(responseEntity.get()));
         } else {
             ErrorDto e = new ErrorDto();
             e.setCause("User is not delete because this id not found in database: Id : " + id);
             response.setErrors(List.of(e));
         }
-        return  response;
+        return response;
     }
 
     @Override
@@ -78,7 +78,7 @@ public class UserService implements UserServiceInterface {
     @Override
     public ResponseDto<List<UserResponseDto>> getAllByFilter(UserFilterDto filter) {
         List<UserEntity> users = repository.getAllByFilter(filter);
-        List<UserResponseDto> userResponseDtoList = users.stream().map(e->Mappers.getMapper(UserMapper.class).toDto(e)).collect(Collectors.toList());
+        List<UserResponseDto> userResponseDtoList = users.stream().map(e -> Mappers.getMapper(UserMapper.class).toDto(e)).collect(Collectors.toList());
 
         return new ResponseDto<>(userResponseDtoList);
     }

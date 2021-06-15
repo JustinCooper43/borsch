@@ -1,6 +1,6 @@
 package com.nayax.borsch.example.model.response;
 
-import com.nayax.borsch.model.dto.response.ErrorDto;
+import com.nayax.borsch.model.dto.ErrorDto;
 
 import java.util.ArrayList;
 import java.util.List;

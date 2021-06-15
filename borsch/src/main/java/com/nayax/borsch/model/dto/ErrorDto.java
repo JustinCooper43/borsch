@@ -1,4 +1,4 @@
-package com.nayax.borsch.model.dto.response;
+package com.nayax.borsch.model.dto;
 
 public class ErrorDto {
     private String cause;

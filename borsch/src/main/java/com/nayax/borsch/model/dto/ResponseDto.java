@@ -1,4 +1,4 @@
-package com.nayax.borsch.model.dto.response;
+package com.nayax.borsch.model.dto;
 
 import java.util.List;
 

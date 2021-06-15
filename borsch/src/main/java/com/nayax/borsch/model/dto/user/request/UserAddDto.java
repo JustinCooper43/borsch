@@ -1,4 +1,4 @@
-package com.nayax.borsch.model.dto.request;
+package com.nayax.borsch.model.dto.user.request;
 
 public class UserAddDto {
     private String eMail;

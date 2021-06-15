@@ -2,7 +2,7 @@ package com.nayax.borsch.examplestreltsov.service;
 
 import com.nayax.borsch.examplestreltsov.models.dto.EmployeeAddDto;
 import com.nayax.borsch.examplestreltsov.models.dto.EmployeeResponseDto;
-import com.nayax.borsch.model.dto.response.ResponseDto;
+import com.nayax.borsch.model.dto.ResponseDto;
 
 public interface ServiceInterface {
 

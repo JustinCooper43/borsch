@@ -1,7 +1,7 @@
 package com.nayax.borsch.controller;
 
-import com.nayax.borsch.model.dto.response.ResponseDto;
-import com.nayax.borsch.model.dto.response.user.UserResponseDto;
+import com.nayax.borsch.model.dto.ResponseDto;
+import com.nayax.borsch.model.dto.user.response.UserResponseDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
