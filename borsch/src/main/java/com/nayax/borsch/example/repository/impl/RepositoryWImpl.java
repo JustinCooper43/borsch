@@ -38,7 +38,7 @@ public class RepositoryWImpl implements RepositoryW {
     public Optional<Employee> get(Long index) {
 
         System.out.println("Repository method get start");
-        String query = "Select * from Employee where id =?";
+        String query = "Selecit * from Employee where id =?";
         Optional<Employee> employee = Optional.empty();
         try {
             Employee emp = jdbcTemplate.queryForObject(query, new RowMapper<Employee>() {
