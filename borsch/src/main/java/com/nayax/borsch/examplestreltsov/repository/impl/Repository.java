@@ -19,7 +19,7 @@ public class Repository implements RepositoryInterface {
     public Employee add(Employee entity) {
 
         String sql = "insert into employee (FirstName, LastName, Salary) " +
-                "ounput inserted.* values (?, ?, ?)";
+                "output inserted.* values (?, ?, ?)";
         return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Employee.class),
                 entity.getFirstName(), entity.getLastName(), entity.getSalary());
     }
