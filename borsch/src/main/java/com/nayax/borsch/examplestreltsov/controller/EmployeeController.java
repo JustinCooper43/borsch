@@ -1,10 +1,9 @@
-package com.nayax.borsch.example.controller;
+package com.nayax.borsch.examplestreltsov.controller;
 
-import com.nayax.borsch.example.models.dto.EmployeeAddDto;
-import com.nayax.borsch.example.models.dto.EmployeeResponseDto;
-import com.nayax.borsch.example.service.impl.Service;
+import com.nayax.borsch.examplestreltsov.models.dto.EmployeeAddDto;
+import com.nayax.borsch.examplestreltsov.models.dto.EmployeeResponseDto;
+import com.nayax.borsch.examplestreltsov.service.impl.Service;
 import com.nayax.borsch.model.dto.response.ResponseDto;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

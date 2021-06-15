@@ -1,11 +1,11 @@
-package com.nayax.borsch.example.service.impl;
+package com.nayax.borsch.examplestreltsov.service.impl;
 
-import com.nayax.borsch.example.mapper.EmployeeMapper;
-import com.nayax.borsch.example.models.dto.EmployeeAddDto;
-import com.nayax.borsch.example.models.dto.EmployeeResponseDto;
-import com.nayax.borsch.example.models.entity.Employee;
-import com.nayax.borsch.example.repository.impl.Repository;
-import com.nayax.borsch.example.service.ServiceInterface;
+import com.nayax.borsch.examplestreltsov.mapper.EmployeeMapper;
+import com.nayax.borsch.examplestreltsov.models.dto.EmployeeAddDto;
+import com.nayax.borsch.examplestreltsov.models.dto.EmployeeResponseDto;
+import com.nayax.borsch.examplestreltsov.models.entity.Employee;
+import com.nayax.borsch.examplestreltsov.repository.impl.Repository;
+import com.nayax.borsch.examplestreltsov.service.ServiceInterface;
 import com.nayax.borsch.model.dto.response.ErrorDto;
 import com.nayax.borsch.model.dto.response.ResponseDto;
 import org.mapstruct.factory.Mappers;

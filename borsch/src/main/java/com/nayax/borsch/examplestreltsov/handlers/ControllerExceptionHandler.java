@@ -1,4 +1,4 @@
-package com.nayax.borsch.example.handlers;
+package com.nayax.borsch.examplestreltsov.handlers;
 
 
 import com.nayax.borsch.model.dto.response.ErrorDto;

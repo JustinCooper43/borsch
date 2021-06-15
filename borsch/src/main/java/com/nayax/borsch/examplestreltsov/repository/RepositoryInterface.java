@@ -1,6 +1,6 @@
-package com.nayax.borsch.example.repository;
+package com.nayax.borsch.examplestreltsov.repository;
 
-import com.nayax.borsch.example.models.entity.Employee;
+import com.nayax.borsch.examplestreltsov.models.entity.Employee;
 
 import java.util.Optional;
 

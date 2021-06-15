@@ -1,4 +1,4 @@
-package com.nayax.borsch.example.models.entity;
+package com.nayax.borsch.examplestreltsov.models.entity;
 
 import java.math.BigDecimal;
 

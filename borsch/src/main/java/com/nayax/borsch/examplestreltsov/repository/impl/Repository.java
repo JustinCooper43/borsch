@@ -1,14 +1,12 @@
-package com.nayax.borsch.example.repository.impl;
+package com.nayax.borsch.examplestreltsov.repository.impl;
 
-import com.nayax.borsch.example.models.entity.Employee;
-import com.nayax.borsch.example.repository.RepositoryInterface;
+import com.nayax.borsch.examplestreltsov.models.entity.Employee;
+import com.nayax.borsch.examplestreltsov.repository.RepositoryInterface;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.jdbc.JdbcTemplateAutoConfiguration;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import javax.swing.text.html.parser.Entity;
 import java.util.Optional;
 
 @org.springframework.stereotype.Repository

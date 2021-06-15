@@ -1,12 +1,11 @@
-package com.nayax.borsch.example.models.dto;
+package com.nayax.borsch.examplestreltsov.models.dto;
 
 import java.math.BigDecimal;
 
-public class EmployeeResponseDto {
+public class EmployeeAddDto {
 
     private String FirstName;
     private String LastName;
-    private Long id;
     private BigDecimal salary;
 
     public String getFirstName() {
@@ -23,14 +22,6 @@ public class EmployeeResponseDto {
 
     public void setLastName(String lastName) {
         LastName = lastName;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public BigDecimal getSalary() {
