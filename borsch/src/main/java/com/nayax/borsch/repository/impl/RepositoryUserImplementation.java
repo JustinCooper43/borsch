@@ -12,8 +12,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class RepositoryUserImplementation implements GenericCrudRepository<UserEntity, Object> {
@@ -41,7 +40,23 @@ public class RepositoryUserImplementation implements GenericCrudRepository<UserE
 
     @Override
     public UserEntity update(UserEntity entity) {
-        return null;
+
+        String sql = "UPDATE [User] SET  [User].Deleted = ? , " +
+                "[User].RoleId = ? , [User].Email = ? , " +
+                "[User].FirstName = ? , [User].LastName = ? , " +
+                "[User].PhoneNumber = ?  where [User].id = ? ";
+
+        int result = 0;
+        try {
+            result = jdbcTemplate.update(sql,
+                    entity.getDeleted(), entity.getRoleId(), entity.geteMail(),
+                    entity.getFirstName(), entity.getLastName(), entity.getPhoneNumber(), entity.getId());
+//            TO DO return type is boolean
+//            return result == 1;
+            return new UserEntity();
+        } catch (EmptyResultDataAccessException e) {
+            return new UserEntity();
+        }
     }
 
     @Override
@@ -63,7 +78,7 @@ public class RepositoryUserImplementation implements GenericCrudRepository<UserE
                     userEntity.seteMail(rs.getNString("userEmail"));
                     userEntity.setFirstName(rs.getNString("fName"));
                     userEntity.setLastName(rs.getNString("lName"));
-                    userEntity.setDeleted( rs.getString("deletedUser"));
+                    userEntity.setDeleted(rs.getString("deletedUser"));
                     userEntity.setPhoneNumber(rs.getNString("phNumber"));
                     userEntity.setRoleName(rs.getNString("roleName"));
                     return userEntity;
@@ -78,16 +93,41 @@ public class RepositoryUserImplementation implements GenericCrudRepository<UserE
 
     @Override
     public List<UserEntity> findAll() {
-        return null;
+
+        String sql = "SELECT \n" +
+                "[User].id  userId, [User].Deleted deletedUser, [User].RoleId roleId,\n" +
+                "[User].Email userEmail, [User].FirstName fName, [User].LastName lName,\n" +
+                "[User].PhoneNumber phNumber FROM [User]";
+
+        List<UserEntity> listUsers = new ArrayList<>();
+        try {
+            listUsers = jdbcTemplate.query(sql, new RowMapper<UserEntity>() {
+                @Override
+                public UserEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
+                    UserEntity userEntity = new UserEntity();
+                    userEntity.setId((Long) rs.getObject("userId"));
+                    userEntity.setRoleId((Long) rs.getObject("roleId"));
+                    userEntity.seteMail(rs.getNString("userEmail"));
+                    userEntity.setFirstName(rs.getNString("fName"));
+                    userEntity.setLastName(rs.getNString("lName"));
+                    userEntity.setDeleted(rs.getString("deletedUser"));
+                    userEntity.setPhoneNumber(rs.getNString("phNumber"));
+                    return userEntity;
+                }
+            });
+            return listUsers;
+        } catch (EmptyResultDataAccessException e) {
+            return listUsers;
+        }
     }
 
     @Override
     public boolean delete(Long id) {
 
-        String sql = "DELETE FROM [User] WHERE id = ?";
+        String sql = "UPDATE [User] SET [User].Deleted = 'Y' WHERE id = ?";
 
         try {
-            int rows = jdbcTemplate.update(sql, id, Types.BIGINT);
+            int rows = jdbcTemplate.update(sql, id);
             return rows > 0;
         } catch (EmptyResultDataAccessException e) {
             return false;
