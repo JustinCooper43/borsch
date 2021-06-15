@@ -10,8 +10,8 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface UserMapper {
 
-    @Mapping(source = "roleName", target = "name")
-    @Mapping(source = "roleId", target = "id")
+    @Mapping(source = "roleName", target = "role.name")
+    @Mapping(source = "roleId", target = "role.id")
     UserResponseDto toDto(UserEntity entity);
 
     @Mapping(target = "id", ignore = true)
