@@ -10,9 +10,9 @@ import org.springframework.web.context.request.WebRequest;
 import java.sql.SQLException;
 import java.util.List;
 
-@RestControllerAdvice
+//@RestControllerAdvice
 public class ControllerExceptionHandler {
-    @ExceptionHandler(SQLException.class)
+    //@ExceptionHandler(SQLException.class)
     public ResponseEntity<ResponseDto<?>> sqlExceptionHandler(SQLException e, WebRequest request){
         List<ErrorDto> error = List.of(new ErrorDto());
         error.get(0).setCause(e.getMessage());

@@ -13,10 +13,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-@RestControllerAdvice
+//@RestControllerAdvice
 public class ControllerExceptionHandler {
 
-    @ExceptionHandler(SQLException.class)
+    //@ExceptionHandler(SQLException.class)
     ResponseEntity<ResponseDto<?>> sqlExceptionHandler(SQLException e, WebRequest request) {
         List<ErrorDto> list = List.of(new ErrorDto());
         list.get(0).setCause("Invalid sql query");

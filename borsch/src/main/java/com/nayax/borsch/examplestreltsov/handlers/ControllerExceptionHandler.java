@@ -11,10 +11,10 @@ import org.springframework.web.context.request.WebRequest;
 import java.sql.SQLException;
 import java.util.List;
 
-@RestControllerAdvice
+//@RestControllerAdvice
 public class ControllerExceptionHandler {
 
-    @ExceptionHandler(SQLException.class)
+    //@ExceptionHandler(SQLException.class)
     ResponseEntity<ResponseDto<?>> sqlExceptionHandler(SQLException e, WebRequest request){
 
         ErrorDto errorDto = new ErrorDto();
