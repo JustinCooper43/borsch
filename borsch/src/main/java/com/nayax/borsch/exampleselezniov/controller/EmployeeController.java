@@ -8,12 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
+//@RestController
 public class EmployeeController {
-    @Autowired
+  //  @Autowired
     private Service service;
 
-    @PostMapping(value = "/add")
+    //@PostMapping(value = "/add")
     public ResponseEntity<ResponseDto<EmployeeResponseDto>> add(@RequestBody EmployeeAddDto dto) {
         System.out.println("####### Starting controller.add #######");
         ResponseDto<EmployeeResponseDto> response = service.add(dto);
@@ -21,7 +21,7 @@ public class EmployeeController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping(value = "/get")
+    //@GetMapping(value = "/get")
     public ResponseEntity<ResponseDto<EmployeeResponseDto>> get(@RequestParam Long id) {
         System.out.println("####### Starting controller.get #######");
         ResponseDto<EmployeeResponseDto> response = service.get(id);

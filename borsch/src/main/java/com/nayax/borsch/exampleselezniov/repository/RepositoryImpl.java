@@ -5,10 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Optional;
 
 @org.springframework.stereotype.Repository
@@ -29,7 +26,7 @@ public class RepositoryImpl implements Repository {
     @Override
     public Optional<Employee> get(Long id) throws EmptyResultDataAccessException {
         System.out.println("####### Started repository.get #######");
-        String sql = "SELECT FirstName, LastName, Salary, Id FROM Employee WHERE id = ? ";
+        String sql = "SELECT yyyFirstName, LastName, Salary, Id FROM Employee WHERE id = ? ";
         try {
             Employee e = jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
                 Employee employee = new Employee();
