@@ -9,17 +9,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/user")
 public class UserController {
     @Autowired
     UserService service;
 
-    @PostMapping("/user/add")
+    @PostMapping("/add")
     public ResponseEntity<ResponseDto<UserResponseDto>> add(@RequestBody UserAddDto dto) {
         ResponseDto<UserResponseDto> responseDto = service.add(dto);
         return ResponseEntity.ok(responseDto);
     }
 
-    @GetMapping("user/get")
+    @GetMapping("/get")
     public ResponseEntity<ResponseDto<UserResponseDto>> get(@RequestParam Long id) {
         ResponseDto<UserResponseDto> responseDto = service.get(id);
         return ResponseEntity.ok(responseDto);
