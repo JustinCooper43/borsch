@@ -9,6 +9,27 @@ public class UserResponseDto {
     private String eMail;
     @ApiModelProperty(position = 3, value = "User Name")
     private String name;
+    @ApiModelProperty(position = 4, value = "User Role")
+    private String roleName;
+    @ApiModelProperty(position = 5, value = "User Phone Number")
+    private String phoneNumber;
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
 
     public Long getId() {
         return id;
