@@ -2,7 +2,7 @@ package com.nayax.borsch.model.dto.assortment.response;
 
 import java.util.List;
 
-public class RespAssormentDto {
+public class RespAssortmentDto {
 
     private RespSimpleItemDto dish;
     private List<RespSimpleItemDto> additions;
