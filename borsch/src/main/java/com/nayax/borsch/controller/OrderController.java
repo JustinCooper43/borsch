@@ -1,7 +1,7 @@
 package com.nayax.borsch.controller;
 
 import com.nayax.borsch.model.dto.ResponseDto;
-import com.nayax.borsch.model.dto.assortment.request.ReqOrderItemAddDto;
+import com.nayax.borsch.model.dto.order.request.ReqOrderItemAddDto;
 import com.nayax.borsch.model.dto.order.response.RespOrderDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
