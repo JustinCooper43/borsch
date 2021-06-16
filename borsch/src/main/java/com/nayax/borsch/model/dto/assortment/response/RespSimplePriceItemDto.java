@@ -3,10 +3,9 @@ package com.nayax.borsch.model.dto.assortment.response;
 import java.math.BigDecimal;
 
 public class RespSimplePriceItemDto {
-    //TODO unmock values
-    private Long id = 23L;
-    private String name = "SimplePriceItemName";
-    private BigDecimal price = new BigDecimal("133.33");
+    private Long id;
+    private String name;
+    private BigDecimal price;
 
     public Long getId() {
         return id;

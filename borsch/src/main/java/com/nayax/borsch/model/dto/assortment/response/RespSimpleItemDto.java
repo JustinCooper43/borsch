@@ -1,9 +1,8 @@
 package com.nayax.borsch.model.dto.assortment.response;
 
 public class RespSimpleItemDto {
-    //TODO unmock values
-    private Long id = 42L;
-    private String name = "SimpleItemName";
+    private Long id;
+    private String name;
 
     public Long getId() {
         return id;
