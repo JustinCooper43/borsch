@@ -18,10 +18,13 @@ public interface UserMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "phoneNumber", ignore = true)
     @Mapping(target = "deleted", ignore = true)
+    @Mapping(target = "roleId", ignore = true)
+    @Mapping(target = "roleName", ignore = true)
 //    @Mapping(source = "name", target = "firstName", qualifiedByName = "splitFirstName")
 //    @Mapping(source = "name", target = "lastName", qualifiedByName = "splitLastName")
     UserEntity toAddEntity(ReqUserAddDto dto);
 
+    @Mapping(target = "roleName", ignore = true)
     UserEntity toUpdateEntity(ReqUserUpdateDto dto);
 
 //    @Named("splitFirstName")

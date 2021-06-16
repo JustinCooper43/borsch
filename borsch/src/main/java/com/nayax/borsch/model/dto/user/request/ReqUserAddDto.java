@@ -2,7 +2,9 @@ package com.nayax.borsch.model.dto.user.request;
 
 public class ReqUserAddDto {
     private String eMail;
-    private String name;
+    private String firstName;
+    private String lastName;
+
 
     public String geteMail() {
         return eMail;
@@ -12,11 +14,19 @@ public class ReqUserAddDto {
         this.eMail = eMail;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 }
