@@ -11,8 +11,9 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Types;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class RepositoryUserImplementation implements GenericCrudRepository<UserEntity, Object> {
@@ -61,13 +62,13 @@ public class RepositoryUserImplementation implements GenericCrudRepository<UserE
 
     @Override
     public Optional<UserEntity> findById(Long id) {
-
+        // TODO add isDeleted filter to where statement
         String sql = "SELECT [User].id  userId, [User].Deleted deletedUser, [User].RoleId roleId,\n" +
                 "[User].Email userEmail, [User].FirstName fName, [User].LastName lName,\n" +
                 "[User].PhoneNumber phNumber, [Role].[Name] roleName FROM [User]\n" +
                 "JOIN  [Role] on [Role].id = [User].RoleId\n" +
                 "WHERE [User].id = ?;";
-
+        var result = Optional.<UserEntity>empty();
         try {
             UserEntity user = jdbcTemplate.queryForObject(sql, new RowMapper<UserEntity>() {
                 @Override
@@ -84,41 +85,41 @@ public class RepositoryUserImplementation implements GenericCrudRepository<UserE
                     return userEntity;
                 }
             }, id);
-            return Optional.ofNullable(user);
+            result = Optional.ofNullable(user);
         } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
+            // TODO perhaps needs logs
+            System.err.printf("User %s not found\n", id == null ? null : id.toString());
         }
+        return result;
     }
 
 
     @Override
     public List<UserEntity> findAll() {
-
+        // TODO add isDeleted filter to where statement
         String sql = "SELECT \n" +
                 "[User].id  userId, [User].Deleted deletedUser, [User].RoleId roleId,\n" +
                 "[User].Email userEmail, [User].FirstName fName, [User].LastName lName,\n" +
                 "[User].PhoneNumber phNumber FROM [User]";
 
         List<UserEntity> listUsers = new ArrayList<>();
-        try {
-            listUsers = jdbcTemplate.query(sql, new RowMapper<UserEntity>() {
-                @Override
-                public UserEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
-                    UserEntity userEntity = new UserEntity();
-                    userEntity.setId((Long) rs.getObject("userId"));
-                    userEntity.setRoleId((Long) rs.getObject("roleId"));
-                    userEntity.seteMail(rs.getNString("userEmail"));
-                    userEntity.setFirstName(rs.getNString("fName"));
-                    userEntity.setLastName(rs.getNString("lName"));
-                    userEntity.setDeleted(rs.getString("deletedUser"));
-                    userEntity.setPhoneNumber(rs.getNString("phNumber"));
-                    return userEntity;
-                }
-            });
-            return listUsers;
-        } catch (EmptyResultDataAccessException e) {
-            return listUsers;
-        }
+        // jdbcTemplate.query doesn't throws EmptyResultDataAccessException
+        listUsers = jdbcTemplate.query(sql, new RowMapper<UserEntity>() {
+            @Override
+            public UserEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
+                UserEntity userEntity = new UserEntity();
+                userEntity.setId((Long) rs.getObject("userId"));
+                userEntity.setRoleId((Long) rs.getObject("roleId"));
+                userEntity.seteMail(rs.getNString("userEmail"));
+                userEntity.setFirstName(rs.getNString("fName"));
+                userEntity.setLastName(rs.getNString("lName"));
+                userEntity.setDeleted(rs.getString("deletedUser"));
+                userEntity.setPhoneNumber(rs.getNString("phNumber"));
+                return userEntity;
+            }
+        });
+        return listUsers;
+
     }
 
     @Override
