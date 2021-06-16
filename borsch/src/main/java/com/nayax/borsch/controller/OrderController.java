@@ -1,7 +1,7 @@
 package com.nayax.borsch.controller;
 
 import com.nayax.borsch.model.dto.ResponseDto;
-import com.nayax.borsch.model.dto.assortment.request.ReqOrderItemAddDto;
+import com.nayax.borsch.model.dto.order.request.ReqOrderItemAddDto;
 import com.nayax.borsch.model.dto.order.response.RespOrderDeliveryDto;
 import com.nayax.borsch.model.dto.order.response.RespOrderDto;
 import com.nayax.borsch.model.dto.order.response.RespOrderSumDto;
@@ -109,7 +109,8 @@ public class OrderController {
     }
 
     @DeleteMapping("/")
-    public boolean deleteOrder(@RequestParam Long orderItemId) {
-        return true;
+    public ResponseEntity<ResponseDto<Boolean>> deleteOrder(@RequestParam Long orderItemId) {
+        ResponseDto<Boolean> result = new ResponseDto<>(Boolean.TRUE);
+        return ResponseEntity.ok(result);
     }
 }
