@@ -4,12 +4,11 @@ import com.nayax.borsch.model.dto.user.response.RespCashierDto;
 import com.nayax.borsch.model.dto.user.response.RespUserDto;
 
 public class RespPaymentInfoDto {
-    //TODO unmock values
-    RespUserDto cashier = new RespUserDto();
+    private RespUserDto cashier ;
     //TODO has to be different type to specify exact applied payment method
-    RespCashierDto paymentMethod = new RespCashierDto();
-    private Boolean completed = true;
-    private Boolean confirmed = false;
+    private RespCashierDto paymentMethod ;
+    private Boolean completed ;
+    private Boolean confirmed ;
 
     public RespUserDto getCashier() {
         return cashier;

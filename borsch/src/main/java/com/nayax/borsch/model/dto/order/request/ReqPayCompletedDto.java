@@ -4,24 +4,15 @@ import java.time.LocalDateTime;
 
 public class ReqPayCompletedDto {
 
-    private Long userId;
-    private LocalDateTime  orderDate;
+    private Long orderId;
     private Long paymentType;
 
-    public Long getUserId() {
-        return userId;
+    public Long getOrderId() {
+        return orderId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public LocalDateTime getOrderDate() {
-        return orderDate;
-    }
-
-    public void setOrderDate(LocalDateTime orderDate) {
-        this.orderDate = orderDate;
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
     }
 
     public Long getPaymentType() {
@@ -31,4 +22,5 @@ public class ReqPayCompletedDto {
     public void setPaymentType(Long paymentType) {
         this.paymentType = paymentType;
     }
+
 }

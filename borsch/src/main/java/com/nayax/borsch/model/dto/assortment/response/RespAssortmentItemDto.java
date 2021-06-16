@@ -4,10 +4,10 @@ import java.math.BigDecimal;
 
 public class RespAssortmentItemDto {
     //TODO unmock values
-    private Long id = 33L;
-    private String name = "AssortmentItemName";
-    private BigDecimal price = new BigDecimal("233.33");
-    private Boolean isHalfable = false;
+    private Long id;
+    private String name;
+    private BigDecimal price;
+    private Boolean isHalfable;
 
     public Long getId() {
         return id;

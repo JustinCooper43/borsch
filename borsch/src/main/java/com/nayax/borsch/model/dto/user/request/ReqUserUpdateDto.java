@@ -3,7 +3,8 @@ package com.nayax.borsch.model.dto.user.request;
 public class ReqUserUpdateDto {
     private Long id;
     private String eMail;
-    private String name;
+    private String firstName;
+    private String lastName;
     private Long roleId;
     private String phoneNumber;
     private String deleted;
@@ -32,12 +33,20 @@ public class ReqUserUpdateDto {
         this.eMail = eMail;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public Long getRoleId() {
