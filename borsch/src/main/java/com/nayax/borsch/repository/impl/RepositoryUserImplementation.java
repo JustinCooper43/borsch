@@ -52,7 +52,7 @@ public class RepositoryUserImplementation implements GenericCrudRepository<UserE
             result = jdbcTemplate.update(sql,
                     entity.getDeleted(), entity.getRoleId(), entity.geteMail(),
                     entity.getFirstName(), entity.getLastName(), entity.getPhoneNumber(), entity.getId());
-//            TO DO return type is boolean
+//            TODO return type is boolean
 //            return result == 1;
             return new UserEntity();
         } catch (EmptyResultDataAccessException e) {

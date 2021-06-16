@@ -20,6 +20,7 @@ public class RemarkController {
         return dto;
     }
 
+    //TODO revise mapping
     @GetMapping("/get")
     public ResponseEntity<ResponseDto<List<RespSimpleItemDto>>> getRemark(@RequestParam int page, @RequestParam int pageSize) {
         RespSimpleItemDto mockDto = getRespSimpleItemDto();

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/payment")
 public class PaymentController {
 
-
+    //TODO revise mapping
     @GetMapping("/get")
     public ResponseEntity<ResponseDto<RespPaymentInfoDto>> get() {
         ResponseDto<RespPaymentInfoDto> responseDto = new ResponseDto<>(generatorPayDto());
