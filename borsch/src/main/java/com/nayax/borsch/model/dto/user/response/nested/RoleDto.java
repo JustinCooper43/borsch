@@ -1,9 +1,9 @@
 package com.nayax.borsch.model.dto.user.response.nested;
 
 public class RoleDto {
-    //TODO unmock values
-    private Long id = 2L;
-    private String name = "Cashier";
+
+    private Long id ;
+    private String name ;
 
     public Long getId() {
         return id;

@@ -3,13 +3,12 @@ package com.nayax.borsch.model.dto.order.response;
 import java.util.List;
 
 public class RespOrderDto {
-    //TODO unmock values
-    private Long typeId = 1L;
-    private List<Long> additionIdList = List.of(1L, 3L, 7L);
-    private Long extraItemId = 12L;
-    private Long remarkId = 4L;
-    private Boolean cutInHalf = false;
-    private Integer itemCount = 2;
+    private Long typeId;
+    private List<Long> additionIdList;
+    private Long extraItemId;
+    private Long remarkId;
+    private Boolean cutInHalf;
+    private Integer itemCount;
 
     public Long getTypeId() {
         return typeId;

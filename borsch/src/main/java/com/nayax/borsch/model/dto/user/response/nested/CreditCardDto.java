@@ -2,9 +2,10 @@ package com.nayax.borsch.model.dto.user.response.nested;
 
 public class CreditCardDto {
     //TODO unmock values
-    private String number = "1234567898765432";
-    private String bank = "BankName";
-    private String note = "Any possible text note about a card";
+    private String number ;
+    private String bank ;
+    private String note ;
+    private String qrCode ;
 
     public String getNumber() {
         return number;
@@ -28,5 +29,13 @@ public class CreditCardDto {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public String getQrCode() {
+        return qrCode;
+    }
+
+    public void setQrCode(String qrCode) {
+        this.qrCode = qrCode;
     }
 }
