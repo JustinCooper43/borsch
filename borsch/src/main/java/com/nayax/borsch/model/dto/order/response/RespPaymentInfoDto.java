@@ -1,29 +1,29 @@
 package com.nayax.borsch.model.dto.order.response;
 
-import com.nayax.borsch.model.dto.user.response.CashierDto;
-import com.nayax.borsch.model.dto.user.response.UserResponseDto;
+import com.nayax.borsch.model.dto.user.response.RespCashierDto;
+import com.nayax.borsch.model.dto.user.response.RespUserDto;
 
-public class PaymentInfoDto {
+public class RespPaymentInfoDto {
     //TODO unmock values
-    UserResponseDto cashier = new UserResponseDto();
+    RespUserDto cashier = new RespUserDto();
     //TODO has to be different type to specify exact applied payment method
-    CashierDto paymentMethod = new CashierDto();
+    RespCashierDto paymentMethod = new RespCashierDto();
     private Boolean completed = true;
     private Boolean confirmed = false;
 
-    public UserResponseDto getCashier() {
+    public RespUserDto getCashier() {
         return cashier;
     }
 
-    public void setCashier(UserResponseDto cashier) {
+    public void setCashier(RespUserDto cashier) {
         this.cashier = cashier;
     }
 
-    public CashierDto getPaymentMethod() {
+    public RespCashierDto getPaymentMethod() {
         return paymentMethod;
     }
 
-    public void setPaymentMethod(CashierDto paymentMethod) {
+    public void setPaymentMethod(RespCashierDto paymentMethod) {
         this.paymentMethod = paymentMethod;
     }
 

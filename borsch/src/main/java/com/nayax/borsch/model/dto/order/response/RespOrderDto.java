@@ -2,7 +2,7 @@ package com.nayax.borsch.model.dto.order.response;
 
 import java.util.List;
 
-public class OrderDto {
+public class RespOrderDto {
     //TODO unmock values
     private Long typeId = 1L;
     private List<Long> additionIdList = List.of(1L, 3L, 7L);

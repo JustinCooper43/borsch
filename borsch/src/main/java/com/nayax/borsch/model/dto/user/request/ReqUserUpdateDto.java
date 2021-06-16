@@ -1,6 +1,6 @@
 package com.nayax.borsch.model.dto.user.request;
 
-public class UserUpdateDto {
+public class ReqUserUpdateDto {
     private Long id;
     private String eMail;
     private String name;

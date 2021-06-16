@@ -2,7 +2,7 @@ package com.nayax.borsch.model.dto.user.response;
 
 import com.nayax.borsch.model.dto.user.response.nested.CreditCardDto;
 
-public class CashierDto {
+public class RespCashierDto {
     //TODO unmock values
     private Boolean cashPaymentAllowed = true;
     private CreditCardDto creditCard = new CreditCardDto();

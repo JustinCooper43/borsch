@@ -2,13 +2,12 @@ package com.nayax.borsch.model.dto.assortment.response;
 
 import java.math.BigDecimal;
 
-public class PriceItemDto {
+public class RespAssortmentItemDto {
     //TODO unmock values
-    private Long id = 29L;
-    private String name = "PriceItemName";
-    private BigDecimal price = new BigDecimal("166.66");
-    //TODO probably has to be of enum type
-    private int type = 1;
+    private Long id = 33L;
+    private String name = "AssortmentItemName";
+    private BigDecimal price = new BigDecimal("233.33");
+    private Boolean isHalfable = false;
 
     public Long getId() {
         return id;
@@ -34,11 +33,11 @@ public class PriceItemDto {
         this.price = price;
     }
 
-    public int getType() {
-        return type;
+    public Boolean getHalfable() {
+        return isHalfable;
     }
 
-    public void setType(int type) {
-        this.type = type;
+    public void setHalfable(Boolean halfable) {
+        isHalfable = halfable;
     }
 }

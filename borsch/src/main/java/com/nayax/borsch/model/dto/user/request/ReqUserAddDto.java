@@ -1,6 +1,6 @@
 package com.nayax.borsch.model.dto.user.request;
 
-public class UserAddDto {
+public class ReqUserAddDto {
     private String eMail;
     private String name;
 

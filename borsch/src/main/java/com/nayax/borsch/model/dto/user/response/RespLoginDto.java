@@ -2,16 +2,16 @@ package com.nayax.borsch.model.dto.user.response;
 
 import java.time.LocalDateTime;
 
-public class LoginResponseDto {
+public class RespLoginDto {
     //TODO unmock values
-    private UserResponseDto user = new UserResponseDto();
+    private RespUserDto user = new RespUserDto();
     private LocalDateTime time = LocalDateTime.now();
 
-    public UserResponseDto getUser() {
+    public RespUserDto getUser() {
         return user;
     }
 
-    public void setUser(UserResponseDto user) {
+    public void setUser(RespUserDto user) {
         this.user = user;
     }
 

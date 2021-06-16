@@ -1,6 +1,6 @@
-package com.nayax.borsch.model.dto.request;
+package com.nayax.borsch.model.dto.user.request;
 
-public class UserFilterDto  {
+public class ReqUserFilterDto {
     private Long id;
     private String eMailPart;
     private String namePart;

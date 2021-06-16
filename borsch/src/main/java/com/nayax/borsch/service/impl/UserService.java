@@ -4,10 +4,10 @@ package com.nayax.borsch.service.impl;
 import com.nayax.borsch.mapper.UserMapper;
 import com.nayax.borsch.model.dto.ErrorDto;
 import com.nayax.borsch.model.dto.ResponseDto;
-import com.nayax.borsch.model.dto.user.request.UserAddDto;
-import com.nayax.borsch.model.dto.user.request.UserFilterDto;
-import com.nayax.borsch.model.dto.user.request.UserUpdateDto;
-import com.nayax.borsch.model.dto.user.response.UserResponseDto;
+import com.nayax.borsch.model.dto.user.request.ReqUserAddDto;
+import com.nayax.borsch.model.dto.user.request.ReqUserFilterDto;
+import com.nayax.borsch.model.dto.user.request.ReqUserUpdateDto;
+import com.nayax.borsch.model.dto.user.response.RespUserDto;
 import com.nayax.borsch.model.entity.UserEntity;
 import com.nayax.borsch.repository.impl.RepositoryUserImplementation;
 import com.nayax.borsch.service.UserServiceInterface;
@@ -27,23 +27,23 @@ public class UserService implements UserServiceInterface {
 
 
     @Override
-    public ResponseDto<UserResponseDto> add(UserAddDto dto) {
+    public ResponseDto<RespUserDto> add(ReqUserAddDto dto) {
         UserEntity user = repository.add(Mappers.getMapper(UserMapper.class).toAddEntity(dto));
-        UserResponseDto userResponseDto = Mappers.getMapper(UserMapper.class).toDto(user);
-        return new ResponseDto<>(userResponseDto);
+        RespUserDto respUserDto = Mappers.getMapper(UserMapper.class).toDto(user);
+        return new ResponseDto<>(respUserDto);
     }
 
     @Override
-    public ResponseDto<UserResponseDto> update(UserUpdateDto dto) {
+    public ResponseDto<RespUserDto> update(ReqUserUpdateDto dto) {
         UserEntity user = repository.update(Mappers.getMapper(UserMapper.class).toUpdateEntity(dto));
-        UserResponseDto userResponseDto = Mappers.getMapper(UserMapper.class).toDto(user);
-        return new ResponseDto<>(userResponseDto);
+        RespUserDto respUserDto = Mappers.getMapper(UserMapper.class).toDto(user);
+        return new ResponseDto<>(respUserDto);
     }
 
     @Override
-    public ResponseDto<UserResponseDto> get(Long id) {
+    public ResponseDto<RespUserDto> get(Long id) {
         Optional<UserEntity> responseEntity = repository.findById(id);
-        ResponseDto<UserResponseDto> response = new ResponseDto<>();
+        ResponseDto<RespUserDto> response = new ResponseDto<>();
         if (responseEntity.isPresent()) {
             response.setData(Mappers.getMapper(UserMapper.class).toDto(responseEntity.get()));
         } else {
@@ -55,9 +55,9 @@ public class UserService implements UserServiceInterface {
     }
 
     @Override
-    public ResponseDto<UserResponseDto> delete(Long id) {
+    public ResponseDto<RespUserDto> delete(Long id) {
         Optional<UserEntity> responseEntity = repository.findById(id);
-        ResponseDto<UserResponseDto> response = new ResponseDto<>();
+        ResponseDto<RespUserDto> response = new ResponseDto<>();
         if (responseEntity.isPresent() && repository.delete(id)) {
             response.setData(Mappers.getMapper(UserMapper.class).toDto(responseEntity.get()));
         } else {
@@ -69,21 +69,21 @@ public class UserService implements UserServiceInterface {
     }
 
     @Override
-    public ResponseDto<List<UserResponseDto>> getAll() {
+    public ResponseDto<List<RespUserDto>> getAll() {
         List<UserEntity> users = repository.findAll();
-        List<UserResponseDto> userResponseDtoList = users.stream().map(this::toDto).collect(Collectors.toList());
-        return new ResponseDto<>(userResponseDtoList);
+        List<RespUserDto> respUserDtoList = users.stream().map(this::toDto).collect(Collectors.toList());
+        return new ResponseDto<>(respUserDtoList);
     }
 
     @Override
-    public ResponseDto<List<UserResponseDto>> getAllByFilter(UserFilterDto filter) {
+    public ResponseDto<List<RespUserDto>> getAllByFilter(ReqUserFilterDto filter) {
         List<UserEntity> users = repository.getAllByFilter(filter);
-        List<UserResponseDto> userResponseDtoList = users.stream().map(e -> Mappers.getMapper(UserMapper.class).toDto(e)).collect(Collectors.toList());
+        List<RespUserDto> respUserDtoList = users.stream().map(e -> Mappers.getMapper(UserMapper.class).toDto(e)).collect(Collectors.toList());
 
-        return new ResponseDto<>(userResponseDtoList);
+        return new ResponseDto<>(respUserDtoList);
     }
 
-    private UserResponseDto toDto(UserEntity e) {
+    private RespUserDto toDto(UserEntity e) {
         return Mappers.getMapper(UserMapper.class).toDto(e);
     }
 }

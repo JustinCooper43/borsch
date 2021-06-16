@@ -4,65 +4,46 @@ import com.nayax.borsch.model.dto.ResponseDto;
 import com.nayax.borsch.model.dto.user.request.ReqUserAddDto;
 import com.nayax.borsch.model.dto.user.request.ReqUserUpdateDto;
 import com.nayax.borsch.model.dto.user.response.RespUserDto;
-import com.nayax.borsch.model.dto.user.response.nested.RoleDto;
+import com.nayax.borsch.service.impl.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/user")
-public class UserController {
-
-//    @Autowired
-//    UserService service;
-
-    private RespUserDto getUserMock() {
-        RespUserDto user = new RespUserDto();
-        user.setId(14L);
-        user.setFirstName("Fname");
-        user.setLastName("Lname");
-        user.seteMail("adress@server.com");
-        RoleDto role = new RoleDto();
-        role.setId(2L);
-        role.setName("Cashier");
-        user.setRole(role);
-        user.setPhoneNumber("+380123456789");
-        return user;
-    }
+@RequestMapping("/test/user")
+public class UserTestController {
+    @Autowired
+    UserService service;
 
     @PostMapping("/add")
     public ResponseEntity<ResponseDto<RespUserDto>> add(@RequestBody ReqUserAddDto dto) {
-        RespUserDto user = getUserMock();
-        ResponseDto<RespUserDto> responseDto = new ResponseDto<>(user);
+        ResponseDto<RespUserDto> responseDto = service.add(dto);
         return ResponseEntity.ok(responseDto);
     }
 
     @GetMapping("/get")
     public ResponseEntity<ResponseDto<RespUserDto>> get(@RequestParam Long id) {
-        RespUserDto user = getUserMock();
-        ResponseDto<RespUserDto> responseDto = new ResponseDto<>(user);
+        ResponseDto<RespUserDto> responseDto = service.get(id);
         return ResponseEntity.ok(responseDto);
     }
 
     @PostMapping("/update")
     public ResponseEntity<ResponseDto<RespUserDto>> update(@RequestBody ReqUserUpdateDto dto) {
-        RespUserDto user = getUserMock();
-        ResponseDto<RespUserDto> responseDto = new ResponseDto<>(user);
+        ResponseDto<RespUserDto> responseDto = service.update(dto);
         return ResponseEntity.ok(responseDto);
     }
 
     @DeleteMapping("/delete")
     public ResponseEntity<ResponseDto<RespUserDto>> delete(@RequestParam Long id) {
-        RespUserDto user = getUserMock();
-        ResponseDto<RespUserDto> responseDto = new ResponseDto<>(user);
+        ResponseDto<RespUserDto> responseDto = service.delete(id);
         return ResponseEntity.ok(responseDto);
     }
 
     @GetMapping("/all")
     public ResponseEntity<ResponseDto<List<RespUserDto>>> getAll() {
-        RespUserDto user = getUserMock();
-        ResponseDto<List<RespUserDto>> responseDto = new ResponseDto<>(List.of(user, user, user, user, user, user, user));
+        ResponseDto<List<RespUserDto>> responseDto = service.getAll();
         return ResponseEntity.ok(responseDto);
     }
 }

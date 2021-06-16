@@ -2,12 +2,11 @@ package com.nayax.borsch.model.dto.assortment.response;
 
 import java.math.BigDecimal;
 
-public class AssortmentItemDto {
+public class RespSimplePriceItemDto {
     //TODO unmock values
-    private Long id = 33L;
-    private String name = "AssortmentItemName";
-    private BigDecimal price = new BigDecimal("233.33");
-    private Boolean isHalfable = false;
+    private Long id = 23L;
+    private String name = "SimplePriceItemName";
+    private BigDecimal price = new BigDecimal("133.33");
 
     public Long getId() {
         return id;
@@ -31,13 +30,5 @@ public class AssortmentItemDto {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
-    }
-
-    public Boolean getHalfable() {
-        return isHalfable;
-    }
-
-    public void setHalfable(Boolean halfable) {
-        isHalfable = halfable;
     }
 }
