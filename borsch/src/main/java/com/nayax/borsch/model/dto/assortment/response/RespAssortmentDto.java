@@ -2,12 +2,12 @@ package com.nayax.borsch.model.dto.assortment.response;
 
 import java.util.List;
 
-public class RespAssormentDto {
+public class RespAssortmentDto {
 
     private RespSimpleItemDto dish;
     private List<RespSimpleItemDto> additions;
     private List<RespSimpleItemDto> remarks;
-    private boolean halfable;
+    private boolean isHalfAble;
 
     public RespSimpleItemDto getDish() {
         return dish;
@@ -25,12 +25,12 @@ public class RespAssormentDto {
         this.additions = additions;
     }
 
-    public boolean isHalfable() {
-        return halfable;
+    public boolean isHalfAble() {
+        return isHalfAble;
     }
 
-    public void setHalfable(boolean halfable) {
-        this.halfable = halfable;
+    public void setHalfAble(boolean halfAble) {
+        this.isHalfAble = halfAble;
     }
 
     public List<RespSimpleItemDto> getRemarks() {
