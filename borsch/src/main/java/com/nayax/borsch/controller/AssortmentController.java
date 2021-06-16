@@ -1,5 +1,6 @@
 package com.nayax.borsch.controller;
 
+import com.nayax.borsch.model.dto.PageDto;
 import com.nayax.borsch.model.dto.ResponseDto;
 import com.nayax.borsch.model.dto.assortment.response.RespAssortmentDto;
 import com.nayax.borsch.model.dto.assortment.response.RespSimpleItemDto;
@@ -24,16 +25,21 @@ public class AssortmentController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<ResponseDto<List<RespAssortmentDto>>> getAssortment(@RequestParam int page, @RequestParam int pageSize) {
+    public ResponseEntity<ResponseDto<PageDto<RespAssortmentDto>>> getAssortment(@RequestParam int page, @RequestParam int pageSize) {
         RespAssortmentDto assortment = new RespAssortmentDto();
         assortment.setHalfAble(true);
         assortment.setAdditions(getMockList());
         assortment.setRemarks(getMockList());
         assortment.setDish(getMockList().get(0));
-        ResponseDto<List<RespAssortmentDto>> responseDto = new ResponseDto<>(
-                List.of(assortment, assortment, assortment, assortment, assortment, assortment, assortment, assortment));
+        PageDto<RespAssortmentDto> pageDto = new PageDto<>(List.of(assortment, assortment, assortment, assortment, assortment, assortment, assortment, assortment));
+        pageDto.setCurrentPageNumber(page);
+        pageDto.setElementsPerPage(pageSize);
+        pageDto.setTotalPages(23);
+        pageDto.setTotalElements(23 * pageSize);
+        ResponseDto<PageDto<RespAssortmentDto>> responseDto = new ResponseDto<>(pageDto);
         return ResponseEntity.ok(responseDto);
     }
+
     @PostMapping("/post")
     public ResponseEntity<ResponseDto<RespAssortmentDto>> getById(@RequestParam Long id) {
         RespAssortmentDto dto = new RespAssortmentDto();
