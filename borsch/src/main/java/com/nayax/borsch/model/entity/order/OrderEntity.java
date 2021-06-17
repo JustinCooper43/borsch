@@ -61,4 +61,28 @@ public class OrderEntity {
     public void setOrderItemId(Long orderItemId) {
         this.orderItemId = orderItemId;
     }
+
+    public Long getOrderSummaryId() {
+        return orderSummaryId;
+    }
+
+    public void setOrderSummaryId(Long orderSummaryId) {
+        this.orderSummaryId = orderSummaryId;
+    }
+
+    public LocalDateTime getCreationTime() {
+        return creationTime;
+    }
+
+    public void setCreationTime(LocalDateTime creationTime) {
+        this.creationTime = creationTime;
+    }
+
+    public Long getUserid() {
+        return Userid;
+    }
+
+    public void setUserid(Long userid) {
+        Userid = userid;
+    }
 }
