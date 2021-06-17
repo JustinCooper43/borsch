@@ -11,8 +11,8 @@ import org.mapstruct.Mapping;
 public interface CashierMapper {
 
     @Mapping(source = "cardNumber", target = "card.creditCard")
-    @Mapping(source = "bankName", target = "card.cardBank")
-    @Mapping(source = "cardNote", target = "card.cardNote")
+    @Mapping(source = "cardBank", target = "card.bankName")
+    @Mapping(source = "cardNote", target = "card.notes")
     @Mapping(source = "cardQrCode", target = "card.qr")
     @Mapping(source = "cashPaymentAllowed", target = "cash")
     RespCashierDto toDto(CashierEntity entity);
@@ -20,8 +20,8 @@ public interface CashierMapper {
 
 
     @Mapping(target = "cardNumber", source = "card.creditCard")
-    @Mapping(target = "bankName", source = "card.cardBank")
-    @Mapping(target = "cardNote", source = "card.cardNote")
+    @Mapping(target = "cardBank", source = "card.bankName")
+    @Mapping(target = "cardNote", source = "card.notes")
     @Mapping(target = "cardQrCode", source = "card.qr")
     @Mapping(target = "cashPaymentAllowed", source = "cash")
     CashierEntity toUpdateEntity(ReqCashierUpDto upDto);

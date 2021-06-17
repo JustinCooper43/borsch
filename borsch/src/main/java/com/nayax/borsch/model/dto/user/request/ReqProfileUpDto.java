@@ -1,26 +1,23 @@
 package com.nayax.borsch.model.dto.user.request;
 
-import com.nayax.borsch.model.dto.user.request.ReqCashierUpDto;
-import com.nayax.borsch.model.dto.user.request.ReqUserUpdateDto;
-
 public class ReqProfileUpDto {
 
-    private ReqUserUpdateDto userUpdateDto;
-    private ReqCashierUpDto cashierUpDto;
+    private ReqUserUpdateDto user;
+    private ReqCashierUpDto payments;
 
-    public ReqUserUpdateDto getUserUpdateDto() {
-        return userUpdateDto;
+    public ReqUserUpdateDto getUser() {
+        return user;
     }
 
-    public void setUserUpdateDto(ReqUserUpdateDto userUpdateDto) {
-        this.userUpdateDto = userUpdateDto;
+    public void setUser(ReqUserUpdateDto user) {
+        this.user = user;
     }
 
-    public ReqCashierUpDto getCashierUpDto() {
-        return cashierUpDto;
+    public ReqCashierUpDto getPayments() {
+        return payments;
     }
 
-    public void setCashierUpDto(ReqCashierUpDto cashierUpDto) {
-        this.cashierUpDto = cashierUpDto;
+    public void setPayments(ReqCashierUpDto payments) {
+        this.payments = payments;
     }
 }
