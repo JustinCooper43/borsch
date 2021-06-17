@@ -10,6 +10,9 @@ public class PaymentEntity {
     private String type;
     private Long orderItemId;
 
+    public PaymentEntity() {
+    }
+
     public Long getId() {
         return id;
     }
