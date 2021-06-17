@@ -107,7 +107,7 @@ public class OrderController {
     }
 
     @GetMapping("/summary")
-    public ResponseEntity<ResponseDto<RespOrderSumDto>> getOrderSummary(@RequestParam(required = false) LocalDateTime dateTime) {
+    public ResponseEntity<ResponseDto<PageDto<RespOrderSumDto>>> getOrderSummary(@RequestParam(required = false) LocalDateTime dateTime) {
         RespOrderSumDto orderSumDto = new RespOrderSumDto();
         RespOrderDto orderItem = getRespOrderMock();
         List<RespOrderDto> itemList = List.of(orderItem, orderItem, orderItem, orderItem, orderItem, orderItem, orderItem);
@@ -117,7 +117,9 @@ public class OrderController {
         orderSumDto.setAmount(new BigDecimal("40.3"));
         orderSumDto.setPaidAmount(new BigDecimal("40.2"));
         orderSumDto.setPaymentType(2);
-        ResponseDto<RespOrderSumDto> responseDto = new ResponseDto<>(orderSumDto);
+        List<RespOrderSumDto> listOfOrders = List.of(orderSumDto, orderSumDto, orderSumDto, orderSumDto, orderSumDto, orderSumDto, orderSumDto);
+        PageDto<RespOrderSumDto> pages = new PageDto<>(listOfOrders);
+        ResponseDto<PageDto<RespOrderSumDto>> responseDto = new ResponseDto<>(pages);
         return ResponseEntity.ok(responseDto);
     }
 
