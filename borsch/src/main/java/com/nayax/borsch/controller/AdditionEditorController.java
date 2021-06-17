@@ -36,7 +36,7 @@ public class AdditionEditorController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ResponseDto<RespSimplePriceItemDto>> editAddition(@PathVariable(value = "id") Long id, @RequestBody ReqSimplePriceItemUpDto dto) {
-        dto.setItemId(id);
+        dto.setId(id);
         RespSimplePriceItemDto mock = getRespSimplePriceItemDto();
         return ResponseEntity.ok(new ResponseDto<>(mock));
     }

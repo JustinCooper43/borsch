@@ -48,7 +48,7 @@ public class DishEditorController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ResponseDto<RespSimplePriceItemDto>> updateDish(@PathVariable(value = "id") Long id, @RequestParam ReqSimplePriceItemUpDto dto) {
-        dto.setItemId(id);
+        dto.setId(id);
         RespSimplePriceItemDto priceItemDto = getRespDishEditMock();
         ResponseDto<RespSimplePriceItemDto> responseDto = new ResponseDto<>(priceItemDto);
         return ResponseEntity.ok(responseDto);

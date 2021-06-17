@@ -47,7 +47,7 @@ public class DrinkEditorController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ResponseDto<RespSimplePriceItemDto>> editDrink(@PathVariable(value="id") Long id, @RequestBody ReqSimplePriceItemUpDto dto) {
-        dto.setItemId(id);
+        dto.setId(id);
         RespSimplePriceItemDto mock2 = getRespSimplePriceItemDto2();
         return ResponseEntity.ok(new ResponseDto<>(mock2));
     }

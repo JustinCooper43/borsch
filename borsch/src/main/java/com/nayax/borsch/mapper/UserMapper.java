@@ -16,7 +16,7 @@ public interface UserMapper {
     RespUserDto toDto(UserEntity entity);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "phoneNumber", ignore = true)
+    @Mapping(target = "phone", ignore = true)
     @Mapping(target = "deleted", ignore = true)
     @Mapping(target = "roleId", ignore = true)
     @Mapping(target = "roleName", ignore = true)
@@ -25,6 +25,7 @@ public interface UserMapper {
     UserEntity toAddEntity(ReqUserAddDto dto);
 
     @Mapping(target = "roleName", ignore = true)
+    @Mapping(target = "deleted", ignore = true)
     UserEntity toUpdateEntity(ReqUserUpdateDto dto);
 
 //    @Named("splitFirstName")

@@ -35,7 +35,7 @@ public class RemarkEditorController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ResponseDto<RespSimpleItemDto>> editRemark(@PathVariable(value = "id") Long id, @RequestBody ReqSimpleItemUpDto dto) {
-        dto.setItemId(id);
+        dto.setId(id);
         RespSimpleItemDto mockDto = getRespSimpleItemDto();
         return ResponseEntity.ok(new ResponseDto<>(mockDto));
     }

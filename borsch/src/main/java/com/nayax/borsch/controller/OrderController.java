@@ -30,7 +30,7 @@ public class OrderController {
         shawa.setId(2l);
         shawa.setName("Щаурма с курицей");
         shawa.setPrice(new BigDecimal("90.00"));
-        shawa.setHalfAble(false);
+        shawa.setHalfable(false);
         orderItem.setDish(shawa);
 
         RespSimplePriceItemDto addition = new RespSimplePriceItemDto();
