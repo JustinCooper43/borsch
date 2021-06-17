@@ -31,7 +31,7 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ResponseDto<RespLoginDto>> login(@RequestParam String email) {
+    public ResponseEntity<ResponseDto<RespLoginDto>> login(@RequestBody String email) {
         RespLoginDto user = getLoginMock();
         ResponseDto<RespLoginDto> responseDto = new ResponseDto<>(user);
         return ResponseEntity.ok(responseDto);

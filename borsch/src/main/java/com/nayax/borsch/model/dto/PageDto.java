@@ -3,9 +3,9 @@ package com.nayax.borsch.model.dto;
 import java.util.List;
 
 public class PageDto<T> {
-    private List<T> page;
-    private Integer currentPageNumber;
-    private Integer elementsPerPage;
+    private List<T> responseList;
+    private Integer page;
+    private Integer pageSize;
     private Integer totalPages;
     private Integer totalElements;
 
@@ -13,32 +13,32 @@ public class PageDto<T> {
 
     }
 
-    public PageDto(List<T> page) {
-        this.page = page;
+    public PageDto(List<T> responseList) {
+        this.responseList = responseList;
     }
 
-    public List<T> getPage() {
+    public List<T> getResponseList() {
+        return responseList;
+    }
+
+    public void setResponseList(List<T> responseList) {
+        this.responseList = responseList;
+    }
+
+    public Integer getPage() {
         return page;
     }
 
-    public void setPage(List<T> page) {
+    public void setPage(Integer page) {
         this.page = page;
     }
 
-    public Integer getCurrentPageNumber() {
-        return currentPageNumber;
+    public Integer getPageSize() {
+        return pageSize;
     }
 
-    public void setCurrentPageNumber(Integer currentPageNumber) {
-        this.currentPageNumber = currentPageNumber;
-    }
-
-    public Integer getElementsPerPage() {
-        return elementsPerPage;
-    }
-
-    public void setElementsPerPage(Integer elementsPerPage) {
-        this.elementsPerPage = elementsPerPage;
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
     }
 
     public Integer getTotalPages() {

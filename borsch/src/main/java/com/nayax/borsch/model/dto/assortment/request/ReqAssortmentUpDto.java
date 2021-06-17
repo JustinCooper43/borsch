@@ -5,9 +5,18 @@ import java.util.List;
 public class ReqAssortmentUpDto {
 
     private Long dish;
+    private Long id;
     private List<Long> additions;
     private boolean halfable;
     private List<Long> remarks;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Long getDish() {
         return dish;
