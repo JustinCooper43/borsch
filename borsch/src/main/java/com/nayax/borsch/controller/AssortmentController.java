@@ -48,4 +48,14 @@ public class AssortmentController {
         ResponseDto<RespAssortmentDto> respDto = new ResponseDto<>(rDto);
         return ResponseEntity.ok(respDto);
     }
+
+    @PutMapping("")
+    public ResponseEntity<ResponseDto<RespAssortmentDto>> editAssortment(RespAssortmentDto dto){
+        RespAssortmentDto respAssortmentDto = new RespAssortmentDto();
+        dto.setAdditions(getMockList());
+        dto.setRemarks(getMockList());
+        dto.setDish(getMockList().get(0));
+        dto.setHalfable(true);
+        return ResponseEntity.ok(new ResponseDto<>(respAssortmentDto));
+    }
 }
