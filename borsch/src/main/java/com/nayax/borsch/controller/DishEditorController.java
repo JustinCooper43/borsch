@@ -55,8 +55,9 @@ public class DishEditorController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseDto<Boolean>> deleteDish(@PathVariable(value = "id") Long id) {
-        ResponseDto<Boolean> responseDto = new ResponseDto<>(true);
+    public ResponseEntity<ResponseDto<RespSimplePriceItemDto>> deleteDish(@PathVariable(value = "id") Long id) {
+        RespSimplePriceItemDto priceItemDto = getRespDishEditMock();
+        ResponseDto<RespSimplePriceItemDto> responseDto = new ResponseDto<>(priceItemDto);
         return ResponseEntity.ok(responseDto);
     }
 }

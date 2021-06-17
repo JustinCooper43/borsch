@@ -59,7 +59,8 @@ public class DrinkEditorController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseDto<Boolean>> deleteDrink(@PathVariable(value="id") Long id) {
-        return ResponseEntity.ok(new ResponseDto<>(true));
+    public ResponseEntity<ResponseDto<RespSimplePriceItemDto>> deleteDrink(@PathVariable(value="id") Long id) {
+        RespSimplePriceItemDto mock2 = getRespSimplePriceItemDto2();
+        return ResponseEntity.ok(new ResponseDto<>(mock2));
     }
 }

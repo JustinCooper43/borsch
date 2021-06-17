@@ -145,8 +145,9 @@ public class OrderController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseDto<Boolean>> deleteOrder(@PathVariable(value="id") Long id) {
-        ResponseDto<Boolean> result = new ResponseDto<>(Boolean.TRUE);
-        return ResponseEntity.ok(result);
+    public ResponseEntity<ResponseDto<RespOrderDto>> deleteOrder(@PathVariable(value="id") Long id) {
+        RespOrderDto orderItem = getRespOrderMock();
+        ResponseDto<RespOrderDto> responseDto = new ResponseDto<>(orderItem);
+        return ResponseEntity.ok(responseDto);
     }
 }

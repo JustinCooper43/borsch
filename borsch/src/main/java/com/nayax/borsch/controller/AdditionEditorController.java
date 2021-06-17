@@ -52,7 +52,8 @@ public class AdditionEditorController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseDto<Boolean>> deleteAddition(@PathVariable(value = "id") Long id) {
-        return ResponseEntity.ok(new ResponseDto<>(true));
+    public ResponseEntity<ResponseDto<RespSimplePriceItemDto>> deleteAddition(@PathVariable(value = "id") Long id) {
+        RespSimplePriceItemDto mock = getRespSimplePriceItemDto();
+        return ResponseEntity.ok(new ResponseDto<>(mock));
     }
 }

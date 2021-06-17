@@ -47,7 +47,8 @@ public class RemarkEditorController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseDto<Boolean>> deleteRemark(@PathVariable(value = "id") Long id) {
-        return ResponseEntity.ok(new ResponseDto<>(true));
+    public ResponseEntity<ResponseDto<RespSimpleItemDto>> deleteRemark(@PathVariable(value = "id") Long id) {
+        RespSimpleItemDto mockDto = getRespSimpleItemDto();
+        return ResponseEntity.ok(new ResponseDto<>(mockDto));
     }
 }
