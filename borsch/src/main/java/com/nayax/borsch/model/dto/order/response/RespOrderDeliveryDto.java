@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 public class RespOrderDeliveryDto {
 
     private RespOrderDto order;
-    private Long quantity;
+    private Integer quantity;
     private LocalDateTime orderDate;
 
     public RespOrderDto getOrder() {
@@ -16,11 +16,11 @@ public class RespOrderDeliveryDto {
         this.order = order;
     }
 
-    public Long getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Long quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 

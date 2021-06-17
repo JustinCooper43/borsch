@@ -4,51 +4,51 @@ import java.util.List;
 
 public class ReqOrderItemAddDto {
 
-    private Long id;
-    private List<Long> additionsId;
-    private Long extraItemId;
-    private Long remarkId;
-    private Boolean isHalfAble;
+    private Long dish;
+    private List<Long> additions;
+    private Long drink;
+    private Long remark;
+    private boolean cut;
     private Integer quantity;
 
-    public Long getId() {
-        return id;
+    public Long getDish() {
+        return dish;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setDish(Long dish) {
+        this.dish = dish;
     }
 
-    public List<Long> getAdditionsId() {
-        return additionsId;
+    public List<Long> getAdditions() {
+        return additions;
     }
 
-    public void setAdditionsId(List<Long> additionsId) {
-        this.additionsId = additionsId;
+    public void setAdditions(List<Long> additions) {
+        this.additions = additions;
     }
 
-    public Long getExtraItemId() {
-        return extraItemId;
+    public Long getDrink() {
+        return drink;
     }
 
-    public void setExtraItemId(Long extraItemId) {
-        this.extraItemId = extraItemId;
+    public void setDrink(Long drink) {
+        this.drink = drink;
     }
 
-    public Long getRemarkId() {
-        return remarkId;
+    public Long getRemark() {
+        return remark;
     }
 
-    public void setRemarkId(Long remarkId) {
-        this.remarkId = remarkId;
+    public void setRemark(Long remark) {
+        this.remark = remark;
     }
 
-    public Boolean getHalfAble() {
-        return isHalfAble;
+    public boolean isCut() {
+        return cut;
     }
 
-    public void setHalfAble(Boolean halfAble) {
-        isHalfAble = halfAble;
+    public void setCut(boolean cut) {
+        this.cut = cut;
     }
 
     public Integer getQuantity() {

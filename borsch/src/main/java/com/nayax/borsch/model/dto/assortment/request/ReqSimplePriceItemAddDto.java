@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 public class ReqSimplePriceItemAddDto {
 
     private String name;
-    private BigDecimal cost;
+    private BigDecimal price;
 
 
     public String getName() {
@@ -16,11 +16,11 @@ public class ReqSimplePriceItemAddDto {
         this.name = name;
     }
 
-    public BigDecimal getCost() {
-        return cost;
+    public BigDecimal getPrice() {
+        return price;
     }
 
-    public void setCost(BigDecimal cost) {
-        this.cost = cost;
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 }

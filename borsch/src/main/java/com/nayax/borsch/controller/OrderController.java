@@ -2,6 +2,9 @@ package com.nayax.borsch.controller;
 
 import com.nayax.borsch.model.dto.PageDto;
 import com.nayax.borsch.model.dto.ResponseDto;
+import com.nayax.borsch.model.dto.assortment.response.RespAssortmentItemDto;
+import com.nayax.borsch.model.dto.assortment.response.RespSimpleItemDto;
+import com.nayax.borsch.model.dto.assortment.response.RespSimplePriceItemDto;
 import com.nayax.borsch.model.dto.order.request.ReqOrderItemAddDto;
 import com.nayax.borsch.model.dto.order.response.RespOrderDeliveryDto;
 import com.nayax.borsch.model.dto.order.response.RespOrderDto;
@@ -22,12 +25,34 @@ public class OrderController {
 
     private RespOrderDto getRespOrderMock() {
         RespOrderDto orderItem = new RespOrderDto();
-        orderItem.setItemCount(2);
-        orderItem.setExtraItemId(3L);
-        orderItem.setAdditionIdList(List.of(2L, 4L, 6L));
-        orderItem.setCutInHalf(false);
-        orderItem.setRemarkId(1L);
-        orderItem.setTypeId(4L);
+
+        RespAssortmentItemDto shawa = new RespAssortmentItemDto();
+        shawa.setId(2l);
+        shawa.setName("Щаурма с курицей");
+        shawa.setPrice(new BigDecimal("90.00"));
+        shawa.setHalfAble(false);
+        orderItem.setDish(shawa);
+
+        RespSimplePriceItemDto addition = new RespSimplePriceItemDto();
+        addition.setId(4l);
+        addition.setName("Картошка");
+        addition.setPrice(new BigDecimal("10.00"));
+        List<RespSimplePriceItemDto> respSimpleItemDtos = List.of(addition,addition,addition,addition,addition,addition,addition);
+        orderItem.setAdditions(respSimpleItemDtos);
+
+        RespSimplePriceItemDto drink = new RespSimplePriceItemDto();
+        addition.setId(4l);
+        addition.setName("Coca-cola");
+        addition.setPrice(new BigDecimal("23.50"));
+        orderItem.setDrink(drink);
+
+        RespSimpleItemDto remark = new RespSimpleItemDto();
+        remark.setId(1l);
+        remark.setName("побольше соуса");
+        orderItem.setRemark(remark);
+        orderItem.setCut(false);
+        orderItem.setQuantity(2);
+
         return orderItem;
     }
 
@@ -91,7 +116,7 @@ public class OrderController {
         orderSumDto.setUser(getUserMock());
         orderSumDto.setAmount(new BigDecimal("40.3"));
         orderSumDto.setPaidAmount(new BigDecimal("40.2"));
-        orderSumDto.setPaymentType(2L);
+        orderSumDto.setPaymentType(2);
         ResponseDto<RespOrderSumDto> responseDto = new ResponseDto<>(orderSumDto);
         return ResponseEntity.ok(responseDto);
     }
@@ -112,7 +137,7 @@ public class OrderController {
         RespOrderDeliveryDto deliveryInfo = new RespOrderDeliveryDto();
         deliveryInfo.setOrder(getRespOrderMock());
         deliveryInfo.setOrderDate(dateTime);
-        deliveryInfo.setQuantity(3L);
+        deliveryInfo.setQuantity(3);
         List<RespOrderDeliveryDto> pages = List.of(deliveryInfo, deliveryInfo, deliveryInfo, deliveryInfo,
                 deliveryInfo, deliveryInfo, deliveryInfo, deliveryInfo, deliveryInfo);
         ResponseDto<List<RespOrderDeliveryDto>> responseDto = new ResponseDto<>(pages);

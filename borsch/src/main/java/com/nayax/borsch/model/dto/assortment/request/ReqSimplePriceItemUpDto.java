@@ -4,16 +4,16 @@ import java.math.BigDecimal;
 
 public class ReqSimplePriceItemUpDto {
 
-    private Long itemId;
+    private Long id;
     private String name;
     private BigDecimal cost;
 
-    public Long getItemId() {
-        return itemId;
+    public Long getId() {
+        return id;
     }
 
-    public void setItemId(Long itemId) {
-        this.itemId = itemId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {

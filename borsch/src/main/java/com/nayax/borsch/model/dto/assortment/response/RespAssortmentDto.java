@@ -7,7 +7,7 @@ public class RespAssortmentDto {
     private RespSimpleItemDto dish;
     private List<RespSimpleItemDto> additions;
     private List<RespSimpleItemDto> remarks;
-    private Boolean isHalfAble;
+    private boolean halfable;
 
     public RespSimpleItemDto getDish() {
         return dish;
@@ -25,19 +25,19 @@ public class RespAssortmentDto {
         this.additions = additions;
     }
 
-    public boolean isHalfAble() {
-        return isHalfAble;
-    }
-
-    public void setHalfAble(boolean halfAble) {
-        this.isHalfAble = halfAble;
-    }
-
     public List<RespSimpleItemDto> getRemarks() {
         return remarks;
     }
 
     public void setRemarks(List<RespSimpleItemDto> remarks) {
         this.remarks = remarks;
+    }
+
+    public boolean isHalfable() {
+        return halfable;
+    }
+
+    public void setHalfable(boolean halfable) {
+        this.halfable = halfable;
     }
 }

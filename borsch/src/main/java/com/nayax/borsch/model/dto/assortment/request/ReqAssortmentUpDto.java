@@ -5,9 +5,9 @@ import java.util.List;
 public class ReqAssortmentUpDto {
 
     private Long dish;
-    private List<Long> additionsId;
-    private Boolean isHalfAble;
-    private List<Long> remarksId;
+    private List<Long> additions;
+    private boolean halfable;
+    private List<Long> remarks;
 
     public Long getDish() {
         return dish;
@@ -17,27 +17,27 @@ public class ReqAssortmentUpDto {
         this.dish = dish;
     }
 
-    public List<Long> getAdditionsId() {
-        return additionsId;
+    public List<Long> getAdditions() {
+        return additions;
     }
 
-    public void setAdditionsId(List<Long> additionsId) {
-        this.additionsId = additionsId;
+    public void setAdditions(List<Long> additions) {
+        this.additions = additions;
     }
 
-    public Boolean getHalfAble() {
-        return isHalfAble;
+    public boolean isHalfable() {
+        return halfable;
     }
 
-    public void setHalfAble(Boolean halfAble) {
-        isHalfAble = halfAble;
+    public void setHalfable(boolean halfable) {
+        this.halfable = halfable;
     }
 
-    public List<Long> getRemarksId() {
-        return remarksId;
+    public List<Long> getRemarks() {
+        return remarks;
     }
 
-    public void setRemarksId(List<Long> remarksId) {
-        this.remarksId = remarksId;
+    public void setRemarks(List<Long> remarks) {
+        this.remarks = remarks;
     }
 }
