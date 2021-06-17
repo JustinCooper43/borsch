@@ -71,7 +71,6 @@ public class CashierController {
         creditCardDto.setNotes("Note about bank");
         creditCardDto.setCreditCard("1234 5678 9011 1234");
 
-        cashier.setCashierId(3L);
         cashier.setCash(true);
         cashier.setCard(creditCardDto);
 
