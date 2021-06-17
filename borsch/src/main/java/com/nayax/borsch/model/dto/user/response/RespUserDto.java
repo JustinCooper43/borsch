@@ -25,11 +25,11 @@ public class RespUserDto {
         this.role = role;
     }
 
-    public String getPhoneNumber() {
+    public String getPhone() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
+    public void setPhone(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 

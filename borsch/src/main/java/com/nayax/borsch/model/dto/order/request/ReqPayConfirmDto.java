@@ -5,17 +5,11 @@ import java.time.LocalDateTime;
 
 public class ReqPayConfirmDto {
 
-    private Long userId;
+    private Long user;
     private LocalDateTime orderDate;
-    private BigDecimal paidNumber;
+    private BigDecimal paid;
 
-    public Long getUserId() {
-        return userId;
-    }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
 
     public LocalDateTime getOrderDate() {
         return orderDate;
@@ -25,11 +19,11 @@ public class ReqPayConfirmDto {
         this.orderDate = orderDate;
     }
 
-    public BigDecimal getPaidNumber() {
-        return paidNumber;
+    public BigDecimal getPaid() {
+        return paid;
     }
 
-    public void setPaidNumber(BigDecimal paidNumber) {
-        this.paidNumber = paidNumber;
+    public void setPaid(BigDecimal paid) {
+        this.paid = paid;
     }
 }

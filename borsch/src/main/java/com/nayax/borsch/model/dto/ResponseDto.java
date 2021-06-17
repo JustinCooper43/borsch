@@ -5,8 +5,17 @@ import java.util.List;
 public class ResponseDto<T> {
     private T data;
     private List<ErrorDto> errors;
+    private String status;
 
     public ResponseDto() {
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public ResponseDto(T data) {

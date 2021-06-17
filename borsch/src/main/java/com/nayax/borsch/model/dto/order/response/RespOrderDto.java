@@ -1,60 +1,65 @@
 package com.nayax.borsch.model.dto.order.response;
 
+import com.nayax.borsch.model.dto.assortment.response.RespAssortmentItemDto;
+import com.nayax.borsch.model.dto.assortment.response.RespSimpleItemDto;
+import com.nayax.borsch.model.dto.assortment.response.RespSimplePriceItemDto;
+
 import java.util.List;
 
 public class RespOrderDto {
-    private Long typeId;
-    private List<Long> additionIdList;
-    private Long extraItemId;
-    private Long remarkId;
-    private Boolean cutInHalf;
-    private Integer itemCount;
 
-    public Long getTypeId() {
-        return typeId;
+    private RespAssortmentItemDto dish;
+    private List<RespSimplePriceItemDto> additions;
+    private RespSimplePriceItemDto drink;
+    private RespSimpleItemDto remark;
+    private boolean cut;
+    private Integer quantity;
+
+    public RespAssortmentItemDto getDish() {
+        return dish;
     }
 
-    public void setTypeId(Long typeId) {
-        this.typeId = typeId;
+    public void setDish(RespAssortmentItemDto dish) {
+        this.dish = dish;
     }
 
-    public List<Long> getAdditionIdList() {
-        return additionIdList;
+    public List<RespSimplePriceItemDto> getAdditions() {
+        return additions;
     }
 
-    public void setAdditionIdList(List<Long> additionIdList) {
-        this.additionIdList = additionIdList;
+    public void setAdditions(List<RespSimplePriceItemDto> additions) {
+        this.additions = additions;
     }
 
-    public Long getExtraItemId() {
-        return extraItemId;
+    public RespSimplePriceItemDto getDrink() {
+        return drink;
     }
 
-    public void setExtraItemId(Long extraItemId) {
-        this.extraItemId = extraItemId;
+    public void setDrink(RespSimplePriceItemDto drink) {
+        this.drink = drink;
     }
 
-    public Long getRemarkId() {
-        return remarkId;
+    public RespSimpleItemDto getRemark() {
+        return remark;
     }
 
-    public void setRemarkId(Long remarkId) {
-        this.remarkId = remarkId;
+    public void setRemark(RespSimpleItemDto remark) {
+        this.remark = remark;
     }
 
-    public Boolean getCutInHalf() {
-        return cutInHalf;
+    public boolean isCut() {
+        return cut;
     }
 
-    public void setCutInHalf(Boolean cutInHalf) {
-        this.cutInHalf = cutInHalf;
+    public void setCut(boolean cut) {
+        this.cut = cut;
     }
 
-    public Integer getItemCount() {
-        return itemCount;
+    public Integer getQuantity() {
+        return quantity;
     }
 
-    public void setItemCount(Integer itemCount) {
-        this.itemCount = itemCount;
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 }

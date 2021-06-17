@@ -11,10 +11,19 @@ public class RespOrderSumDto {
 
     private RespUserDto user;
     private List<RespOrderDto> orders;
-    private Long paymentType;
+    private Integer paymentType;
     private BigDecimal amount;
     private BigDecimal paidAmount;
     private LocalDateTime orderDate;
+
+
+    public Integer getPaymentType() {
+        return paymentType;
+    }
+
+    public void setPaymentType(Integer paymentType) {
+        this.paymentType = paymentType;
+    }
 
     public RespUserDto getUser() {
         return user;
@@ -32,13 +41,6 @@ public class RespOrderSumDto {
         this.orders = orders;
     }
 
-    public Long getPaymentType() {
-        return paymentType;
-    }
-
-    public void setPaymentType(Long paymentType) {
-        this.paymentType = paymentType;
-    }
 
     public BigDecimal getAmount() {
         return amount;
