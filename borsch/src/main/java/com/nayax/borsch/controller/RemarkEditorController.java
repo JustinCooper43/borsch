@@ -25,11 +25,7 @@ public class RemarkEditorController {
     public ResponseEntity<ResponseDto<PageDto<RespSimpleItemDto>>> getRemark(@RequestParam int page, @RequestParam int pageSize) {
         RespSimpleItemDto mockDto = getRespSimpleItemDto();
         List<RespSimpleItemDto> listMock = List.of(mockDto, mockDto, mockDto, mockDto, mockDto, mockDto, mockDto, mockDto, mockDto, mockDto);
-        PageDto<RespSimpleItemDto> pageDto = new PageDto<>(listMock);
-        pageDto.setTotalElements(10 * pageSize);
-        pageDto.setTotalPages(10);
-        pageDto.setPageSize(pageSize);
-        pageDto.setPage(page);
+        PageDto<RespSimpleItemDto> pageDto = PageDto.getPagedList(page, pageSize, listMock);
         return ResponseEntity.ok(new ResponseDto<>(pageDto));
     }
 

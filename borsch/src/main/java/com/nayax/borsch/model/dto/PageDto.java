@@ -1,5 +1,7 @@
 package com.nayax.borsch.model.dto;
 
+import com.nayax.borsch.utility.PageDtoBuilder;
+
 import java.util.List;
 
 public class PageDto<T> {
@@ -15,6 +17,17 @@ public class PageDto<T> {
 
     public PageDto(List<T> responseList) {
         this.responseList = responseList;
+    }
+
+    //TODO mock method, to be removed when unmocking controllers
+    public static <T> PageDto<T> getPagedList(Integer page, Integer pageSize, List<T> itemList) {
+        return new PageDtoBuilder<T>()
+                .page(itemList)
+                .totalElements(10 * pageSize)
+                .totalPages(10)
+                .elementsPerPage(pageSize)
+                .currentPageNum(page)
+                .build();
     }
 
     public List<T> getResponseList() {
@@ -45,12 +58,12 @@ public class PageDto<T> {
         return totalPages;
     }
 
-    public Integer getTotalElements() {
-        return totalElements;
-    }
-
     public void setTotalPages(Integer totalPages) {
         this.totalPages = totalPages;
+    }
+
+    public Integer getTotalElements() {
+        return totalElements;
     }
 
     public void setTotalElements(Integer totalElements) {
