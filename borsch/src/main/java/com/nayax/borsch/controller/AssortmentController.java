@@ -50,6 +50,4 @@ public class AssortmentController {
         ResponseDto<RespAssortmentDto> respDto = new ResponseDto<>(dto);
         return ResponseEntity.ok(respDto);
     }
-
-
 }
