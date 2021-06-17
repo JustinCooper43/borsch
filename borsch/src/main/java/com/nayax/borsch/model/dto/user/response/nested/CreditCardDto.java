@@ -1,6 +1,7 @@
 package com.nayax.borsch.model.dto.user.response.nested;
 
 public class CreditCardDto {
+
     private String creditCard;
     private String bankName;
     private String notes;
