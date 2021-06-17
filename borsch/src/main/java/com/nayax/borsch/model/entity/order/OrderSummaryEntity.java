@@ -1,5 +1,7 @@
 package com.nayax.borsch.model.entity.order;
 
+import com.nayax.borsch.model.entity.user.CashierEntity;
+
 import java.time.LocalDateTime;
 
 public class OrderSummaryEntity {
