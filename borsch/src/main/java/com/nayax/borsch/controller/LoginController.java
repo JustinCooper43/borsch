@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 
 @RestController
-@RequestMapping("/")
 public class LoginController {
 
     private RespLoginDto getLoginMock() {
@@ -39,8 +38,9 @@ public class LoginController {
     }
 
     @PostMapping("/logout")
-    public boolean logout() {
-        return true;
+    public ResponseEntity<ResponseDto<Boolean>> logout() {
+        ResponseDto<Boolean> result = new ResponseDto<>(Boolean.TRUE);
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping("/sign")

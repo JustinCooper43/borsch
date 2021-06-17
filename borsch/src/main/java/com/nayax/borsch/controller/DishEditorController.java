@@ -1,6 +1,7 @@
 package com.nayax.borsch.controller;
 
 
+import com.nayax.borsch.model.dto.PageDto;
 import com.nayax.borsch.model.dto.ResponseDto;
 import com.nayax.borsch.model.dto.assortment.request.ReqSimplePriceItemAddDto;
 import com.nayax.borsch.model.dto.assortment.request.ReqSimplePriceItemUpDto;
@@ -28,7 +29,7 @@ public class DishEditorController {
         return priceItemDto;
     }
 
-    @PostMapping("/add")
+    @PostMapping
     public ResponseEntity<ResponseDto<RespSimplePriceItemDto>> addDish(@RequestBody ReqSimplePriceItemAddDto dto) {
         RespSimplePriceItemDto priceItemDto = getRespDishEditMock();
         ResponseDto<RespSimplePriceItemDto> responseDto = new ResponseDto<>(priceItemDto);
@@ -36,22 +37,27 @@ public class DishEditorController {
     }
 
 
-    @GetMapping("/get")
-    public ResponseEntity<ResponseDto<List<RespSimplePriceItemDto>>> getDish( @RequestParam Long page, @RequestParam Long pageSize){
+    @GetMapping
+    public ResponseEntity<ResponseDto<PageDto<RespSimplePriceItemDto>>> getDish( @RequestParam Integer page, @RequestParam Integer pageSize){
         RespSimplePriceItemDto priceItem = getRespDishEditMock();
         List <RespSimplePriceItemDto> priceItemList = List.of(priceItem,priceItem,priceItem,priceItem,priceItem,priceItem);
-        ResponseDto <List<RespSimplePriceItemDto>> responseDto = new ResponseDto<>(priceItemList);
+        PageDto<RespSimplePriceItemDto> pageDto = new PageDto<>(priceItemList);
+        pageDto.setTotalElements(10 * pageSize);
+        pageDto.setTotalPages(10);
+        pageDto.setElementsPerPage(pageSize);
+        pageDto.setCurrentPageNumber(page);
+        ResponseDto<PageDto<RespSimplePriceItemDto>> responseDto = new ResponseDto<>(pageDto);
         return ResponseEntity.ok(responseDto);
     }
 
-    @PostMapping("/update")
+    @PutMapping
     public ResponseEntity<ResponseDto<RespSimplePriceItemDto>> updateDish( @RequestBody ReqSimplePriceItemUpDto dto){
         RespSimplePriceItemDto priceItemDto = getRespDishEditMock();
         ResponseDto<RespSimplePriceItemDto> responseDto = new ResponseDto<>(priceItemDto);
         return ResponseEntity.ok(responseDto);
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping
     public ResponseEntity<ResponseDto<Boolean>> deleteDish(@RequestParam Long dishId){
         ResponseDto<Boolean> responseDto = new ResponseDto<>(true);
 

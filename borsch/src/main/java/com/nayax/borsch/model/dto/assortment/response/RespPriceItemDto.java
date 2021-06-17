@@ -6,7 +6,7 @@ public class RespPriceItemDto {
     private Long id;
     private String name;
     private BigDecimal price;
-    private Integer type = 1;
+    private Integer type;
 
     public Long getId() {
         return id;

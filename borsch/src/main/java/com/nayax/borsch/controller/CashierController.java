@@ -19,7 +19,7 @@ import java.util.List;
 public class CashierController {
 
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<ResponseDto<RespProfileDto>> getById(@RequestParam Long id) {
         ResponseDto<RespProfileDto> respDto = new ResponseDto<>(generatedMock());
         return ResponseEntity.ok(respDto);
@@ -38,10 +38,10 @@ public class CashierController {
     }
 
 
-    private List<RespUserDto> generateMockList() {
+    private  List<RespUserDto> generateMockList() {
         List<RespUserDto> listResult = new ArrayList<>();
         int quantityPages = 8;
-        for (int i = 0; i < quantityPages; i++) {
+        for(int i = 0; i < quantityPages; i++){
             listResult.add(generatedMock().getUser());
         }
         return listResult;

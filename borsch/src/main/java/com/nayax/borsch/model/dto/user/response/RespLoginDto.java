@@ -3,9 +3,8 @@ package com.nayax.borsch.model.dto.user.response;
 import java.time.LocalDateTime;
 
 public class RespLoginDto {
-
-    private RespUserDto user = new RespUserDto();
-    private LocalDateTime time = LocalDateTime.now();
+    private RespUserDto user;
+    private LocalDateTime time;
 
     public RespUserDto getUser() {
         return user;

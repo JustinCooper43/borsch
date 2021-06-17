@@ -23,7 +23,7 @@ public class PaymentController {
         return ResponseEntity.ok(responseDto);
     }
 
-    @PostMapping("/complete/")
+    @PostMapping("/complete")
     public ResponseEntity<ResponseDto<Boolean>> complete(@RequestBody ReqPayCompletedDto reqDto) {
         ResponseDto<Boolean> result = new ResponseDto<>(Boolean.TRUE);
         return ResponseEntity.ok(result);
