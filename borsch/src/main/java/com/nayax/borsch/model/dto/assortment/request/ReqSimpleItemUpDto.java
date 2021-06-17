@@ -2,7 +2,7 @@ package com.nayax.borsch.model.dto.assortment.request;
 
 public class ReqSimpleItemUpDto {
 
-    private Long itemId;
+    private Long id;
     private String itemName;
 
     public String getItemName() {
@@ -13,11 +13,11 @@ public class ReqSimpleItemUpDto {
         this.itemName = itemName;
     }
 
-    public Long getItemId() {
-        return itemId;
+    public Long getId() {
+        return id;
     }
 
-    public void setItemId(Long itemId) {
-        this.itemId = itemId;
+    public void setId(Long id) {
+        this.id = id;
     }
 }

@@ -27,7 +27,7 @@ public class AssortmentController {
     @GetMapping
     public ResponseEntity<ResponseDto<PageDto<RespAssortmentDto>>> getAssortment(@RequestParam int page, @RequestParam int pageSize) {
         RespAssortmentDto assortment = new RespAssortmentDto();
-        assortment.setHalfAble(true);
+        assortment.setHalfable(true);
         assortment.setAdditions(getMockList());
         assortment.setRemarks(getMockList());
         assortment.setDish(getMockList().get(0));
@@ -46,7 +46,7 @@ public class AssortmentController {
         dto.setAdditions(getMockList());
         dto.setRemarks(getMockList());
         dto.setDish(getMockList().get(0));
-        dto.setHalfAble(true);
+        dto.setHalfable(true);
         ResponseDto<RespAssortmentDto> respDto = new ResponseDto<>(dto);
         return ResponseEntity.ok(respDto);
     }

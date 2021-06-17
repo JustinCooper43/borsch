@@ -2,13 +2,13 @@ package com.nayax.borsch.model.dto.assortment.request;
 
 public class ReqSimpleItemAddDto {
 
-    private String itemName;
+    private String name;
 
-    public String getItemName() {
-        return itemName;
+    public String getName() {
+        return name;
     }
 
-    public void setItemName(String itemName) {
-        this.itemName = itemName;
+    public void setName(String name) {
+        this.name = name;
     }
 }
