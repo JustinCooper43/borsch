@@ -6,7 +6,6 @@ public class ReqCashierUpDto {
 
     private Long cashierId;
     private Boolean cashPaymentAllowed;
-    private Boolean creditPaymentAllowed ;
     private CreditCardDto creditCard;
 
     public Boolean getCashPaymentAllowed() {
@@ -33,11 +32,4 @@ public class ReqCashierUpDto {
         this.cashierId = cashierId;
     }
 
-    public Boolean getCreditPaymentAllowed() {
-        return creditPaymentAllowed;
-    }
-
-    public void setCreditPaymentAllowed(Boolean creditPaymentAllowed) {
-        this.creditPaymentAllowed = creditPaymentAllowed;
-    }
 }

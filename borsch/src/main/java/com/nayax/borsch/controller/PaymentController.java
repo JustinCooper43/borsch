@@ -36,7 +36,7 @@ public class PaymentController {
     }
 
 
-    private RespPaymentInfoDto generatorPayDto() {
+    public static RespPaymentInfoDto generatorPayDto() {
         RespPaymentInfoDto result = new RespPaymentInfoDto();
         RespUserDto user = new RespUserDto();
         RespCashierDto cashier = new RespCashierDto();

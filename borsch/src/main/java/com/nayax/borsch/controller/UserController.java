@@ -1,8 +1,10 @@
 package com.nayax.borsch.controller;
 
 import com.nayax.borsch.model.dto.ResponseDto;
+import com.nayax.borsch.model.dto.user.request.ReqProfileUpDto;
 import com.nayax.borsch.model.dto.user.request.ReqUserAddDto;
-import com.nayax.borsch.model.dto.user.request.ReqUserUpdateDto;
+import com.nayax.borsch.model.dto.user.response.RespCashierDto;
+import com.nayax.borsch.model.dto.user.response.RespProfileDto;
 import com.nayax.borsch.model.dto.user.response.RespUserDto;
 import com.nayax.borsch.model.dto.user.response.nested.RoleDto;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +19,7 @@ public class UserController {
 //    @Autowired
 //    UserService service;
 
-    private RespUserDto getUserMock() {
+    public static RespUserDto getUserMock() {
         RespUserDto user = new RespUserDto();
         user.setId(14L);
         user.setFirstName("Fname");
@@ -46,10 +48,14 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ResponseDto<RespUserDto>> update(@PathVariable(value = "id") Long id, @RequestBody ReqUserUpdateDto dto) {
-        dto.setId(id);
+    public ResponseEntity<ResponseDto<RespProfileDto>> update(@PathVariable(value = "id") Long id, @RequestBody ReqProfileUpDto dto) {
+        dto.getUserUpdateDto().setId(id);
         RespUserDto user = getUserMock();
-        ResponseDto<RespUserDto> responseDto = new ResponseDto<>(user);
+        RespCashierDto payments = PaymentController.generatorPayDto().getPaymentMethod();
+        RespProfileDto profile = new RespProfileDto();
+        profile.setUser(user);
+        profile.setPayments(payments);
+        ResponseDto<RespProfileDto> responseDto = new ResponseDto<>(profile);
         return ResponseEntity.ok(responseDto);
     }
 
