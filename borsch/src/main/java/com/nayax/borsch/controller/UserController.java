@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/profile")
 public class UserController {
 
 //    @Autowired
@@ -31,35 +31,35 @@ public class UserController {
         return user;
     }
 
-    @PostMapping("/add")
+    @PostMapping("/")
     public ResponseEntity<ResponseDto<RespUserDto>> add(@RequestBody ReqUserAddDto dto) {
         RespUserDto user = getUserMock();
         ResponseDto<RespUserDto> responseDto = new ResponseDto<>(user);
         return ResponseEntity.ok(responseDto);
     }
 
-    @GetMapping("/get")
+    @GetMapping("/")
     public ResponseEntity<ResponseDto<RespUserDto>> get(@RequestParam Long id) {
         RespUserDto user = getUserMock();
         ResponseDto<RespUserDto> responseDto = new ResponseDto<>(user);
         return ResponseEntity.ok(responseDto);
     }
 
-    @PostMapping("/update")
+    @PostMapping("/")
     public ResponseEntity<ResponseDto<RespUserDto>> update(@RequestBody ReqUserUpdateDto dto) {
         RespUserDto user = getUserMock();
         ResponseDto<RespUserDto> responseDto = new ResponseDto<>(user);
         return ResponseEntity.ok(responseDto);
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping("/")
     public ResponseEntity<ResponseDto<RespUserDto>> delete(@RequestParam Long id) {
         RespUserDto user = getUserMock();
         ResponseDto<RespUserDto> responseDto = new ResponseDto<>(user);
         return ResponseEntity.ok(responseDto);
     }
 
-    @GetMapping("/all")
+    @GetMapping("/")
     public ResponseEntity<ResponseDto<List<RespUserDto>>> getAll() {
         RespUserDto user = getUserMock();
         ResponseDto<List<RespUserDto>> responseDto = new ResponseDto<>(List.of(user, user, user, user, user, user, user));

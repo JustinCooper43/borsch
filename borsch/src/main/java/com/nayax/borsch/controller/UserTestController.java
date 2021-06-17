@@ -12,36 +12,36 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/test/user")
+@RequestMapping("/test/profile")
 public class UserTestController {
     @Autowired
     UserService service;
 
-    @PostMapping("/add")
+    @PostMapping("/")
     public ResponseEntity<ResponseDto<RespUserDto>> add(@RequestBody ReqUserAddDto dto) {
         ResponseDto<RespUserDto> responseDto = service.add(dto);
         return ResponseEntity.ok(responseDto);
     }
 
-    @GetMapping("/get")
+    @GetMapping("/")
     public ResponseEntity<ResponseDto<RespUserDto>> get(@RequestParam Long id) {
         ResponseDto<RespUserDto> responseDto = service.get(id);
         return ResponseEntity.ok(responseDto);
     }
 
-    @PostMapping("/update")
+    @PostMapping("/")
     public ResponseEntity<ResponseDto<RespUserDto>> update(@RequestBody ReqUserUpdateDto dto) {
         ResponseDto<RespUserDto> responseDto = service.update(dto);
         return ResponseEntity.ok(responseDto);
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping("/")
     public ResponseEntity<ResponseDto<RespUserDto>> delete(@RequestParam Long id) {
         ResponseDto<RespUserDto> responseDto = service.delete(id);
         return ResponseEntity.ok(responseDto);
     }
 
-    @GetMapping("/all")
+    @GetMapping("/")
     public ResponseEntity<ResponseDto<List<RespUserDto>>> getAll() {
         ResponseDto<List<RespUserDto>> responseDto = service.getAll();
         return ResponseEntity.ok(responseDto);

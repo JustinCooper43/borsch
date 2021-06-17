@@ -40,7 +40,7 @@ public class AssortmentController {
         return ResponseEntity.ok(responseDto);
     }
 
-    @PostMapping("/post")
+    @PostMapping("/")
     public ResponseEntity<ResponseDto<RespAssortmentDto>> getById(@RequestParam Long id) {
         RespAssortmentDto dto = new RespAssortmentDto();
         dto.setAdditions(getMockList());

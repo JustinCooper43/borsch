@@ -17,19 +17,19 @@ import org.springframework.web.bind.annotation.*;
 public class PaymentController {
 
 
-    @GetMapping("/get")
+    @GetMapping("/")
     public ResponseEntity<ResponseDto<RespPaymentInfoDto>> get() {
         ResponseDto<RespPaymentInfoDto> responseDto = new ResponseDto<>(generatorPayDto());
         return ResponseEntity.ok(responseDto);
     }
 
-    @PostMapping("/complete/post")
+    @PostMapping("/complete")
     public ResponseEntity<ResponseDto<Boolean>> complete(@RequestBody ReqPayCompletedDto reqDto) {
         ResponseDto<Boolean> result = new ResponseDto<>(Boolean.TRUE);
         return ResponseEntity.ok(result);
     }
 
-    @PostMapping("/confirm/post")
+    @PostMapping("/confirm")
     public ResponseEntity<ResponseDto<Boolean>> confirm(@RequestBody ReqPayConfirmDto reqDto) {
         ResponseDto<Boolean> result = new ResponseDto<>(Boolean.TRUE);
         return ResponseEntity.ok(result);
