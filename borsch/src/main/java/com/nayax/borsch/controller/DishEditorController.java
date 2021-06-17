@@ -40,8 +40,8 @@ public class DishEditorController {
         PageDto<RespSimplePriceItemDto> pageDto = new PageDto<>(priceItemList);
         pageDto.setTotalElements(10 * pageSize);
         pageDto.setTotalPages(10);
-        pageDto.setElementsPerPage(pageSize);
-        pageDto.setCurrentPageNumber(page);
+        pageDto.setPageSize(pageSize);
+        pageDto.setPage(page);
         ResponseDto<PageDto<RespSimplePriceItemDto>> responseDto = new ResponseDto<>(pageDto);
         return ResponseEntity.ok(responseDto);
     }

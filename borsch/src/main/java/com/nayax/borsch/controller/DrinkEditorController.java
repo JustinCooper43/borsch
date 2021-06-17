@@ -39,8 +39,8 @@ public class DrinkEditorController {
         PageDto<RespSimplePriceItemDto> pageDto = new PageDto<>(listMock);
         pageDto.setTotalElements(10 * pageSize);
         pageDto.setTotalPages(10);
-        pageDto.setElementsPerPage(pageSize);
-        pageDto.setCurrentPageNumber(page);
+        pageDto.setPageSize(pageSize);
+        pageDto.setPage(page);
         ResponseDto<PageDto<RespSimplePriceItemDto>> response = new ResponseDto<>(pageDto);
         return ResponseEntity.ok(response);
     }

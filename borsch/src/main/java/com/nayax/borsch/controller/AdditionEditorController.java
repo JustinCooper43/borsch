@@ -1,6 +1,7 @@
 package com.nayax.borsch.controller;
 
 
+import com.nayax.borsch.model.dto.PageDto;
 import com.nayax.borsch.model.dto.ResponseDto;
 import com.nayax.borsch.model.dto.assortment.request.ReqSimplePriceItemAddDto;
 import com.nayax.borsch.model.dto.assortment.request.ReqSimplePriceItemUpDto;
@@ -25,13 +26,16 @@ public class AdditionEditorController {
     }
 
     @GetMapping
-    public ResponseEntity<ResponseDto<List<RespSimplePriceItemDto>>> getAddition(@RequestParam int page, @RequestParam int pageSize) {
-        //TODO paging
+    public ResponseEntity<ResponseDto<PageDto<RespSimplePriceItemDto>>> getAddition(@RequestParam int page, @RequestParam int pageSize) {
         RespSimplePriceItemDto mock = getRespSimplePriceItemDto();
         List<RespSimplePriceItemDto> listMock = List.of(mock, mock, mock, mock, mock, mock, mock);
-        ResponseDto<List<RespSimplePriceItemDto>> response = new ResponseDto<>(listMock);
-
-        return ResponseEntity.ok(response);
+        PageDto<RespSimplePriceItemDto> pageDto = new PageDto<>(listMock);
+        pageDto.setTotalElements(10 * pageSize);
+        pageDto.setTotalPages(10);
+        pageDto.setPageSize(pageSize);
+        pageDto.setPage(page);
+        ResponseDto<PageDto<RespSimplePriceItemDto>> responseDto = new ResponseDto<>(pageDto);
+        return ResponseEntity.ok(responseDto);
     }
 
     @PutMapping("/{id}")

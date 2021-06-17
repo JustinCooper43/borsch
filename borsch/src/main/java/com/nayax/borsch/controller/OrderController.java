@@ -86,8 +86,8 @@ public class OrderController {
         PageDto<RespOrderDto> pageDto = new PageDto<>(itemList);
         pageDto.setTotalElements(10 * pageSize);
         pageDto.setTotalPages(10);
-        pageDto.setElementsPerPage(pageSize);
-        pageDto.setCurrentPageNumber(page);
+        pageDto.setPageSize(pageSize);
+        pageDto.setPage(page);
         ResponseDto<PageDto<RespOrderDto>> responseDto = new ResponseDto<>(pageDto);
         return ResponseEntity.ok(responseDto);
     }
@@ -100,8 +100,8 @@ public class OrderController {
         PageDto<RespOrderDto> pageDto = new PageDto<>(itemList);
         pageDto.setTotalElements(10 * pageSize);
         pageDto.setTotalPages(10);
-        pageDto.setElementsPerPage(pageSize);
-        pageDto.setCurrentPageNumber(page);
+        pageDto.setPageSize(pageSize);
+        pageDto.setPage(page);
         ResponseDto<PageDto<RespOrderDto>> responseDto = new ResponseDto<>(pageDto);
         return ResponseEntity.ok(responseDto);
     }
