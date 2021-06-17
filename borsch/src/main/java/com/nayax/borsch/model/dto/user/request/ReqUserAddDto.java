@@ -4,7 +4,15 @@ public class ReqUserAddDto {
     private String eMail;
     private String firstName;
     private String lastName;
+    private String phone;
 
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
     public String geteMail() {
         return eMail;

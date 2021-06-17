@@ -67,9 +67,9 @@ public class OrderController {
         return ResponseEntity.ok(responseDto);
     }
 
-    @GetMapping("/history")
+    @GetMapping("/history/{userId}")
     public ResponseEntity<ResponseDto<PageDto<RespOrderDto>>> getPagedHistory(
-            @RequestParam Long userId, @RequestParam int page, @RequestParam int pageSize) {
+            @PathVariable(value="userId") Long userId, @RequestParam int page, @RequestParam int pageSize) {
         RespOrderDto orderItem = getRespOrderMock();
         List<RespOrderDto> itemList = List.of(orderItem, orderItem, orderItem, orderItem, orderItem, orderItem, orderItem);
         PageDto<RespOrderDto> pageDto = new PageDto<>(itemList);
@@ -119,8 +119,8 @@ public class OrderController {
         return ResponseEntity.ok(responseDto);
     }
 
-    @DeleteMapping
-    public ResponseEntity<ResponseDto<Boolean>> deleteOrder(@RequestParam Long orderItemId) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResponseDto<Boolean>> deleteOrder(@PathVariable(value="id") Long id) {
         ResponseDto<Boolean> result = new ResponseDto<>(Boolean.TRUE);
         return ResponseEntity.ok(result);
     }

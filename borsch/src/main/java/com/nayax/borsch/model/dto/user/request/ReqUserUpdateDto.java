@@ -6,16 +6,7 @@ public class ReqUserUpdateDto {
     private String firstName;
     private String lastName;
     private Long roleId;
-    private String phoneNumber;
-    private String deleted;
-
-    public String getDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(String deleted) {
-        this.deleted = deleted;
-    }
+    private String phone;
 
     public Long getId() {
         return id;
@@ -57,11 +48,11 @@ public class ReqUserUpdateDto {
         this.roleId = roleId;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

@@ -38,22 +38,23 @@ public class UserController {
         return ResponseEntity.ok(responseDto);
     }
 
-    @GetMapping
-    public ResponseEntity<ResponseDto<RespUserDto>> get(@RequestParam Long id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<ResponseDto<RespUserDto>> get(@PathVariable(value = "id") Long id) {
         RespUserDto user = getUserMock();
         ResponseDto<RespUserDto> responseDto = new ResponseDto<>(user);
         return ResponseEntity.ok(responseDto);
     }
 
-    @PutMapping
-    public ResponseEntity<ResponseDto<RespUserDto>> update(@RequestBody ReqUserUpdateDto dto) {
+    @PutMapping("/{id}")
+    public ResponseEntity<ResponseDto<RespUserDto>> update(@PathVariable(value = "id") Long id, @RequestBody ReqUserUpdateDto dto) {
+        dto.setId(id);
         RespUserDto user = getUserMock();
         ResponseDto<RespUserDto> responseDto = new ResponseDto<>(user);
         return ResponseEntity.ok(responseDto);
     }
 
-    @DeleteMapping
-    public ResponseEntity<ResponseDto<RespUserDto>> delete(@RequestParam Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResponseDto<RespUserDto>> delete(@PathVariable(value = "id") Long id) {
         RespUserDto user = getUserMock();
         ResponseDto<RespUserDto> responseDto = new ResponseDto<>(user);
         return ResponseEntity.ok(responseDto);

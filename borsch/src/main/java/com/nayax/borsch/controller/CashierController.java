@@ -2,7 +2,6 @@ package com.nayax.borsch.controller;
 
 
 import com.nayax.borsch.model.dto.ResponseDto;
-import com.nayax.borsch.model.dto.order.response.RespPaymentInfoDto;
 import com.nayax.borsch.model.dto.user.response.RespCashierDto;
 import com.nayax.borsch.model.dto.user.response.RespProfileDto;
 import com.nayax.borsch.model.dto.user.response.RespUserDto;
@@ -19,8 +18,8 @@ import java.util.List;
 public class CashierController {
 
 
-    @PostMapping
-    public ResponseEntity<ResponseDto<RespProfileDto>> getById(@RequestParam Long id) {
+    @PostMapping("/{id}")
+    public ResponseEntity<ResponseDto<RespProfileDto>> getById(@PathVariable(value="id") Long id) {
         ResponseDto<RespProfileDto> respDto = new ResponseDto<>(generatedMock());
         return ResponseEntity.ok(respDto);
     }

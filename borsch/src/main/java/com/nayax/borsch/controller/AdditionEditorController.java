@@ -24,19 +24,19 @@ public class AdditionEditorController {
         return dto;
     }
 
-
-
     @GetMapping
     public ResponseEntity<ResponseDto<List<RespSimplePriceItemDto>>> getAddition(@RequestParam int page, @RequestParam int pageSize) {
+        //TODO paging
         RespSimplePriceItemDto mock = getRespSimplePriceItemDto();
-
-        List<RespSimplePriceItemDto> listMock = List.of(mock,  mock,  mock,  mock, mock, mock, mock);
+        List<RespSimplePriceItemDto> listMock = List.of(mock, mock, mock, mock, mock, mock, mock);
         ResponseDto<List<RespSimplePriceItemDto>> response = new ResponseDto<>(listMock);
+
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping
-    public ResponseEntity<ResponseDto<RespSimplePriceItemDto>> editAddition(@RequestBody ReqSimplePriceItemUpDto dto) {
+    @PutMapping("/{id}")
+    public ResponseEntity<ResponseDto<RespSimplePriceItemDto>> editAddition(@PathVariable(value = "id") Long id, @RequestBody ReqSimplePriceItemUpDto dto) {
+        dto.setItemId(id);
         RespSimplePriceItemDto mock = getRespSimplePriceItemDto();
         return ResponseEntity.ok(new ResponseDto<>(mock));
     }
@@ -47,8 +47,8 @@ public class AdditionEditorController {
         return ResponseEntity.ok(new ResponseDto<>(mock));
     }
 
-    @DeleteMapping
-    public ResponseEntity<ResponseDto<Boolean>> deleteAddition(@RequestParam Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResponseDto<Boolean>> deleteAddition(@PathVariable(value = "id") Long id) {
         return ResponseEntity.ok(new ResponseDto<>(true));
     }
 }

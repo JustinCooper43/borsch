@@ -33,8 +33,9 @@ public class RemarkEditorController {
         return ResponseEntity.ok(new ResponseDto<>(pageDto));
     }
 
-    @PutMapping
-    public ResponseEntity<ResponseDto<RespSimpleItemDto>> editRemark(@RequestBody ReqSimpleItemUpDto dto) {
+    @PutMapping("/{id}")
+    public ResponseEntity<ResponseDto<RespSimpleItemDto>> editRemark(@PathVariable(value = "id") Long id, @RequestBody ReqSimpleItemUpDto dto) {
+        dto.setItemId(id);
         RespSimpleItemDto mockDto = getRespSimpleItemDto();
         return ResponseEntity.ok(new ResponseDto<>(mockDto));
     }
@@ -45,8 +46,8 @@ public class RemarkEditorController {
         return ResponseEntity.ok(new ResponseDto<>(mockDto));
     }
 
-    @DeleteMapping
-    public ResponseEntity<ResponseDto<Boolean>> deleteRemark(@RequestParam Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResponseDto<Boolean>> deleteRemark(@PathVariable(value = "id") Long id) {
         return ResponseEntity.ok(new ResponseDto<>(true));
     }
 }

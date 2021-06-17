@@ -5,10 +5,7 @@ import com.nayax.borsch.model.dto.PageDto;
 import com.nayax.borsch.model.dto.ResponseDto;
 import com.nayax.borsch.model.dto.assortment.request.ReqSimplePriceItemAddDto;
 import com.nayax.borsch.model.dto.assortment.request.ReqSimplePriceItemUpDto;
-import com.nayax.borsch.model.dto.assortment.response.RespPriceItemDto;
 import com.nayax.borsch.model.dto.assortment.response.RespSimplePriceItemDto;
-import com.nayax.borsch.model.dto.order.request.ReqOrderItemAddDto;
-import com.nayax.borsch.model.dto.order.response.RespOrderDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,11 +33,10 @@ public class DishEditorController {
         return ResponseEntity.ok(responseDto);
     }
 
-
     @GetMapping
-    public ResponseEntity<ResponseDto<PageDto<RespSimplePriceItemDto>>> getDish( @RequestParam Integer page, @RequestParam Integer pageSize){
+    public ResponseEntity<ResponseDto<PageDto<RespSimplePriceItemDto>>> getDish(@RequestParam Integer page, @RequestParam Integer pageSize) {
         RespSimplePriceItemDto priceItem = getRespDishEditMock();
-        List <RespSimplePriceItemDto> priceItemList = List.of(priceItem,priceItem,priceItem,priceItem,priceItem,priceItem);
+        List<RespSimplePriceItemDto> priceItemList = List.of(priceItem, priceItem, priceItem, priceItem, priceItem, priceItem);
         PageDto<RespSimplePriceItemDto> pageDto = new PageDto<>(priceItemList);
         pageDto.setTotalElements(10 * pageSize);
         pageDto.setTotalPages(10);
@@ -50,20 +46,17 @@ public class DishEditorController {
         return ResponseEntity.ok(responseDto);
     }
 
-    @PutMapping
-    public ResponseEntity<ResponseDto<RespSimplePriceItemDto>> updateDish( @RequestBody ReqSimplePriceItemUpDto dto){
+    @PutMapping("/{id}")
+    public ResponseEntity<ResponseDto<RespSimplePriceItemDto>> updateDish(@PathVariable(value = "id") Long id, @RequestParam ReqSimplePriceItemUpDto dto) {
+        dto.setItemId(id);
         RespSimplePriceItemDto priceItemDto = getRespDishEditMock();
         ResponseDto<RespSimplePriceItemDto> responseDto = new ResponseDto<>(priceItemDto);
         return ResponseEntity.ok(responseDto);
     }
 
-    @DeleteMapping
-    public ResponseEntity<ResponseDto<Boolean>> deleteDish(@RequestParam Long dishId){
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResponseDto<Boolean>> deleteDish(@PathVariable(value = "id") Long id) {
         ResponseDto<Boolean> responseDto = new ResponseDto<>(true);
-
-        return ResponseEntity.ok(responseDto) ;
+        return ResponseEntity.ok(responseDto);
     }
-
-
-
 }

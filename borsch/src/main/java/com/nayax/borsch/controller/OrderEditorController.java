@@ -6,6 +6,7 @@ import com.nayax.borsch.model.dto.assortment.response.RespAssortmentItemDto;
 import com.nayax.borsch.model.dto.assortment.response.RespPriceItemDto;
 import com.nayax.borsch.model.dto.assortment.response.RespPriceListDto;
 import com.nayax.borsch.model.dto.assortment.response.RespSimplePriceItemDto;
+import com.nayax.borsch.model.dto.assortment.response.RespSimpleItemDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -65,13 +66,12 @@ public class OrderEditorController {
         return ResponseEntity.ok(responseDto);
     }
     @GetMapping("/remark/dropdown")
-    public ResponseEntity<ResponseDto<List<RespSimplePriceItemDto>>> remarkDropdown(){
-         RespSimplePriceItemDto priceItemDto = new RespSimplePriceItemDto();
-         priceItemDto.setId(12l);
-         priceItemDto.setName("Побольше соуса");
-         priceItemDto.setPrice(new BigDecimal("1.221"));
-        List<RespSimplePriceItemDto> list = List.of(priceItemDto ,priceItemDto ,priceItemDto ,priceItemDto ,priceItemDto );
-        ResponseDto<List<RespSimplePriceItemDto>> responseDto = new ResponseDto<>(list);
+    public ResponseEntity<ResponseDto<List<RespSimpleItemDto>>> remarkDropdown(){
+         RespSimpleItemDto itemDto = new RespSimpleItemDto();
+         itemDto.setId(12l);
+         itemDto.setName("Побольше соуса");
+        List<RespSimpleItemDto> list = List.of(itemDto, itemDto, itemDto, itemDto, itemDto);
+        ResponseDto<List<RespSimpleItemDto>> responseDto = new ResponseDto<>(list);
         return ResponseEntity.ok(responseDto);
     }
 

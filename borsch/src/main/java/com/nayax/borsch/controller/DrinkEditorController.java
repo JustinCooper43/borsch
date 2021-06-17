@@ -45,8 +45,9 @@ public class DrinkEditorController {
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping
-    public ResponseEntity<ResponseDto<RespSimplePriceItemDto>> editDrink(@RequestBody ReqSimplePriceItemUpDto dto) {
+    @PutMapping("/{id}")
+    public ResponseEntity<ResponseDto<RespSimplePriceItemDto>> editDrink(@PathVariable(value="id") Long id, @RequestBody ReqSimplePriceItemUpDto dto) {
+        dto.setItemId(id);
         RespSimplePriceItemDto mock2 = getRespSimplePriceItemDto2();
         return ResponseEntity.ok(new ResponseDto<>(mock2));
     }
@@ -57,8 +58,8 @@ public class DrinkEditorController {
         return ResponseEntity.ok(new ResponseDto<>(mock));
     }
 
-    @DeleteMapping
-    public ResponseEntity<ResponseDto<Boolean>> deleteDrink(@RequestParam Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResponseDto<Boolean>> deleteDrink(@PathVariable(value="id") Long id) {
         return ResponseEntity.ok(new ResponseDto<>(true));
     }
 }
