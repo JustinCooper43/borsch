@@ -4,7 +4,6 @@ public class CashierEntity {
 
     private Long cashierId;
     private boolean cashPaymentAllowed;
-    private boolean creditPaymentAllowed;
 
     private String cardNumber;
     private String cardBank;
@@ -25,14 +24,6 @@ public class CashierEntity {
 
     public void setCashPaymentAllowed(boolean cashPaymentAllowed) {
         this.cashPaymentAllowed = cashPaymentAllowed;
-    }
-
-    public boolean isCreditPaymentAllowed() {
-        return creditPaymentAllowed;
-    }
-
-    public void setCreditPaymentAllowed(boolean creditPaymentAllowed) {
-        this.creditPaymentAllowed = creditPaymentAllowed;
     }
 
     public String getCardNumber() {

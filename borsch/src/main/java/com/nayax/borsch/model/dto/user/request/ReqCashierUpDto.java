@@ -5,23 +5,23 @@ import com.nayax.borsch.model.dto.user.response.nested.CreditCardDto;
 public class ReqCashierUpDto {
 
     private Long cashierId;
-    private Boolean cashPaymentAllowed;
-    private CreditCardDto creditCard;
+    private Boolean cash;
+    private CreditCardDto card;
 
-    public Boolean getCashPaymentAllowed() {
-        return cashPaymentAllowed;
+    public Boolean getCash() {
+        return cash;
     }
 
-    public void setCashPaymentAllowed(Boolean cashPaymentAllowed) {
-        this.cashPaymentAllowed = cashPaymentAllowed;
+    public void setCash(Boolean cash) {
+        this.cash = cash;
     }
 
-    public CreditCardDto getCreditCard() {
-        return creditCard;
+    public CreditCardDto getCard() {
+        return card;
     }
 
-    public void setCreditCard(CreditCardDto creditCard) {
-        this.creditCard = creditCard;
+    public void setCard(CreditCardDto card) {
+        this.card = card;
     }
 
     public Long getCashierId() {

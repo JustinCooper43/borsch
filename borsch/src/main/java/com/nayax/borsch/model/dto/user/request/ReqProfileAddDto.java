@@ -2,22 +2,22 @@ package com.nayax.borsch.model.dto.user.request;
 
 public class ReqProfileAddDto {
 
-    private ReqUserAddDto userAddDto;
-    private ReqCashierAddDto cashierAddDto;
+    private ReqUserAddDto user;
+    private ReqCashierAddDto payments;
 
-    public ReqUserAddDto getUserAddDto() {
-        return userAddDto;
+    public ReqUserAddDto getUser() {
+        return user;
     }
 
-    public void setUserAddDto(ReqUserAddDto userAddDto) {
-        this.userAddDto = userAddDto;
+    public void setUser(ReqUserAddDto user) {
+        this.user = user;
     }
 
-    public ReqCashierAddDto getCashierAddDto() {
-        return cashierAddDto;
+    public ReqCashierAddDto getPayments() {
+        return payments;
     }
 
-    public void setCashierAddDto(ReqCashierAddDto cashierAddDto) {
-        this.cashierAddDto = cashierAddDto;
+    public void setPayments(ReqCashierAddDto payments) {
+        this.payments = payments;
     }
 }

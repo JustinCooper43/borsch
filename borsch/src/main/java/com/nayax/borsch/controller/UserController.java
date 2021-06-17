@@ -1,8 +1,8 @@
 package com.nayax.borsch.controller;
 
 import com.nayax.borsch.model.dto.ResponseDto;
+import com.nayax.borsch.model.dto.user.request.ReqProfileAddDto;
 import com.nayax.borsch.model.dto.user.request.ReqProfileUpDto;
-import com.nayax.borsch.model.dto.user.request.ReqUserAddDto;
 import com.nayax.borsch.model.dto.user.response.RespCashierDto;
 import com.nayax.borsch.model.dto.user.response.RespProfileDto;
 import com.nayax.borsch.model.dto.user.response.RespUserDto;
@@ -34,9 +34,13 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<ResponseDto<RespUserDto>> add(@RequestBody ReqUserAddDto dto) {
+    public ResponseEntity<ResponseDto<RespProfileDto>> add(@RequestBody ReqProfileAddDto dto) {
         RespUserDto user = getUserMock();
-        ResponseDto<RespUserDto> responseDto = new ResponseDto<>(user);
+        RespCashierDto payments = PaymentController.generatorPayDto().getPaymentMethod();
+        RespProfileDto profile = new RespProfileDto();
+        profile.setUser(user);
+        profile.setPayments(payments);
+        ResponseDto<RespProfileDto> responseDto = new ResponseDto<>(profile);
         return ResponseEntity.ok(responseDto);
     }
 
@@ -49,7 +53,7 @@ public class UserController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ResponseDto<RespProfileDto>> update(@PathVariable(value = "id") Long id, @RequestBody ReqProfileUpDto dto) {
-        dto.getUserUpdateDto().setId(id);
+        dto.getUser().setId(id);
         RespUserDto user = getUserMock();
         RespCashierDto payments = PaymentController.generatorPayDto().getPaymentMethod();
         RespProfileDto profile = new RespProfileDto();
