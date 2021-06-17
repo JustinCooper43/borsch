@@ -1,4 +1,4 @@
-package com.nayax.borsch.model.entity;
+package com.nayax.borsch.model.entity.user;
 
 public class UserEntity {
 
