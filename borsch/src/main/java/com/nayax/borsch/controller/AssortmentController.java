@@ -5,11 +5,7 @@ import com.nayax.borsch.model.dto.ResponseDto;
 import com.nayax.borsch.model.dto.assortment.response.RespAssortmentDto;
 import com.nayax.borsch.model.dto.assortment.response.RespSimpleItemDto;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -49,5 +45,15 @@ public class AssortmentController {
         dto.setHalfable(true);
         ResponseDto<RespAssortmentDto> respDto = new ResponseDto<>(dto);
         return ResponseEntity.ok(respDto);
+    }
+
+    @PutMapping("")
+    public ResponseEntity<ResponseDto<RespAssortmentDto>> editAssortment(RespAssortmentDto dto){
+        RespAssortmentDto respAssortmentDto = new RespAssortmentDto();
+        dto.setAdditions(getMockList());
+        dto.setRemarks(getMockList());
+        dto.setDish(getMockList().get(0));
+        dto.setHalfable(true);
+        return ResponseEntity.ok(new ResponseDto<>(respAssortmentDto));
     }
 }
