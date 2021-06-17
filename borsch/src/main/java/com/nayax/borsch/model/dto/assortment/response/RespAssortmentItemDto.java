@@ -3,11 +3,11 @@ package com.nayax.borsch.model.dto.assortment.response;
 import java.math.BigDecimal;
 
 public class RespAssortmentItemDto {
-    //TODO unmock values
+
     private Long id;
     private String name;
     private BigDecimal price;
-    private Boolean isHalfable;
+    private Boolean isHalfAble;
 
     public Long getId() {
         return id;
@@ -33,11 +33,11 @@ public class RespAssortmentItemDto {
         this.price = price;
     }
 
-    public Boolean getHalfable() {
-        return isHalfable;
+    public Boolean getHalfAble() {
+        return isHalfAble;
     }
 
-    public void setHalfable(Boolean halfable) {
-        isHalfable = halfable;
+    public void setHalfAble(Boolean halfable) {
+        isHalfAble = halfable;
     }
 }

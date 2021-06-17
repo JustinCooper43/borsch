@@ -6,8 +6,8 @@ public class ReqCashierUpDto {
 
     private Long cashierId;
     private Boolean cashPaymentAllowed;
+    private Boolean creditPaymentAllowed ;
     private CreditCardDto creditCard;
-    private String qrCode;
 
     public Boolean getCashPaymentAllowed() {
         return cashPaymentAllowed;
@@ -25,19 +25,19 @@ public class ReqCashierUpDto {
         this.creditCard = creditCard;
     }
 
-    public String getQrCode() {
-        return qrCode;
-    }
-
-    public void setQrCode(String qrCode) {
-        this.qrCode = qrCode;
-    }
-
     public Long getCashierId() {
         return cashierId;
     }
 
     public void setCashierId(Long cashierId) {
         this.cashierId = cashierId;
+    }
+
+    public Boolean getCreditPaymentAllowed() {
+        return creditPaymentAllowed;
+    }
+
+    public void setCreditPaymentAllowed(Boolean creditPaymentAllowed) {
+        this.creditPaymentAllowed = creditPaymentAllowed;
     }
 }

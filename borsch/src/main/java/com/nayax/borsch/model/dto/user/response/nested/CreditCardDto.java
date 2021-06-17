@@ -1,7 +1,7 @@
 package com.nayax.borsch.model.dto.user.response.nested;
 
 public class CreditCardDto {
-    //TODO unmock values
+
     private String number ;
     private String bank ;
     private String note ;

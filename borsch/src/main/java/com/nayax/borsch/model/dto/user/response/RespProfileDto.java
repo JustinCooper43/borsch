@@ -1,9 +1,9 @@
 package com.nayax.borsch.model.dto.user.response;
 
 public class RespProfileDto {
-    //TODO unmock values
-    private RespUserDto user = new RespUserDto();
-    private RespCashierDto payments = new RespCashierDto();
+
+    private RespUserDto user ;
+    private RespCashierDto payments ;
 
     public RespUserDto getUser() {
         return user;

@@ -7,7 +7,7 @@ public class RespAssortmentDto {
     private RespSimpleItemDto dish;
     private List<RespSimpleItemDto> additions;
     private List<RespSimpleItemDto> remarks;
-    private boolean isHalfAble;
+    private Boolean isHalfAble;
 
     public RespSimpleItemDto getDish() {
         return dish;

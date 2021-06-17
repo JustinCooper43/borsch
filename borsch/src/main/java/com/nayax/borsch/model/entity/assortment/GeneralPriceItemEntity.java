@@ -1,8 +1,8 @@
-package com.nayax.borsch.model.dto.assortment.response;
+package com.nayax.borsch.model.entity.assortment;
 
 import java.math.BigDecimal;
 
-public class RespSimplePriceItemDto {
+public class GeneralPriceItemEntity {
 
     private Long id;
     private String name;

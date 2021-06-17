@@ -5,9 +5,9 @@ import com.nayax.borsch.model.dto.user.response.nested.CreditCardDto;
 public class RespCashierDto {
 
     private Long cashierId;
-    private Boolean cashPaymentAllowed = true;
-    private Boolean creditPaymentAllowed = true;
-    private CreditCardDto creditCard = new CreditCardDto();
+    private Boolean cashPaymentAllowed ;
+    private Boolean creditPaymentAllowed ;
+    private CreditCardDto creditCard;
 
 
     public Boolean getCashPaymentAllowed() {
