@@ -9,7 +9,7 @@ public class ReqOrderItemAddDto {
     private Long extraItemId;
     private Long remarkId;
     private Boolean isHalfAble;
-    private Long quantity;
+    private Integer quantity;
 
     public Long getId() {
         return id;
@@ -51,11 +51,11 @@ public class ReqOrderItemAddDto {
         isHalfAble = halfAble;
     }
 
-    public Long getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Long quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 }
