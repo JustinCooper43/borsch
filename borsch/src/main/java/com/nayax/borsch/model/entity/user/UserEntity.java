@@ -3,7 +3,6 @@ package com.nayax.borsch.model.entity.user;
 public class UserEntity {
 
     private Long id;
-//    mock
     private Long roleId = 3L;
     private String roleName;
     private String eMail;

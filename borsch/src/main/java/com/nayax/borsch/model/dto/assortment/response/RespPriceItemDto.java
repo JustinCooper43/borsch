@@ -6,8 +6,7 @@ public class RespPriceItemDto {
     private Long id;
     private String name;
     private BigDecimal price;
-    //TODO probably has to be of enum type
-    private int type;
+    private Integer type;
 
     public Long getId() {
         return id;
@@ -33,11 +32,11 @@ public class RespPriceItemDto {
         this.price = price;
     }
 
-    public int getType() {
+    public Integer getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(Integer type) {
         this.type = type;
     }
 }

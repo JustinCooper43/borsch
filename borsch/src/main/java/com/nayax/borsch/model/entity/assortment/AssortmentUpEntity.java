@@ -1,8 +1,8 @@
-package com.nayax.borsch.model.dto.assortment.request;
+package com.nayax.borsch.model.entity.assortment;
 
 import java.util.List;
 
-public class ReqAssortmentUpDto {
+public class AssortmentUpEntity {
 
     private Long dish;
     private List<Long> additionsId;

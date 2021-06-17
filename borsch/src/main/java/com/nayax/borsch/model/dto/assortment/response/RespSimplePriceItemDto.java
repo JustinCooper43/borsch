@@ -3,6 +3,7 @@ package com.nayax.borsch.model.dto.assortment.response;
 import java.math.BigDecimal;
 
 public class RespSimplePriceItemDto {
+
     private Long id;
     private String name;
     private BigDecimal price;

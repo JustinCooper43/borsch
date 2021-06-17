@@ -1,12 +1,12 @@
-package com.nayax.borsch.model.dto.assortment.response;
+package com.nayax.borsch.model.entity.assortment;
 
 import java.math.BigDecimal;
 
-public class RespAssortmentItemDto {
+public class GeneralPriceItemEntity {
+
     private Long id;
     private String name;
     private BigDecimal price;
-    private Boolean isHalfAble;
 
     public Long getId() {
         return id;
@@ -30,13 +30,5 @@ public class RespAssortmentItemDto {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
-    }
-
-    public Boolean getHalfAble() {
-        return isHalfAble;
-    }
-
-    public void setHalfAble(Boolean halfable) {
-        isHalfAble = halfable;
     }
 }
