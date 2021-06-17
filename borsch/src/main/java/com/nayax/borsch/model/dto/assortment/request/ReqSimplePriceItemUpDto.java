@@ -6,7 +6,7 @@ public class ReqSimplePriceItemUpDto {
 
     private Long id;
     private String name;
-    private BigDecimal cost;
+    private BigDecimal price;
 
     public Long getId() {
         return id;
@@ -24,11 +24,11 @@ public class ReqSimplePriceItemUpDto {
         this.name = name;
     }
 
-    public BigDecimal getCost() {
-        return cost;
+    public BigDecimal getPrice() {
+        return price;
     }
 
-    public void setCost(BigDecimal cost) {
-        this.cost = cost;
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 }

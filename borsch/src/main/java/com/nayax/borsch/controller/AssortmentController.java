@@ -2,6 +2,7 @@ package com.nayax.borsch.controller;
 
 import com.nayax.borsch.model.dto.PageDto;
 import com.nayax.borsch.model.dto.ResponseDto;
+import com.nayax.borsch.model.dto.assortment.request.ReqAssortmentUpDto;
 import com.nayax.borsch.model.dto.assortment.response.RespAssortmentDto;
 import com.nayax.borsch.model.dto.assortment.response.RespSimpleItemDto;
 import org.springframework.http.ResponseEntity;
@@ -28,22 +29,23 @@ public class AssortmentController {
         assortment.setRemarks(getMockList());
         assortment.setDish(getMockList().get(0));
         PageDto<RespAssortmentDto> pageDto = new PageDto<>(List.of(assortment, assortment, assortment, assortment, assortment, assortment, assortment, assortment));
-        pageDto.setCurrentPageNumber(page);
-        pageDto.setElementsPerPage(pageSize);
+        pageDto.setPage(page);
+        pageDto.setPageSize(pageSize);
         pageDto.setTotalPages(23);
         pageDto.setTotalElements(23 * pageSize);
         ResponseDto<PageDto<RespAssortmentDto>> responseDto = new ResponseDto<>(pageDto);
         return ResponseEntity.ok(responseDto);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ResponseDto<RespAssortmentDto>> getById(@PathVariable(value = "id") Long id) {
-        RespAssortmentDto dto = new RespAssortmentDto();
-        dto.setAdditions(getMockList());
-        dto.setRemarks(getMockList());
-        dto.setDish(getMockList().get(0));
-        dto.setHalfable(true);
-        ResponseDto<RespAssortmentDto> respDto = new ResponseDto<>(dto);
+    @PutMapping("/{id}")
+    public ResponseEntity<ResponseDto<RespAssortmentDto>> getById(@PathVariable(value = "id") Long id, @RequestBody ReqAssortmentUpDto dto) {
+        dto.setId(id);
+        RespAssortmentDto rDto = new RespAssortmentDto();
+        rDto.setAdditions(getMockList());
+        rDto.setRemarks(getMockList());
+        rDto.setDish(getMockList().get(0));
+        rDto.setHalfable(true);
+        ResponseDto<RespAssortmentDto> respDto = new ResponseDto<>(rDto);
         return ResponseEntity.ok(respDto);
     }
 

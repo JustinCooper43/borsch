@@ -86,8 +86,8 @@ public class OrderController {
         PageDto<RespOrderDto> pageDto = new PageDto<>(itemList);
         pageDto.setTotalElements(10 * pageSize);
         pageDto.setTotalPages(10);
-        pageDto.setElementsPerPage(pageSize);
-        pageDto.setCurrentPageNumber(page);
+        pageDto.setPageSize(pageSize);
+        pageDto.setPage(page);
         ResponseDto<PageDto<RespOrderDto>> responseDto = new ResponseDto<>(pageDto);
         return ResponseEntity.ok(responseDto);
     }
@@ -100,8 +100,8 @@ public class OrderController {
         PageDto<RespOrderDto> pageDto = new PageDto<>(itemList);
         pageDto.setTotalElements(10 * pageSize);
         pageDto.setTotalPages(10);
-        pageDto.setElementsPerPage(pageSize);
-        pageDto.setCurrentPageNumber(page);
+        pageDto.setPageSize(pageSize);
+        pageDto.setPage(page);
         ResponseDto<PageDto<RespOrderDto>> responseDto = new ResponseDto<>(pageDto);
         return ResponseEntity.ok(responseDto);
     }
@@ -145,8 +145,9 @@ public class OrderController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseDto<Boolean>> deleteOrder(@PathVariable(value="id") Long id) {
-        ResponseDto<Boolean> result = new ResponseDto<>(Boolean.TRUE);
-        return ResponseEntity.ok(result);
+    public ResponseEntity<ResponseDto<RespOrderDto>> deleteOrder(@PathVariable(value="id") Long id) {
+        RespOrderDto orderItem = getRespOrderMock();
+        ResponseDto<RespOrderDto> responseDto = new ResponseDto<>(orderItem);
+        return ResponseEntity.ok(responseDto);
     }
 }

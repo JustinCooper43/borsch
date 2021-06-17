@@ -39,8 +39,8 @@ public class DrinkEditorController {
         PageDto<RespSimplePriceItemDto> pageDto = new PageDto<>(listMock);
         pageDto.setTotalElements(10 * pageSize);
         pageDto.setTotalPages(10);
-        pageDto.setElementsPerPage(pageSize);
-        pageDto.setCurrentPageNumber(page);
+        pageDto.setPageSize(pageSize);
+        pageDto.setPage(page);
         ResponseDto<PageDto<RespSimplePriceItemDto>> response = new ResponseDto<>(pageDto);
         return ResponseEntity.ok(response);
     }
@@ -59,7 +59,8 @@ public class DrinkEditorController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseDto<Boolean>> deleteDrink(@PathVariable(value="id") Long id) {
-        return ResponseEntity.ok(new ResponseDto<>(true));
+    public ResponseEntity<ResponseDto<RespSimplePriceItemDto>> deleteDrink(@PathVariable(value="id") Long id) {
+        RespSimplePriceItemDto mock2 = getRespSimplePriceItemDto2();
+        return ResponseEntity.ok(new ResponseDto<>(mock2));
     }
 }

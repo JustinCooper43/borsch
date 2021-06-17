@@ -28,8 +28,8 @@ public class RemarkEditorController {
         PageDto<RespSimpleItemDto> pageDto = new PageDto<>(listMock);
         pageDto.setTotalElements(10 * pageSize);
         pageDto.setTotalPages(10);
-        pageDto.setElementsPerPage(pageSize);
-        pageDto.setCurrentPageNumber(page);
+        pageDto.setPageSize(pageSize);
+        pageDto.setPage(page);
         return ResponseEntity.ok(new ResponseDto<>(pageDto));
     }
 
@@ -47,7 +47,8 @@ public class RemarkEditorController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseDto<Boolean>> deleteRemark(@PathVariable(value = "id") Long id) {
-        return ResponseEntity.ok(new ResponseDto<>(true));
+    public ResponseEntity<ResponseDto<RespSimpleItemDto>> deleteRemark(@PathVariable(value = "id") Long id) {
+        RespSimpleItemDto mockDto = getRespSimpleItemDto();
+        return ResponseEntity.ok(new ResponseDto<>(mockDto));
     }
 }
