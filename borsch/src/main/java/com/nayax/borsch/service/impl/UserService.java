@@ -48,7 +48,7 @@ public class UserService implements UserServiceInterface {
             response.setData(Mappers.getMapper(UserMapper.class).toDto(responseEntity.get()));
         } else {
             ErrorDto e = new ErrorDto();
-            e.setCause("User is not found by id " + id);
+            e.setMessage("User is not found by id " + id);
             response.setErrors(List.of(e));
         }
         return response;
@@ -62,7 +62,7 @@ public class UserService implements UserServiceInterface {
             response.setData(Mappers.getMapper(UserMapper.class).toDto(responseEntity.get()));
         } else {
             ErrorDto e = new ErrorDto();
-            e.setCause("User is not delete because this id not found in database: Id : " + id);
+            e.setMessage("User is not delete because this id not found in database: Id : " + id);
             response.setErrors(List.of(e));
         }
         return response;
