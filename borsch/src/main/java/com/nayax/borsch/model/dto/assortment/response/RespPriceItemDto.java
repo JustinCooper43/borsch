@@ -3,12 +3,11 @@ package com.nayax.borsch.model.dto.assortment.response;
 import java.math.BigDecimal;
 
 public class RespPriceItemDto {
-    //TODO unmock values
-    private Long id = 29L;
-    private String name = "PriceItemName";
-    private BigDecimal price = new BigDecimal("166.66");
+    private Long id;
+    private String name;
+    private BigDecimal price;
     //TODO probably has to be of enum type
-    private int type = 1;
+    private int type;
 
     public Long getId() {
         return id;

@@ -19,19 +19,19 @@ import java.util.List;
 public class CashierController {
 
 
-    @PostMapping("/post")
+    @PostMapping
     public ResponseEntity<ResponseDto<RespProfileDto>> getById(@RequestParam Long id) {
         ResponseDto<RespProfileDto> respDto = new ResponseDto<>(generatedMock());
         return ResponseEntity.ok(respDto);
     }
 
-    @GetMapping("/dropdown/get")
+    @GetMapping("/dropdown")
     public ResponseEntity<ResponseDto<List<RespUserDto>>> getAllUsers() {
         ResponseDto<List<RespUserDto>> respListDto = new ResponseDto<>(generateMockList());
         return ResponseEntity.ok(respListDto);
     }
 
-    @PostMapping("/current/get")
+    @PostMapping("/current")
     public ResponseEntity<ResponseDto<RespProfileDto>> get() {
         ResponseDto<RespProfileDto> respDto = new ResponseDto<>(generatedMock());
         return ResponseEntity.ok(respDto);

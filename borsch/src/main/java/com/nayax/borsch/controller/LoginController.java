@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 
 @RestController
-@RequestMapping("/")
 public class LoginController {
 
     private RespLoginDto getLoginMock() {

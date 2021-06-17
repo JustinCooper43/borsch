@@ -1,5 +1,6 @@
 package com.nayax.borsch.controller;
 
+import com.nayax.borsch.model.dto.PageDto;
 import com.nayax.borsch.model.dto.ResponseDto;
 import com.nayax.borsch.model.dto.order.request.ReqOrderItemAddDto;
 import com.nayax.borsch.model.dto.order.response.RespOrderDeliveryDto;
@@ -45,28 +46,38 @@ public class OrderController {
     }
 
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<ResponseDto<RespOrderDto>> addOrder(@RequestBody ReqOrderItemAddDto dto) {
         RespOrderDto orderItem = getRespOrderMock();
         ResponseDto<RespOrderDto> responseDto = new ResponseDto<>(orderItem);
         return ResponseEntity.ok(responseDto);
     }
 
-    @GetMapping("/")
-    public ResponseEntity<ResponseDto<List<RespOrderDto>>> getPagedOrders(
-            @RequestParam int page, @RequestParam int pageSize, @RequestParam Long userId, @RequestParam(required = false) LocalDateTime dateTime) {
+    @GetMapping
+    public ResponseEntity<ResponseDto<PageDto<RespOrderDto>>> getPagedOrders(
+            @RequestParam Integer page, @RequestParam Integer pageSize, @RequestParam Long userId, @RequestParam(required = false) LocalDateTime dateTime) {
         RespOrderDto orderItem = getRespOrderMock();
         List<RespOrderDto> itemList = List.of(orderItem, orderItem, orderItem, orderItem, orderItem, orderItem, orderItem);
-        ResponseDto<List<RespOrderDto>> responseDto = new ResponseDto<>(itemList);
+        PageDto<RespOrderDto> pageDto = new PageDto<>(itemList);
+        pageDto.setTotalElements(10 * pageSize);
+        pageDto.setTotalPages(10);
+        pageDto.setElementsPerPage(pageSize);
+        pageDto.setCurrentPageNumber(page);
+        ResponseDto<PageDto<RespOrderDto>> responseDto = new ResponseDto<>(pageDto);
         return ResponseEntity.ok(responseDto);
     }
 
     @GetMapping("/history")
-    public ResponseEntity<ResponseDto<List<RespOrderDto>>> getPagedHistory(
+    public ResponseEntity<ResponseDto<PageDto<RespOrderDto>>> getPagedHistory(
             @RequestParam Long userId, @RequestParam int page, @RequestParam int pageSize) {
         RespOrderDto orderItem = getRespOrderMock();
         List<RespOrderDto> itemList = List.of(orderItem, orderItem, orderItem, orderItem, orderItem, orderItem, orderItem);
-        ResponseDto<List<RespOrderDto>> responseDto = new ResponseDto<>(itemList);
+        PageDto<RespOrderDto> pageDto = new PageDto<>(itemList);
+        pageDto.setTotalElements(10 * pageSize);
+        pageDto.setTotalPages(10);
+        pageDto.setElementsPerPage(pageSize);
+        pageDto.setCurrentPageNumber(page);
+        ResponseDto<PageDto<RespOrderDto>> responseDto = new ResponseDto<>(pageDto);
         return ResponseEntity.ok(responseDto);
     }
 
@@ -108,7 +119,7 @@ public class OrderController {
         return ResponseEntity.ok(responseDto);
     }
 
-    @DeleteMapping("/")
+    @DeleteMapping
     public ResponseEntity<ResponseDto<Boolean>> deleteOrder(@RequestParam Long orderItemId) {
         ResponseDto<Boolean> result = new ResponseDto<>(Boolean.TRUE);
         return ResponseEntity.ok(result);
