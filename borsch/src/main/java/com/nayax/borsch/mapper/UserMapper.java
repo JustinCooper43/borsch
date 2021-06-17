@@ -21,6 +21,7 @@ public interface UserMapper {
 
 
 
+
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "phone", ignore = true)
     @Mapping(target = "deleted", ignore = true)
@@ -32,6 +33,8 @@ public interface UserMapper {
 
 
     UserEntity toAddEntity(ReqUserAddDto dto);
+
+
 
 
 
