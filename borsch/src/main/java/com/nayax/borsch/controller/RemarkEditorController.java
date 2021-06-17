@@ -20,26 +20,26 @@ public class RemarkEditorController {
         return dto;
     }
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<ResponseDto<List<RespSimpleItemDto>>> getRemark(@RequestParam int page, @RequestParam int pageSize) {
         RespSimpleItemDto mockDto = getRespSimpleItemDto();
         List<RespSimpleItemDto> listMock = List.of(mockDto, mockDto, mockDto, mockDto, mockDto, mockDto, mockDto, mockDto, mockDto, mockDto);
         return ResponseEntity.ok(new ResponseDto<>(listMock));
     }
 
-    @PutMapping("/")
+    @PutMapping
     public ResponseEntity<ResponseDto<RespSimpleItemDto>> editRemark(@RequestBody ReqSimpleItemUpDto dto) {
         RespSimpleItemDto mockDto = getRespSimpleItemDto();
         return ResponseEntity.ok(new ResponseDto<>(mockDto));
     }
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<ResponseDto<RespSimpleItemDto>> addRemark(@RequestBody ReqSimpleItemAddDto dto) {
         RespSimpleItemDto mockDto = getRespSimpleItemDto();
         return ResponseEntity.ok(new ResponseDto<>(mockDto));
     }
 
-    @DeleteMapping("/")
+    @DeleteMapping
     public ResponseEntity<ResponseDto<Boolean>> deleteRemark(@RequestParam Long id) {
         return ResponseEntity.ok(new ResponseDto<>(true));
     }

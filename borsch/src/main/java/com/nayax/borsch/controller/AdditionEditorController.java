@@ -26,7 +26,7 @@ public class AdditionEditorController {
 
 
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<ResponseDto<List<RespSimplePriceItemDto>>> getAddition(@RequestParam int page, @RequestParam int pageSize) {
         RespSimplePriceItemDto mock = getRespSimplePriceItemDto();
 
@@ -35,19 +35,19 @@ public class AdditionEditorController {
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/")
+    @PutMapping
     public ResponseEntity<ResponseDto<RespSimplePriceItemDto>> editAddition(@RequestBody ReqSimplePriceItemUpDto dto) {
         RespSimplePriceItemDto mock = getRespSimplePriceItemDto();
         return ResponseEntity.ok(new ResponseDto<>(mock));
     }
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<ResponseDto<RespSimplePriceItemDto>> addAddition(@RequestBody ReqSimplePriceItemAddDto dto) {
         RespSimplePriceItemDto mock = getRespSimplePriceItemDto();
         return ResponseEntity.ok(new ResponseDto<>(mock));
     }
 
-    @DeleteMapping("/")
+    @DeleteMapping
     public ResponseEntity<ResponseDto<Boolean>> deleteAddition(@RequestParam Long id) {
         return ResponseEntity.ok(new ResponseDto<>(true));
     }

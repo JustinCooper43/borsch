@@ -31,35 +31,35 @@ public class UserController {
         return user;
     }
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<ResponseDto<RespUserDto>> add(@RequestBody ReqUserAddDto dto) {
         RespUserDto user = getUserMock();
         ResponseDto<RespUserDto> responseDto = new ResponseDto<>(user);
         return ResponseEntity.ok(responseDto);
     }
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<ResponseDto<RespUserDto>> get(@RequestParam Long id) {
         RespUserDto user = getUserMock();
         ResponseDto<RespUserDto> responseDto = new ResponseDto<>(user);
         return ResponseEntity.ok(responseDto);
     }
 
-    @PostMapping("/")
+    @PutMapping
     public ResponseEntity<ResponseDto<RespUserDto>> update(@RequestBody ReqUserUpdateDto dto) {
         RespUserDto user = getUserMock();
         ResponseDto<RespUserDto> responseDto = new ResponseDto<>(user);
         return ResponseEntity.ok(responseDto);
     }
 
-    @DeleteMapping("/")
+    @DeleteMapping
     public ResponseEntity<ResponseDto<RespUserDto>> delete(@RequestParam Long id) {
         RespUserDto user = getUserMock();
         ResponseDto<RespUserDto> responseDto = new ResponseDto<>(user);
         return ResponseEntity.ok(responseDto);
     }
 
-    @GetMapping("/")
+    @GetMapping("/all")
     public ResponseEntity<ResponseDto<List<RespUserDto>>> getAll() {
         RespUserDto user = getUserMock();
         ResponseDto<List<RespUserDto>> responseDto = new ResponseDto<>(List.of(user, user, user, user, user, user, user));

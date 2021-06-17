@@ -19,7 +19,7 @@ import java.util.List;
 public class CashierController {
 
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<ResponseDto<RespProfileDto>> getById(@RequestParam Long id) {
         ResponseDto<RespProfileDto> respDto = new ResponseDto<>(generatedMock());
         return ResponseEntity.ok(respDto);

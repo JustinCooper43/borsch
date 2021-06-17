@@ -45,14 +45,14 @@ public class OrderController {
     }
 
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<ResponseDto<RespOrderDto>> addOrder(@RequestBody ReqOrderItemAddDto dto) {
         RespOrderDto orderItem = getRespOrderMock();
         ResponseDto<RespOrderDto> responseDto = new ResponseDto<>(orderItem);
         return ResponseEntity.ok(responseDto);
     }
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<ResponseDto<List<RespOrderDto>>> getPagedOrders(
             @RequestParam int page, @RequestParam int pageSize, @RequestParam Long userId, @RequestParam(required = false) LocalDateTime dateTime) {
         RespOrderDto orderItem = getRespOrderMock();
@@ -108,7 +108,7 @@ public class OrderController {
         return ResponseEntity.ok(responseDto);
     }
 
-    @DeleteMapping("/")
+    @DeleteMapping
     public ResponseEntity<ResponseDto<Boolean>> deleteOrder(@RequestParam Long orderItemId) {
         ResponseDto<Boolean> result = new ResponseDto<>(Boolean.TRUE);
         return ResponseEntity.ok(result);

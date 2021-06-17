@@ -34,7 +34,7 @@ public class DrinkEditorController {
         return dto;
     }
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<ResponseDto<List<RespSimplePriceItemDto>>> getDrink(@RequestParam int page, @RequestParam int pageSize) {
         RespSimplePriceItemDto mock = getRespSimplePriceItemDto();
         RespSimplePriceItemDto mock2 = getRespSimplePriceItemDto2();
@@ -43,19 +43,19 @@ public class DrinkEditorController {
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/")
+    @PutMapping
     public ResponseEntity<ResponseDto<RespSimplePriceItemDto>> editDrink(@RequestBody ReqSimplePriceItemUpDto dto) {
         RespSimplePriceItemDto mock2 = getRespSimplePriceItemDto2();
         return ResponseEntity.ok(new ResponseDto<>(mock2));
     }
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<ResponseDto<RespSimplePriceItemDto>> addDrink(@RequestBody ReqSimplePriceItemAddDto dto) {
         RespSimplePriceItemDto mock = getRespSimplePriceItemDto();
         return ResponseEntity.ok(new ResponseDto<>(mock));
     }
 
-    @DeleteMapping("/")
+    @DeleteMapping
     public ResponseEntity<ResponseDto<Boolean>> deleteDrink(@RequestParam Long id) {
         return ResponseEntity.ok(new ResponseDto<>(true));
     }
