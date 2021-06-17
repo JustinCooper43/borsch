@@ -1,5 +1,6 @@
 package com.nayax.borsch.controller;
 
+import com.nayax.borsch.model.dto.PageDto;
 import com.nayax.borsch.model.dto.ResponseDto;
 import com.nayax.borsch.model.dto.assortment.request.ReqSimplePriceItemAddDto;
 import com.nayax.borsch.model.dto.assortment.request.ReqSimplePriceItemUpDto;
@@ -32,11 +33,16 @@ public class DrinkController {
 
     //TODO revise mapping
     @GetMapping("/get")
-    public ResponseEntity<ResponseDto<List<RespSimplePriceItemDto>>> getDrink(@RequestParam int page, @RequestParam int pageSize) {
+    public ResponseEntity<ResponseDto<PageDto<RespSimplePriceItemDto>>> getDrink(@RequestParam Integer page, @RequestParam Integer pageSize) {
         RespSimplePriceItemDto mock = getRespSimplePriceItemDto();
         RespSimplePriceItemDto mock2 = getRespSimplePriceItemDto2();
         List<RespSimplePriceItemDto> listMock = List.of(mock, mock2, mock, mock2, mock);
-        ResponseDto<List<RespSimplePriceItemDto>> response = new ResponseDto<>(listMock);
+        PageDto<RespSimplePriceItemDto> pageDto = new PageDto<>(listMock);
+        pageDto.setTotalElements(10 * pageSize);
+        pageDto.setTotalPages(10);
+        pageDto.setElementsPerPage(pageSize);
+        pageDto.setCurrentPageNumber(page);
+        ResponseDto<PageDto<RespSimplePriceItemDto>> response = new ResponseDto<>(pageDto);
         return ResponseEntity.ok(response);
     }
 

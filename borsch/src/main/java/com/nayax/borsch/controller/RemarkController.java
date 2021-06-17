@@ -1,5 +1,6 @@
 package com.nayax.borsch.controller;
 
+import com.nayax.borsch.model.dto.PageDto;
 import com.nayax.borsch.model.dto.ResponseDto;
 import com.nayax.borsch.model.dto.assortment.request.ReqSimpleItemAddDto;
 import com.nayax.borsch.model.dto.assortment.request.ReqSimpleItemUpDto;
@@ -22,10 +23,15 @@ public class RemarkController {
 
     //TODO revise mapping
     @GetMapping("/get")
-    public ResponseEntity<ResponseDto<List<RespSimpleItemDto>>> getRemark(@RequestParam int page, @RequestParam int pageSize) {
+    public ResponseEntity<ResponseDto<PageDto<RespSimpleItemDto>>> getRemark(@RequestParam int page, @RequestParam int pageSize) {
         RespSimpleItemDto mockDto = getRespSimpleItemDto();
         List<RespSimpleItemDto> listMock = List.of(mockDto, mockDto, mockDto, mockDto, mockDto, mockDto, mockDto, mockDto, mockDto, mockDto);
-        return ResponseEntity.ok(new ResponseDto<>(listMock));
+        PageDto<RespSimpleItemDto> pageDto = new PageDto<>(listMock);
+        pageDto.setTotalElements(10 * pageSize);
+        pageDto.setTotalPages(10);
+        pageDto.setElementsPerPage(pageSize);
+        pageDto.setCurrentPageNumber(page);
+        return ResponseEntity.ok(new ResponseDto<>(pageDto));
     }
 
     @PutMapping("edit")
