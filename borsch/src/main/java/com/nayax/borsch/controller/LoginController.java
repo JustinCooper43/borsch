@@ -38,8 +38,9 @@ public class LoginController {
     }
 
     @PostMapping("/logout")
-    public boolean logout() {
-        return true;
+    public ResponseEntity<ResponseDto<Boolean>> logout() {
+        ResponseDto<Boolean> result = new ResponseDto<>(Boolean.TRUE);
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping("/sign")

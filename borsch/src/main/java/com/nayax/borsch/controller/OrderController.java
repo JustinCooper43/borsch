@@ -82,7 +82,7 @@ public class OrderController {
     }
 
     @GetMapping("/summary")
-    public ResponseEntity<ResponseDto<RespOrderSumDto>> getOrderSummary(@RequestBody LocalDateTime dateTime) {
+    public ResponseEntity<ResponseDto<RespOrderSumDto>> getOrderSummary(@RequestParam(required = false) LocalDateTime dateTime) {
         RespOrderSumDto orderSumDto = new RespOrderSumDto();
         RespOrderDto orderItem = getRespOrderMock();
         List<RespOrderDto> itemList = List.of(orderItem, orderItem, orderItem, orderItem, orderItem, orderItem, orderItem);
@@ -97,7 +97,7 @@ public class OrderController {
     }
 
     @GetMapping("/summary/info")
-    public ResponseEntity<ResponseDto<RespOrderSumInfoDto>> getOrderInfo(@RequestBody LocalDateTime dateTime) {
+    public ResponseEntity<ResponseDto<RespOrderSumInfoDto>> getOrderInfo(@RequestParam(required = false) LocalDateTime dateTime) {
         RespOrderSumInfoDto info = new RespOrderSumInfoDto();
         info.setPayAmount(new BigDecimal("5000"));
         info.setPayCompleted(new BigDecimal("4000"));
@@ -108,7 +108,7 @@ public class OrderController {
     }
 
     @GetMapping("/delivery")
-    public ResponseEntity<ResponseDto<List<RespOrderDeliveryDto>>> getDelivery(@RequestBody LocalDateTime dateTime) {
+    public ResponseEntity<ResponseDto<List<RespOrderDeliveryDto>>> getDelivery(@RequestParam(required = false) LocalDateTime dateTime) {
         RespOrderDeliveryDto deliveryInfo = new RespOrderDeliveryDto();
         deliveryInfo.setOrder(getRespOrderMock());
         deliveryInfo.setOrderDate(dateTime);
