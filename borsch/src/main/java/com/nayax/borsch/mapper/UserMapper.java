@@ -3,7 +3,6 @@ package com.nayax.borsch.mapper;
 import com.nayax.borsch.model.dto.user.request.ReqUserAddDto;
 import com.nayax.borsch.model.dto.user.request.ReqUserUpdateDto;
 import com.nayax.borsch.model.dto.user.response.RespUserDto;
-import com.nayax.borsch.model.entity.UserEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

@@ -1,6 +1,5 @@
 package com.nayax.borsch.repository.impl;
 
-import com.nayax.borsch.model.entity.UserEntity;
 import com.nayax.borsch.repository.GenericCrudRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;

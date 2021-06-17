@@ -8,7 +8,6 @@ import com.nayax.borsch.model.dto.user.request.ReqUserAddDto;
 import com.nayax.borsch.model.dto.user.request.ReqUserFilterDto;
 import com.nayax.borsch.model.dto.user.request.ReqUserUpdateDto;
 import com.nayax.borsch.model.dto.user.response.RespUserDto;
-import com.nayax.borsch.model.entity.UserEntity;
 import com.nayax.borsch.repository.impl.RepositoryUserImplementation;
 import com.nayax.borsch.service.UserServiceInterface;
 import org.mapstruct.factory.Mappers;
