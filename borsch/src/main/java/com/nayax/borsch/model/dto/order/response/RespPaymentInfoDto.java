@@ -4,11 +4,11 @@ import com.nayax.borsch.model.dto.user.response.RespCashierDto;
 import com.nayax.borsch.model.dto.user.response.RespUserDto;
 
 public class RespPaymentInfoDto {
+
     private RespUserDto cashier ;
-    //TODO has to be different type to specify exact applied payment method
     private RespCashierDto paymentMethod ;
-    private Boolean completed ;
-    private Boolean confirmed ;
+    private boolean completed ;
+    private boolean confirmed ;
 
     public RespUserDto getCashier() {
         return cashier;
