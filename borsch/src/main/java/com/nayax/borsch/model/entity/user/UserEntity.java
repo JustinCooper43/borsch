@@ -9,7 +9,7 @@ public class UserEntity {
     private String firstName;
     private String lastName;
     private String deleted;
-    private String phoneNumber;
+    private String phone;
 
     public Long getId() {
         return id;
@@ -59,12 +59,12 @@ public class UserEntity {
         this.deleted = deleted;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getRoleName() {

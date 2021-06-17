@@ -1,40 +1,40 @@
 package com.nayax.borsch.model.dto.user.response.nested;
 
 public class CreditCardDto {
-    private String number;
-    private String bank;
-    private String note;
-    private String qrCode;
+    private String creditCard;
+    private String bankName;
+    private String notes;
+    private String qr;
 
-    public String getNumber() {
-        return number;
+    public String getCreditCard() {
+        return creditCard;
     }
 
-    public void setNumber(String number) {
-        this.number = number;
+    public void setCreditCard(String creditCard) {
+        this.creditCard = creditCard;
     }
 
-    public String getBank() {
-        return bank;
+    public String getBankName() {
+        return bankName;
     }
 
-    public void setBank(String bank) {
-        this.bank = bank;
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
     }
 
-    public String getNote() {
-        return note;
+    public String getNotes() {
+        return notes;
     }
 
-    public void setNote(String note) {
-        this.note = note;
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
-    public String getQrCode() {
-        return qrCode;
+    public String getQr() {
+        return qr;
     }
 
-    public void setQrCode(String qrCode) {
-        this.qrCode = qrCode;
+    public void setQr(String qr) {
+        this.qr = qr;
     }
 }

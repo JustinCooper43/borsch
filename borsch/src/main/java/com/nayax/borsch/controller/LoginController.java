@@ -24,7 +24,7 @@ public class LoginController {
         role.setId(2L);
         role.setName("Cashier");
         user.setRole(role);
-        user.setPhoneNumber("+380123456789");
+        user.setPhone("+380123456789");
         loginDto.setUser(user);
         loginDto.setTime(LocalDateTime.now());
         return loginDto;
