@@ -26,18 +26,17 @@ public class OrderController {
     private RespOrderDto getRespOrderMock() {
         RespOrderDto orderItem = new RespOrderDto();
 
-        RespAssortmentItemDto shawa = new RespAssortmentItemDto();
+        RespSimplePriceItemDto shawa = new RespSimplePriceItemDto();
         shawa.setId(2l);
         shawa.setName("Щаурма с курицей");
         shawa.setPrice(new BigDecimal("90.00"));
-        shawa.setHalfable(false);
         orderItem.setDish(shawa);
 
         RespSimplePriceItemDto addition = new RespSimplePriceItemDto();
         addition.setId(4l);
         addition.setName("Картошка");
         addition.setPrice(new BigDecimal("10.00"));
-        List<RespSimplePriceItemDto> respSimpleItemDtos = List.of(addition,addition,addition,addition,addition,addition,addition);
+        List<RespSimplePriceItemDto> respSimpleItemDtos = List.of(addition, addition, addition, addition, addition, addition, addition);
         orderItem.setAdditions(respSimpleItemDtos);
 
         RespSimplePriceItemDto drink = new RespSimplePriceItemDto();
@@ -55,21 +54,6 @@ public class OrderController {
 
         return orderItem;
     }
-
-    private RespUserDto getUserMock() {
-        RespUserDto user = new RespUserDto();
-        user.setId(14L);
-        user.setFirstName("Fname");
-        user.setLastName("Lname");
-        user.seteMail("adress@server.com");
-        RoleDto role = new RoleDto();
-        role.setId(2L);
-        role.setName("Cashier");
-        user.setRole(role);
-        user.setPhone("+380123456789");
-        return user;
-    }
-
 
     @PostMapping
     public ResponseEntity<ResponseDto<RespOrderDto>> addOrder(@RequestBody ReqOrderItemAddDto dto) {

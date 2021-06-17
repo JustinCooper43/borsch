@@ -1,6 +1,5 @@
 package com.nayax.borsch.model.dto.order.response;
 
-import com.nayax.borsch.model.dto.assortment.response.RespAssortmentItemDto;
 import com.nayax.borsch.model.dto.assortment.response.RespSimpleItemDto;
 import com.nayax.borsch.model.dto.assortment.response.RespSimplePriceItemDto;
 
@@ -8,18 +7,18 @@ import java.util.List;
 
 public class RespOrderDto {
 
-    private RespAssortmentItemDto dish;
+    private RespSimplePriceItemDto dish;
     private List<RespSimplePriceItemDto> additions;
     private RespSimplePriceItemDto drink;
     private RespSimpleItemDto remark;
     private boolean cut;
     private Integer quantity;
 
-    public RespAssortmentItemDto getDish() {
+    public RespSimplePriceItemDto getDish() {
         return dish;
     }
 
-    public void setDish(RespAssortmentItemDto dish) {
+    public void setDish(RespSimplePriceItemDto dish) {
         this.dish = dish;
     }
 
