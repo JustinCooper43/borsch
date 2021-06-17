@@ -35,7 +35,7 @@ public class RepositoryUserImplementation implements GenericCrudRepository<UserE
         return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(UserEntity.class),
                 entity.getDeleted(), entity.getRoleId(),
                 entity.geteMail(), entity.getFirstName(), entity.getLastName(),
-                entity.getPhoneNumber()
+                entity.getPhone()
         );
     }
 
@@ -51,7 +51,7 @@ public class RepositoryUserImplementation implements GenericCrudRepository<UserE
         try {
             result = jdbcTemplate.update(sql,
                     entity.getDeleted(), entity.getRoleId(), entity.geteMail(),
-                    entity.getFirstName(), entity.getLastName(), entity.getPhoneNumber(), entity.getId());
+                    entity.getFirstName(), entity.getLastName(), entity.getPhone(), entity.getId());
 //            TODO return type is boolean
 //            return result == 1;
             return new UserEntity();
@@ -80,7 +80,7 @@ public class RepositoryUserImplementation implements GenericCrudRepository<UserE
                     userEntity.setFirstName(rs.getNString("fName"));
                     userEntity.setLastName(rs.getNString("lName"));
                     userEntity.setDeleted(rs.getString("deletedUser"));
-                    userEntity.setPhoneNumber(rs.getNString("phNumber"));
+                    userEntity.setPhone(rs.getNString("phNumber"));
                     userEntity.setRoleName(rs.getNString("roleName"));
                     return userEntity;
                 }
@@ -114,7 +114,7 @@ public class RepositoryUserImplementation implements GenericCrudRepository<UserE
                 userEntity.setFirstName(rs.getNString("fName"));
                 userEntity.setLastName(rs.getNString("lName"));
                 userEntity.setDeleted(rs.getString("deletedUser"));
-                userEntity.setPhoneNumber(rs.getNString("phNumber"));
+                userEntity.setPhone(rs.getNString("phNumber"));
                 return userEntity;
             }
         });

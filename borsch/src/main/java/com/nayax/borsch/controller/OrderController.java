@@ -66,7 +66,7 @@ public class OrderController {
         role.setId(2L);
         role.setName("Cashier");
         user.setRole(role);
-        user.setPhoneNumber("+380123456789");
+        user.setPhone("+380123456789");
         return user;
     }
 
