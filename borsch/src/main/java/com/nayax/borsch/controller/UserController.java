@@ -64,9 +64,13 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseDto<RespUserDto>> delete(@PathVariable(value = "id") Long id) {
+    public ResponseEntity<ResponseDto<RespProfileDto>> delete(@PathVariable(value = "id") Long id) {
         RespUserDto user = getUserMock();
-        ResponseDto<RespUserDto> responseDto = new ResponseDto<>(user);
+        RespCashierDto payments = PaymentController.generatorPayDto().getPaymentMethod();
+        RespProfileDto profile = new RespProfileDto();
+        profile.setUser(user);
+        profile.setPayments(payments);
+        ResponseDto<RespProfileDto> responseDto = new ResponseDto<>(profile);
         return ResponseEntity.ok(responseDto);
     }
 

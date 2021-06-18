@@ -15,7 +15,7 @@ public class ControllerExceptionHandler {
     //@ExceptionHandler(SQLException.class)
     ResponseEntity<ResponseDto<?>> sqlExceptionHandler(SQLException e, WebRequest request) {
         List<ErrorDto> list = List.of(new ErrorDto());
-        list.get(0).setCause("Invalid sql query");
+        list.get(0).setMessage("Invalid sql query");
         return ResponseEntity.ok(new ResponseDto<>(list));
     }
 }

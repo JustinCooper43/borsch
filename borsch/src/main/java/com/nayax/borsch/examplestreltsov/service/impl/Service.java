@@ -41,7 +41,7 @@ public class Service implements ServiceInterface {
             responseDto.setData(Mappers.getMapper(EmployeeMapper.class).toDto(responseEntity.get()));
         } else {
             ErrorDto errorDto = new ErrorDto();
-            errorDto.setCause("No employee found for id " + id);
+            errorDto.setMessage("No employee found for id " + id);
             responseDto.setErrors(List.of(errorDto));
 
         }

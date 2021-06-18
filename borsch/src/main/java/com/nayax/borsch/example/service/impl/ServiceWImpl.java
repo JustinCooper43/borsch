@@ -45,7 +45,7 @@ public class ServiceWImpl implements ServiceW {
             responseDto = new ResponseDto<>(employeeResponseDto);
         } else {
             ErrorDto e = new ErrorDto();
-            e.setCause("Employee this id " + index + " not found");
+            e.setMessage("Employee this id " + index + " not found");
             listError = List.of(e);
             responseDto = new ResponseDto<>(listError);
         }

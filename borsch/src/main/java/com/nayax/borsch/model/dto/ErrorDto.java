@@ -1,15 +1,15 @@
 package com.nayax.borsch.model.dto;
 
 public class ErrorDto {
-    private String cause;
+    private String message;
     private Integer code;
 
-    public String getCause() {
-        return cause;
+    public String getMessage() {
+        return message;
     }
 
-    public void setCause(String cause) {
-        this.cause = cause;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public Integer getCode() {
