@@ -40,4 +40,13 @@ public class ShawarmaItemEntity {
         halfAble = halfable;
     }
 
+    @Override
+    public String toString() {
+        return "ShawarmaItemEntity{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", isHalfAble=" + isHalfAble +
+                '}';
+    }
 }

@@ -50,3 +50,10 @@ asciidoctor {
 	dependsOn test
 }
 
+//jvmargs {
+//	file.encoding=UTF-8
+//}
+
+tasks.bootRun {
+	jvmArgs '-Dfile.encoding=UTF8'
+}
