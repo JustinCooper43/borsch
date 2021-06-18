@@ -46,7 +46,6 @@ public class RepositoryUserImplementation implements GenericCrudRepository<UserE
                 "[User].RoleId = ? , [User].Email = ? , " +
                 "[User].FirstName = ? , [User].LastName = ? , " +
                 "[User].PhoneNumber = ?  where [User].id = ? ";
-
         int result = 0;
         try {
             result = jdbcTemplate.update(sql,

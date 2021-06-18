@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class RespOrderItemDto {
-    //TODO add cost
+    //TODO add cost, orderId?
     private RespSimplePriceItemDto dish;
     private List<RespSimplePriceItemDto> additions;
     private RespSimplePriceItemDto drink;

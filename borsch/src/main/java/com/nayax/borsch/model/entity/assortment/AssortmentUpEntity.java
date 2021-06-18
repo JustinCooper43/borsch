@@ -6,8 +6,16 @@ public class AssortmentUpEntity {
 
     private Long dish;
     private List<Long> additionsId;
-    private Boolean isHalfAble;
+    private boolean isHalfAble;
     private List<Long> remarksId;
+
+    public boolean isHalfAble() {
+        return isHalfAble;
+    }
+
+    public void setHalfAble(boolean isHalfAble) {
+        this.isHalfAble = isHalfAble;
+    }
 
     public Long getDish() {
         return dish;
@@ -25,13 +33,6 @@ public class AssortmentUpEntity {
         this.additionsId = additionsId;
     }
 
-    public Boolean getHalfAble() {
-        return isHalfAble;
-    }
-
-    public void setHalfAble(Boolean halfAble) {
-        isHalfAble = halfAble;
-    }
 
     public List<Long> getRemarksId() {
         return remarksId;

@@ -21,6 +21,7 @@ public interface UserMapper {
 
 
 
+
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "phone", ignore = true)
     @Mapping(target = "active", ignore = true)
@@ -29,6 +30,8 @@ public interface UserMapper {
 //    @Mapping(source = "name", target = "firstName", qualifiedByName = "splitFirstName")
 //    @Mapping(source = "name", target = "lastName", qualifiedByName = "splitLastName")
  UserEntity toAddEntity(ReqUserAddDto dto);
+
+
 
 
 

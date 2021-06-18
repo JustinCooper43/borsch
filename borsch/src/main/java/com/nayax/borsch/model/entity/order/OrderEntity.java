@@ -13,7 +13,7 @@ public class OrderEntity {
     private GeneralPriceItemEntity remark;
     private boolean cut;
     private Integer quantity;
-    private Long Userid;
+    private Long userId;
     private LocalDateTime creationTime;
     private Long orderSummaryId;
 
@@ -73,12 +73,12 @@ public class OrderEntity {
         this.quantity = quantity;
     }
 
-    public Long getUserid() {
-        return Userid;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUserid(Long userid) {
-        Userid = userid;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public LocalDateTime getCreationTime() {
