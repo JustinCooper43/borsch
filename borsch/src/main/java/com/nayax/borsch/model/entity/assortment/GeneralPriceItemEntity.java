@@ -7,6 +7,7 @@ public class GeneralPriceItemEntity {
     private Long id;
     private String name;
     private BigDecimal price;
+    private String active;
 
     public Long getId() {
         return id;
@@ -30,5 +31,13 @@ public class GeneralPriceItemEntity {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public String getActive() {
+        return active;
+    }
+
+    public void setActive(String active) {
+        this.active = active;
     }
 }
