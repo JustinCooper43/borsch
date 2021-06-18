@@ -8,7 +8,7 @@ public class AssortmentRespEntity {
     private GeneralPriceItemEntity dish;
     private List<GeneralPriceItemEntity> additions;
     private List<GeneralPriceItemEntity> remarks;
-    private Boolean isHalfAble;
+    private boolean isHalfAble;
 
     public GeneralPriceItemEntity getDish() {
         return dish;
@@ -34,11 +34,11 @@ public class AssortmentRespEntity {
         this.remarks = remarks;
     }
 
-    public Boolean getHalfAble() {
+    public boolean getHalfAble() {
         return isHalfAble;
     }
 
-    public void setHalfAble(Boolean halfAble) {
+    public void setHalfAble(boolean halfAble) {
         isHalfAble = halfAble;
     }
 }

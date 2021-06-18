@@ -10,7 +10,7 @@ import java.util.List;
 public class RespOrderSumDto {
 
     private RespUserDto user;
-    private List<RespOrderDto> orders;
+    private List<RespOrderItemDto> orders;
     private Integer paymentType;
     private BigDecimal amount;
     private BigDecimal paidAmount;
@@ -33,11 +33,11 @@ public class RespOrderSumDto {
         this.user = user;
     }
 
-    public List<RespOrderDto> getOrders() {
+    public List<RespOrderItemDto> getOrders() {
         return orders;
     }
 
-    public void setOrders(List<RespOrderDto> orders) {
+    public void setOrders(List<RespOrderItemDto> orders) {
         this.orders = orders;
     }
 
