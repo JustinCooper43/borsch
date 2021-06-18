@@ -1,15 +1,25 @@
 package com.nayax.borsch.model.dto.order.request;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class ReqOrderItemAddDto {
-
+    //TODO add cost
     private Long dish;
     private List<Long> additions;
     private Long drink;
     private Long remark;
     private boolean cut;
     private Integer quantity;
+    private LocalDateTime orderDate;
+
+    public LocalDateTime getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(LocalDateTime orderDate) {
+        this.orderDate = orderDate;
+    }
 
     public Long getDish() {
         return dish;

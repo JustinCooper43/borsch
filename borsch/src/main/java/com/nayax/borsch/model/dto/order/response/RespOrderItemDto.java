@@ -1,25 +1,34 @@
 package com.nayax.borsch.model.dto.order.response;
 
-import com.nayax.borsch.model.dto.assortment.response.RespAssortmentItemDto;
 import com.nayax.borsch.model.dto.assortment.response.RespSimpleItemDto;
 import com.nayax.borsch.model.dto.assortment.response.RespSimplePriceItemDto;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
-public class RespOrderDto {
-
-    private RespAssortmentItemDto dish;
+public class RespOrderItemDto {
+    //TODO add cost
+    private RespSimplePriceItemDto dish;
     private List<RespSimplePriceItemDto> additions;
     private RespSimplePriceItemDto drink;
     private RespSimpleItemDto remark;
     private boolean cut;
     private Integer quantity;
+    private LocalDateTime orderDate;
 
-    public RespAssortmentItemDto getDish() {
+    public LocalDateTime getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(LocalDateTime orderDate) {
+        this.orderDate = orderDate;
+    }
+
+    public RespSimplePriceItemDto getDish() {
         return dish;
     }
 
-    public void setDish(RespAssortmentItemDto dish) {
+    public void setDish(RespSimplePriceItemDto dish) {
         this.dish = dish;
     }
 

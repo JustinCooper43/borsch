@@ -29,11 +29,7 @@ public class AdditionEditorController {
     public ResponseEntity<ResponseDto<PageDto<RespSimplePriceItemDto>>> getAddition(@RequestParam int page, @RequestParam int pageSize) {
         RespSimplePriceItemDto mock = getRespSimplePriceItemDto();
         List<RespSimplePriceItemDto> listMock = List.of(mock, mock, mock, mock, mock, mock, mock);
-        PageDto<RespSimplePriceItemDto> pageDto = new PageDto<>(listMock);
-        pageDto.setTotalElements(10 * pageSize);
-        pageDto.setTotalPages(10);
-        pageDto.setPageSize(pageSize);
-        pageDto.setPage(page);
+        PageDto<RespSimplePriceItemDto> pageDto = PageDto.getPagedList(page, pageSize, listMock);
         ResponseDto<PageDto<RespSimplePriceItemDto>> responseDto = new ResponseDto<>(pageDto);
         return ResponseEntity.ok(responseDto);
     }

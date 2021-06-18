@@ -9,7 +9,6 @@ import com.nayax.borsch.model.dto.assortment.response.RespSimplePriceItemDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -37,11 +36,7 @@ public class DishEditorController {
     public ResponseEntity<ResponseDto<PageDto<RespSimplePriceItemDto>>> getDish(@RequestParam Integer page, @RequestParam Integer pageSize) {
         RespSimplePriceItemDto priceItem = getRespDishEditMock();
         List<RespSimplePriceItemDto> priceItemList = List.of(priceItem, priceItem, priceItem, priceItem, priceItem, priceItem);
-        PageDto<RespSimplePriceItemDto> pageDto = new PageDto<>(priceItemList);
-        pageDto.setTotalElements(10 * pageSize);
-        pageDto.setTotalPages(10);
-        pageDto.setPageSize(pageSize);
-        pageDto.setPage(page);
+        PageDto<RespSimplePriceItemDto> pageDto = PageDto.getPagedList(page, pageSize, priceItemList);
         ResponseDto<PageDto<RespSimplePriceItemDto>> responseDto = new ResponseDto<>(pageDto);
         return ResponseEntity.ok(responseDto);
     }

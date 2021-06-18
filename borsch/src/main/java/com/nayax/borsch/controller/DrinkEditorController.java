@@ -36,17 +36,13 @@ public class DrinkEditorController {
         RespSimplePriceItemDto mock = getRespSimplePriceItemDto();
         RespSimplePriceItemDto mock2 = getRespSimplePriceItemDto2();
         List<RespSimplePriceItemDto> listMock = List.of(mock, mock2, mock, mock2, mock);
-        PageDto<RespSimplePriceItemDto> pageDto = new PageDto<>(listMock);
-        pageDto.setTotalElements(10 * pageSize);
-        pageDto.setTotalPages(10);
-        pageDto.setPageSize(pageSize);
-        pageDto.setPage(page);
+        PageDto<RespSimplePriceItemDto> pageDto = PageDto.getPagedList(page, pageSize, listMock);
         ResponseDto<PageDto<RespSimplePriceItemDto>> response = new ResponseDto<>(pageDto);
         return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ResponseDto<RespSimplePriceItemDto>> editDrink(@PathVariable(value="id") Long id, @RequestBody ReqSimplePriceItemUpDto dto) {
+    public ResponseEntity<ResponseDto<RespSimplePriceItemDto>> editDrink(@PathVariable(value = "id") Long id, @RequestBody ReqSimplePriceItemUpDto dto) {
         dto.setId(id);
         RespSimplePriceItemDto mock2 = getRespSimplePriceItemDto2();
         return ResponseEntity.ok(new ResponseDto<>(mock2));
@@ -59,7 +55,7 @@ public class DrinkEditorController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseDto<RespSimplePriceItemDto>> deleteDrink(@PathVariable(value="id") Long id) {
+    public ResponseEntity<ResponseDto<RespSimplePriceItemDto>> deleteDrink(@PathVariable(value = "id") Long id) {
         RespSimplePriceItemDto mock2 = getRespSimplePriceItemDto2();
         return ResponseEntity.ok(new ResponseDto<>(mock2));
     }

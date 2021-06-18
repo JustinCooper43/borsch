@@ -15,7 +15,7 @@ public class RespUserDto {
     @ApiModelProperty(position = 5, value = "User Role")
     private RoleDto role;
     @ApiModelProperty(position = 6, value = "User Phone Number")
-    private String phoneNumber;
+    private String phone;
 
     public RoleDto getRole() {
         return role;
@@ -26,11 +26,11 @@ public class RespUserDto {
     }
 
     public String getPhone() {
-        return phoneNumber;
+        return phone;
     }
 
     public void setPhone(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+        this.phone = phoneNumber;
     }
 
 

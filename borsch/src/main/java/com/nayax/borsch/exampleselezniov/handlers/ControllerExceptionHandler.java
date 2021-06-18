@@ -13,7 +13,7 @@ public class ControllerExceptionHandler {
     //@ExceptionHandler(SQLException.class)
     public ResponseEntity<ResponseDto<?>> sqlExceptionHandler(SQLException e, WebRequest request) {
         List<ErrorDto> error = List.of(new ErrorDto());
-        error.get(0).setCause(e.getMessage());
+        error.get(0).setMessage(e.getMessage());
         return ResponseEntity.ok(new ResponseDto<>(error));
     }
 }

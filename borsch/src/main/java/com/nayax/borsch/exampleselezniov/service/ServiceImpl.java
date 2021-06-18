@@ -38,7 +38,7 @@ public class ServiceImpl implements Service {
             response.setData(Mappers.getMapper(EmployeeMapper.class).toDto(responseEntity.get()));
         } else {
             ErrorDto e = new ErrorDto();
-            e.setCause("No employee found for id " + id);
+            e.setMessage("No employee found for id " + id);
             response.setErrors(List.of(e));
         }
         System.out.println("####### Returning from service.get #######");

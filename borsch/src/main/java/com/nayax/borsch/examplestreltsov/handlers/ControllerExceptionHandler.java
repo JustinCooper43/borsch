@@ -16,7 +16,7 @@ public class ControllerExceptionHandler {
     ResponseEntity<ResponseDto<?>> sqlExceptionHandler(SQLException e, WebRequest request) {
 
         ErrorDto errorDto = new ErrorDto();
-        errorDto.setCause("SQL problem 500");
+        errorDto.setMessage("SQL problem 500");
         ResponseDto<?> listResponseDto = new ResponseDto<>();
         listResponseDto.setErrors(List.of(errorDto));
         return ResponseEntity.ok(listResponseDto);

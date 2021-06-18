@@ -2,16 +2,13 @@ package com.nayax.borsch.controller;
 
 import com.nayax.borsch.model.dto.PageDto;
 import com.nayax.borsch.model.dto.ResponseDto;
-import com.nayax.borsch.model.dto.assortment.response.RespAssortmentItemDto;
 import com.nayax.borsch.model.dto.assortment.response.RespSimpleItemDto;
 import com.nayax.borsch.model.dto.assortment.response.RespSimplePriceItemDto;
 import com.nayax.borsch.model.dto.order.request.ReqOrderItemAddDto;
 import com.nayax.borsch.model.dto.order.response.RespOrderDeliveryDto;
-import com.nayax.borsch.model.dto.order.response.RespOrderDto;
+import com.nayax.borsch.model.dto.order.response.RespOrderItemDto;
 import com.nayax.borsch.model.dto.order.response.RespOrderSumDto;
 import com.nayax.borsch.model.dto.order.response.RespOrderSumInfoDto;
-import com.nayax.borsch.model.dto.user.response.RespUserDto;
-import com.nayax.borsch.model.dto.user.response.nested.RoleDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,21 +20,20 @@ import java.util.List;
 @RequestMapping("/order")
 public class OrderController {
 
-    private RespOrderDto getRespOrderMock() {
-        RespOrderDto orderItem = new RespOrderDto();
+    private RespOrderItemDto getRespOrderMock() {
+        RespOrderItemDto orderItem = new RespOrderItemDto();
 
-        RespAssortmentItemDto shawa = new RespAssortmentItemDto();
+        RespSimplePriceItemDto shawa = new RespSimplePriceItemDto();
         shawa.setId(2l);
         shawa.setName("Щаурма с курицей");
         shawa.setPrice(new BigDecimal("90.00"));
-        shawa.setHalfable(false);
         orderItem.setDish(shawa);
 
         RespSimplePriceItemDto addition = new RespSimplePriceItemDto();
         addition.setId(4l);
         addition.setName("Картошка");
         addition.setPrice(new BigDecimal("10.00"));
-        List<RespSimplePriceItemDto> respSimpleItemDtos = List.of(addition,addition,addition,addition,addition,addition,addition);
+        List<RespSimplePriceItemDto> respSimpleItemDtos = List.of(addition, addition, addition, addition, addition, addition, addition);
         orderItem.setAdditions(respSimpleItemDtos);
 
         RespSimplePriceItemDto drink = new RespSimplePriceItemDto();
@@ -56,69 +52,47 @@ public class OrderController {
         return orderItem;
     }
 
-    private RespUserDto getUserMock() {
-        RespUserDto user = new RespUserDto();
-        user.setId(14L);
-        user.setFirstName("Fname");
-        user.setLastName("Lname");
-        user.seteMail("adress@server.com");
-        RoleDto role = new RoleDto();
-        role.setId(2L);
-        role.setName("Cashier");
-        user.setRole(role);
-        user.setPhone("+380123456789");
-        return user;
-    }
-
-
     @PostMapping
-    public ResponseEntity<ResponseDto<RespOrderDto>> addOrder(@RequestBody ReqOrderItemAddDto dto) {
-        RespOrderDto orderItem = getRespOrderMock();
-        ResponseDto<RespOrderDto> responseDto = new ResponseDto<>(orderItem);
+    public ResponseEntity<ResponseDto<RespOrderItemDto>> addOrder(@RequestBody ReqOrderItemAddDto dto) {
+        RespOrderItemDto orderItem = getRespOrderMock();
+        ResponseDto<RespOrderItemDto> responseDto = new ResponseDto<>(orderItem);
         return ResponseEntity.ok(responseDto);
     }
 
     @GetMapping
-    public ResponseEntity<ResponseDto<PageDto<RespOrderDto>>> getPagedOrders(
+    public ResponseEntity<ResponseDto<PageDto<RespOrderItemDto>>> getPagedOrders(
             @RequestParam Integer page, @RequestParam Integer pageSize, @RequestParam Long userId, @RequestParam(required = false) LocalDateTime dateTime) {
-        RespOrderDto orderItem = getRespOrderMock();
-        List<RespOrderDto> itemList = List.of(orderItem, orderItem, orderItem, orderItem, orderItem, orderItem, orderItem);
-        PageDto<RespOrderDto> pageDto = new PageDto<>(itemList);
-        pageDto.setTotalElements(10 * pageSize);
-        pageDto.setTotalPages(10);
-        pageDto.setPageSize(pageSize);
-        pageDto.setPage(page);
-        ResponseDto<PageDto<RespOrderDto>> responseDto = new ResponseDto<>(pageDto);
+        RespOrderItemDto orderItem = getRespOrderMock();
+        List<RespOrderItemDto> itemList = List.of(orderItem, orderItem, orderItem, orderItem, orderItem, orderItem, orderItem);
+        PageDto<RespOrderItemDto> pageDto = PageDto.getPagedList(page, pageSize, itemList);
+        ResponseDto<PageDto<RespOrderItemDto>> responseDto = new ResponseDto<>(pageDto);
         return ResponseEntity.ok(responseDto);
     }
 
     @GetMapping("/history/{userId}")
-    public ResponseEntity<ResponseDto<PageDto<RespOrderDto>>> getPagedHistory(
-            @PathVariable(value="userId") Long userId, @RequestParam int page, @RequestParam int pageSize) {
-        RespOrderDto orderItem = getRespOrderMock();
-        List<RespOrderDto> itemList = List.of(orderItem, orderItem, orderItem, orderItem, orderItem, orderItem, orderItem);
-        PageDto<RespOrderDto> pageDto = new PageDto<>(itemList);
-        pageDto.setTotalElements(10 * pageSize);
-        pageDto.setTotalPages(10);
-        pageDto.setPageSize(pageSize);
-        pageDto.setPage(page);
-        ResponseDto<PageDto<RespOrderDto>> responseDto = new ResponseDto<>(pageDto);
+    public ResponseEntity<ResponseDto<PageDto<RespOrderItemDto>>> getPagedHistory(
+            @PathVariable(value = "userId") Long userId, @RequestParam int page, @RequestParam int pageSize) {
+        RespOrderItemDto orderItem = getRespOrderMock();
+        List<RespOrderItemDto> itemList = List.of(orderItem, orderItem, orderItem, orderItem, orderItem, orderItem, orderItem);
+        PageDto<RespOrderItemDto> pageDto = PageDto.getPagedList(page, pageSize, itemList);
+        ResponseDto<PageDto<RespOrderItemDto>> responseDto = new ResponseDto<>(pageDto);
         return ResponseEntity.ok(responseDto);
     }
 
     @GetMapping("/summary")
-    public ResponseEntity<ResponseDto<PageDto<RespOrderSumDto>>> getOrderSummary(@RequestParam(required = false) LocalDateTime dateTime) {
+    public ResponseEntity<ResponseDto<PageDto<RespOrderSumDto>>> getOrderSummary(
+            @RequestParam Integer page, @RequestParam Integer pageSize, @RequestParam(required = false) LocalDateTime dateTime) {
         RespOrderSumDto orderSumDto = new RespOrderSumDto();
-        RespOrderDto orderItem = getRespOrderMock();
-        List<RespOrderDto> itemList = List.of(orderItem, orderItem, orderItem, orderItem, orderItem, orderItem, orderItem);
+        RespOrderItemDto orderItem = getRespOrderMock();
+        List<RespOrderItemDto> itemList = List.of(orderItem, orderItem, orderItem, orderItem, orderItem, orderItem, orderItem);
         orderSumDto.setOrderDate(LocalDateTime.now().minusMinutes(10));
         orderSumDto.setOrders(itemList);
-        orderSumDto.setUser(getUserMock());
+        orderSumDto.setUser(UserController.getUserMock());
         orderSumDto.setAmount(new BigDecimal("40.3"));
         orderSumDto.setPaidAmount(new BigDecimal("40.2"));
         orderSumDto.setPaymentType(2);
         List<RespOrderSumDto> listOfOrders = List.of(orderSumDto, orderSumDto, orderSumDto, orderSumDto, orderSumDto, orderSumDto, orderSumDto);
-        PageDto<RespOrderSumDto> pages = new PageDto<>(listOfOrders);
+        PageDto<RespOrderSumDto> pages = PageDto.getPagedList(page, pageSize, listOfOrders);
         ResponseDto<PageDto<RespOrderSumDto>> responseDto = new ResponseDto<>(pages);
         return ResponseEntity.ok(responseDto);
     }
@@ -147,9 +121,9 @@ public class OrderController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseDto<RespOrderDto>> deleteOrder(@PathVariable(value="id") Long id) {
-        RespOrderDto orderItem = getRespOrderMock();
-        ResponseDto<RespOrderDto> responseDto = new ResponseDto<>(orderItem);
+    public ResponseEntity<ResponseDto<RespOrderItemDto>> deleteOrder(@PathVariable(value = "id") Long id) {
+        RespOrderItemDto orderItem = getRespOrderMock();
+        ResponseDto<RespOrderItemDto> responseDto = new ResponseDto<>(orderItem);
         return ResponseEntity.ok(responseDto);
     }
 }

@@ -28,18 +28,15 @@ public class AssortmentController {
         assortment.setAdditions(getMockList());
         assortment.setRemarks(getMockList());
         assortment.setDish(getMockList().get(0));
-        PageDto<RespAssortmentDto> pageDto = new PageDto<>(List.of(assortment, assortment, assortment, assortment, assortment, assortment, assortment, assortment));
-        pageDto.setPage(page);
-        pageDto.setPageSize(pageSize);
-        pageDto.setTotalPages(23);
-        pageDto.setTotalElements(23 * pageSize);
+        PageDto<RespAssortmentDto> pageDto = PageDto.getPagedList(page, pageSize,
+                List.of(assortment, assortment, assortment, assortment, assortment, assortment, assortment, assortment));
         ResponseDto<PageDto<RespAssortmentDto>> responseDto = new ResponseDto<>(pageDto);
         return ResponseEntity.ok(responseDto);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ResponseDto<RespAssortmentDto>> getById(@PathVariable(value = "id") Long id, @RequestBody ReqAssortmentUpDto dto) {
-        dto.setId(id);
+        dto.setDish(id);
         RespAssortmentDto rDto = new RespAssortmentDto();
         rDto.setAdditions(getMockList());
         rDto.setRemarks(getMockList());
@@ -49,8 +46,8 @@ public class AssortmentController {
         return ResponseEntity.ok(respDto);
     }
 
-    @PutMapping("")
-    public ResponseEntity<ResponseDto<RespAssortmentDto>> editAssortment(RespAssortmentDto dto){
+    @PutMapping
+    public ResponseEntity<ResponseDto<RespAssortmentDto>> editAssortment(@RequestBody RespAssortmentDto dto) {
         RespAssortmentDto respAssortmentDto = new RespAssortmentDto();
         dto.setAdditions(getMockList());
         dto.setRemarks(getMockList());

@@ -3,7 +3,6 @@ package com.nayax.borsch.controller;
 
 import com.nayax.borsch.model.dto.ResponseDto;
 import com.nayax.borsch.model.dto.order.request.ReqPayCompletedDto;
-import com.nayax.borsch.model.dto.order.request.ReqPayConfirmDto;
 import com.nayax.borsch.model.dto.order.response.RespPaymentInfoDto;
 import com.nayax.borsch.model.dto.user.response.RespCashierDto;
 import com.nayax.borsch.model.dto.user.response.RespUserDto;
@@ -29,12 +28,12 @@ public class PaymentController {
         return ResponseEntity.ok(result);
     }
 
-    @PostMapping("/confirm")
+  /*  @PostMapping("/confirm")
     public ResponseEntity<ResponseDto<Boolean>> confirm(@RequestBody ReqPayConfirmDto reqDto) {
         ResponseDto<Boolean> result = new ResponseDto<>(Boolean.TRUE);
         return ResponseEntity.ok(result);
     }
-
+*/
 
     public static RespPaymentInfoDto generatorPayDto() {
         RespPaymentInfoDto result = new RespPaymentInfoDto();
