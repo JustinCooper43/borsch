@@ -1,6 +1,7 @@
 package com.nayax.borsch.mapper;
 
 
+import com.nayax.borsch.model.dto.user.request.ReqCashierAddDto;
 import com.nayax.borsch.model.dto.user.request.ReqCashierUpDto;
 import com.nayax.borsch.model.dto.user.response.RespCashierDto;
 import com.nayax.borsch.model.entity.user.CashierEntity;
@@ -18,13 +19,21 @@ public interface CashierMapper {
     RespCashierDto toDto(CashierEntity entity);
 
 
-
     @Mapping(target = "cardNumber", source = "card.creditCard")
     @Mapping(target = "cardBank", source = "card.bankName")
     @Mapping(target = "cardNote", source = "card.notes")
     @Mapping(target = "cardQrCode", source = "card.qr")
     @Mapping(target = "cashPaymentAllowed", source = "cash")
-    CashierEntity toUpdateEntity(ReqCashierUpDto upDto);
+    CashierEntity toAddEntity(ReqCashierAddDto addDto);
+
+
+    @Mapping(source = "cashierId", target = "cashierId")
+    @Mapping(source = "cash", target = "cashPaymentAllowed")
+    @Mapping(source = "card.creditCard", target = "cardNumber")
+    @Mapping(source = "card.bankName", target = "cardBank")
+    @Mapping(source = "card.notes", target = "cardNote")
+    @Mapping(source = "card.qr", target = "cardQrCode")
+    CashierEntity toUpEntity(ReqCashierUpDto upDto);
 
 
 }
