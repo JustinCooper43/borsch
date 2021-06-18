@@ -6,15 +6,15 @@ public class AssortmentUpEntity {
 
     private Long dish;
     private List<Long> additionsId;
-    private boolean isHalfAble;
     private List<Long> remarksId;
+    private boolean halfAble;
 
     public boolean isHalfAble() {
-        return isHalfAble;
+        return halfAble;
     }
 
-    public void setHalfAble(boolean isHalfAble) {
-        this.isHalfAble = isHalfAble;
+    public void setHalfAble(boolean halfAble) {
+        this.halfAble = halfAble;
     }
 
     public Long getDish() {

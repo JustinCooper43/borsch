@@ -11,22 +11,13 @@ import org.mapstruct.Mapping;
 
 import java.util.List;
 
-@Mapper
+@Mapper(uses = SimpleItemsMapper.class)
 public interface AssortmentMapper {
-
     @Mapping(source = "dish", target = "dish")
     @Mapping(source = "additions", target = "additionsId")
-    @Mapping(source = "halfable", target = "isHalfAble")
     @Mapping(source = "remarks", target = "remarksId")
     AssortmentUpEntity assortmentUpdateReqToEntity(ReqAssortmentUpDto dto);
 
-
-    @Mapping(source = "id", target = "id")
-    @Mapping(source = "name", target = "name")
-    RespSimpleItemDto generalPriceItemToRespSimpleDto(GeneralPriceItemEntity entity);
-////////////////////////////////////////////////////////////////////////////////////////
-
-    @Mapping(source = "isHalfAble", target = "halfable")
     RespAssortmentDto assortmentEntityToDto(AssortmentRespEntity entity);
 
     List<RespSimpleItemDto> fromEntityToRespDto(List<GeneralPriceItemEntity> itemEntities);

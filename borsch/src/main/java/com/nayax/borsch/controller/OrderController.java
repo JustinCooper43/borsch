@@ -1,5 +1,6 @@
 package com.nayax.borsch.controller;
 
+import com.nayax.borsch.mapper.OrderItemMapper;
 import com.nayax.borsch.model.dto.PageDto;
 import com.nayax.borsch.model.dto.ResponseDto;
 import com.nayax.borsch.model.dto.assortment.response.RespSimpleItemDto;
@@ -9,6 +10,8 @@ import com.nayax.borsch.model.dto.order.response.RespOrderDeliveryDto;
 import com.nayax.borsch.model.dto.order.response.RespOrderItemDto;
 import com.nayax.borsch.model.dto.order.response.RespOrderSumDto;
 import com.nayax.borsch.model.dto.order.response.RespOrderSumInfoDto;
+import com.nayax.borsch.model.entity.order.OrderEntity;
+import org.mapstruct.factory.Mappers;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,6 +57,8 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<ResponseDto<RespOrderItemDto>> addOrder(@RequestBody ReqOrderItemAddDto dto) {
+        OrderEntity test = Mappers.getMapper(OrderItemMapper.class).toAddEntity(dto);
+        RespOrderItemDto revtest = Mappers.getMapper(OrderItemMapper.class).toDto(test);
         RespOrderItemDto orderItem = getRespOrderMock();
         ResponseDto<RespOrderItemDto> responseDto = new ResponseDto<>(orderItem);
         return ResponseEntity.ok(responseDto);
