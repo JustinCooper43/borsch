@@ -14,21 +14,21 @@ import java.util.List;
 @Mapper
 public interface AssortmentMapper {
 
-    @Mapping(source = "dish", target = "dish")
-    @Mapping(source = "additions", target = "additionsId")
-    @Mapping(source = "halfable", target = "isHalfAble")
-    @Mapping(source = "remarks", target = "remarksId")
-    AssortmentUpEntity assortmentUpdateReqToEntity(ReqAssortmentUpDto dto);
-
-
-    @Mapping(source = "id", target = "id")
-    @Mapping(source = "name", target = "name")
-    RespSimpleItemDto generalPriceItemToRespSimpleDto(GeneralPriceItemEntity entity);
-////////////////////////////////////////////////////////////////////////////////////////
-
-    @Mapping(source = "isHalfAble", target = "halfable")
-    RespAssortmentDto assortmentEntityToDto(AssortmentRespEntity entity);
-
-    List<RespSimpleItemDto> fromEntityToRespDto(List<GeneralPriceItemEntity> itemEntities);
+//    @Mapping(source = "dish", target = "dish")
+//    @Mapping(source = "additions", target = "additionsId")
+//    @Mapping(source = "halfable", target = "isHalfAble")
+//    @Mapping(source = "remarks", target = "remarksId")
+//    AssortmentUpEntity assortmentUpdateReqToEntity(ReqAssortmentUpDto dto);
+//
+//
+//    @Mapping(source = "id", target = "id")
+//    @Mapping(source = "name", target = "name")
+//    RespSimpleItemDto generalPriceItemToRespSimpleDto(GeneralPriceItemEntity entity);
+//////////////////////////////////////////////////////////////////////////////////////////
+//
+//    @Mapping(source = "isHalfAble", target = "halfable")
+//    RespAssortmentDto assortmentEntityToDto(AssortmentRespEntity entity);
+//
+//    List<RespSimpleItemDto> fromEntityToRespDto(List<GeneralPriceItemEntity> itemEntities);
 
 }
