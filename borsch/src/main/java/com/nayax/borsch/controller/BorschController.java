@@ -1,6 +1,7 @@
 package com.nayax.borsch.controller;
 
 import com.nayax.borsch.model.dto.ResponseDto;
+import com.nayax.borsch.model.dto.assortment.response.RespAssortmentItemDto;
 import com.nayax.borsch.model.dto.user.response.RespUserDto;
 import com.nayax.borsch.model.entity.assortment.ShawarmaItemEntity;
 import com.nayax.borsch.repository.impl.RepositoryShawarmaTypeImpl;
@@ -26,24 +27,31 @@ public class BorschController {
     private RepositoryShawarmaTypeImpl shawarmaType;
 
     @GetMapping("/user")
-    public ResponseEntity<ResponseDto<ShawarmaItemEntity>> getUserExample() {
+    public ResponseEntity<ResponseDto<RespAssortmentItemDto>> getUserExample() {
         RespUserDto respUserDto = new RespUserDto();
         respUserDto.setId(1L);
         respUserDto.seteMail("efil@gmail.com");
         respUserDto.setLastName("John Dou");
-        Optional<ShawarmaItemEntity> entity = shawarmaType.findById(103L);
+        Optional<ShawarmaItemEntity> entity = shawarmaType.findById(15L);
         System.out.println(entity.get());
 
-        List<ShawarmaItemEntity> list = shawarmaType.findAll();
-        System.out.println("List: ");
-        list.forEach(System.out::println);
+//        List<ShawarmaItemEntity> list = shawarmaType.findAll();
+//        System.out.println("List: ");
+//        list.forEach(System.out::println);
+//
+//        ShawarmaItemEntity shawarmaItemEntity = new ShawarmaItemEntity();
+//        shawarmaItemEntity.setId(22L);
+////        shawarmaItemEntity.setHalfAble(true);
+//        shawarmaItemEntity.setName("Updated");
+//        shawarmaItemEntity.setPrice(new BigDecimal("0"));
+//        ShawarmaItemEntity updated = shawarmaType.update(shawarmaItemEntity);
 
-        ShawarmaItemEntity shawarmaItemEntity = new ShawarmaItemEntity();
-        shawarmaItemEntity.setId(22L);
-//        shawarmaItemEntity.setHalfAble(true);
-        shawarmaItemEntity.setName("Updated");
-        shawarmaItemEntity.setPrice(new BigDecimal("0"));
-        ShawarmaItemEntity updated = shawarmaType.update(shawarmaItemEntity);
-        return ResponseEntity.ok().body(new ResponseDto<>(entity.get()));
+
+        RespAssortmentItemDto dto = new RespAssortmentItemDto();
+        dto.setId(entity.get().getId());
+        dto.setName(entity.get().getName());
+        dto.setPrice(entity.get().getPrice());
+        dto.setHalfable(entity.get().getHalfAble());
+        return ResponseEntity.ok().body(new ResponseDto<>(dto));
     }
 }
