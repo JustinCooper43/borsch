@@ -1,6 +1,7 @@
 package com.nayax.borsch.model.dto.user.response;
 
 public class RespProfileDto {
+
     private RespUserDto user;
     private RespCashierDto payments;
 

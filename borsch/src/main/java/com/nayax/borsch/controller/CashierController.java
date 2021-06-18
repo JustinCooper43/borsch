@@ -7,6 +7,9 @@ import com.nayax.borsch.model.dto.user.response.RespProfileDto;
 import com.nayax.borsch.model.dto.user.response.RespUserDto;
 import com.nayax.borsch.model.dto.user.response.nested.CreditCardDto;
 import com.nayax.borsch.model.dto.user.response.nested.RoleDto;
+import com.nayax.borsch.model.entity.user.CashierEntity;
+import com.nayax.borsch.model.entity.user.ProfileEntity;
+import com.nayax.borsch.model.entity.user.UserEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +22,7 @@ public class CashierController {
 
 
     @PostMapping("/{id}")
-    public ResponseEntity<ResponseDto<RespProfileDto>> getById(@PathVariable(value="id") Long id) {
+    public ResponseEntity<ResponseDto<RespProfileDto>> getById(@PathVariable(value = "id") Long id) {
         ResponseDto<RespProfileDto> respDto = new ResponseDto<>(generatedMock());
         return ResponseEntity.ok(respDto);
     }
@@ -37,10 +40,10 @@ public class CashierController {
     }
 
 
-    private  List<RespUserDto> generateMockList() {
+    private List<RespUserDto> generateMockList() {
         List<RespUserDto> listResult = new ArrayList<>();
         int quantityPages = 8;
-        for(int i = 0; i < quantityPages; i++){
+        for (int i = 0; i < quantityPages; i++) {
             listResult.add(generatedMock().getUser());
         }
         return listResult;
@@ -78,5 +81,28 @@ public class CashierController {
         respDto.setPayments(cashier);
 
         return respDto;
+    }
+
+    private ProfileEntity createEntity() {
+        ProfileEntity entity = new ProfileEntity();
+        UserEntity userEntity = new UserEntity();
+        CashierEntity cashierEntity = new CashierEntity();
+
+        userEntity.seteMail("sdfdaf");
+        userEntity.setActive("a");
+        userEntity.setId(123232L);
+        userEntity.setFirstName("ffffff");
+        userEntity.setLastName("lllllllll");
+
+        cashierEntity.setCashierId(12L);
+        cashierEntity.setCardBank("qwef");
+        cashierEntity.setCardNote("sdfwef");
+        cashierEntity.setCardNumber("421234234");
+        cashierEntity.setCardQrCode("qrqrqrqrq");
+        cashierEntity.setCashPaymentAllowed(true);
+
+        entity.setCashierEntity(cashierEntity);
+        entity.setUserEntity(userEntity);
+        return entity;
     }
 }
