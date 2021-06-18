@@ -6,7 +6,7 @@ public class ShawarmaItemEntity {
     private Long id;
     private String name;
     private BigDecimal price;
-    private Boolean isHalfAble;
+    private boolean halfAble;
 
     public Long getId() {
         return id;
@@ -32,12 +32,12 @@ public class ShawarmaItemEntity {
         this.price = price;
     }
 
-    public Boolean getHalfAble() {
-        return isHalfAble;
+    public boolean isHalfAble() {
+        return halfAble;
     }
 
-    public void setHalfAble(Boolean halfable) {
-        isHalfAble = halfable;
+    public void setHalfAble(boolean halfable) {
+        halfAble = halfable;
     }
 
 }

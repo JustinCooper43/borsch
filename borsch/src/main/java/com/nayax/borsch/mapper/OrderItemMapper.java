@@ -31,5 +31,6 @@ public interface OrderItemMapper {
     @Mapping(target = "price", ignore = true)
     GeneralPriceItemEntity toItemId(Long id);
 
+    @Mapping(target = "orderDate", source = "creationTime")
     RespOrderItemDto toDto(OrderEntity entity);
 }
