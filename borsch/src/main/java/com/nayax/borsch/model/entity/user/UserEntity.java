@@ -8,7 +8,7 @@ public class UserEntity {
     private String eMail;
     private String firstName;
     private String lastName;
-    private String deleted;
+    private String active;
     private String phone;
 
     public Long getId() {
@@ -51,12 +51,12 @@ public class UserEntity {
         this.lastName = lastName;
     }
 
-    public String getDeleted() {
-        return deleted;
+    public String getActive() {
+        return active;
     }
 
-    public void setDeleted(String deleted) {
-        this.deleted = deleted;
+    public void setActive(String active) {
+        this.active = active;
     }
 
     public String getPhone() {

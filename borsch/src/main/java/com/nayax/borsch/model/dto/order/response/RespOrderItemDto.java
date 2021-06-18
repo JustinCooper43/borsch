@@ -3,16 +3,26 @@ package com.nayax.borsch.model.dto.order.response;
 import com.nayax.borsch.model.dto.assortment.response.RespSimpleItemDto;
 import com.nayax.borsch.model.dto.assortment.response.RespSimplePriceItemDto;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
-public class RespOrderDto {
-
+public class RespOrderItemDto {
+    //TODO add cost
     private RespSimplePriceItemDto dish;
     private List<RespSimplePriceItemDto> additions;
     private RespSimplePriceItemDto drink;
     private RespSimpleItemDto remark;
     private boolean cut;
     private Integer quantity;
+    private LocalDateTime orderDate;
+
+    public LocalDateTime getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(LocalDateTime orderDate) {
+        this.orderDate = orderDate;
+    }
 
     public RespSimplePriceItemDto getDish() {
         return dish;

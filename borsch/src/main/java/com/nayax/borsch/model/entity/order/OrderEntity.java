@@ -1,73 +1,84 @@
 package com.nayax.borsch.model.entity.order;
 
+import com.nayax.borsch.model.entity.assortment.GeneralPriceItemEntity;
+
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class OrderEntity {
-
-    private Long orderSummaryId;
-    private LocalDateTime creationTime;
-    private Long id;
+    private Long orderId;
+    private GeneralPriceItemEntity dish;
+    private List<GeneralPriceItemEntity> additions;
+    private GeneralPriceItemEntity drink;
+    private GeneralPriceItemEntity remark;
+    private boolean cut;
+    private Integer quantity;
     private Long Userid;
-    private Long shawarmaTypeId;
-    private Boolean cutInHalf;
-    private Long remarkId;
-    private  Long extraItemId;
-    private Long orderItemId;
+    private LocalDateTime creationTime;
+    private Long orderSummaryId;
 
-    public Long getId() {
-        return id;
+    public Long getOrderId() {
+        return orderId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
     }
 
-    public Long getShawarmaTypeId() {
-        return shawarmaTypeId;
+    public GeneralPriceItemEntity getDish() {
+        return dish;
     }
 
-    public void setShawarmaTypeId(Long shawarmaTypeId) {
-        this.shawarmaTypeId = shawarmaTypeId;
+    public void setDish(GeneralPriceItemEntity dish) {
+        this.dish = dish;
     }
 
-    public Boolean getCutInHalf() {
-        return cutInHalf;
+    public List<GeneralPriceItemEntity> getAdditions() {
+        return additions;
     }
 
-    public void setCutInHalf(Boolean cutInHalf) {
-        this.cutInHalf = cutInHalf;
+    public void setAdditions(List<GeneralPriceItemEntity> additions) {
+        this.additions = additions;
     }
 
-    public Long getRemarkId() {
-        return remarkId;
+    public GeneralPriceItemEntity getDrink() {
+        return drink;
     }
 
-    public void setRemarkId(Long remarkId) {
-        this.remarkId = remarkId;
+    public void setDrink(GeneralPriceItemEntity drink) {
+        this.drink = drink;
     }
 
-    public Long getExtraItemId() {
-        return extraItemId;
+    public GeneralPriceItemEntity getRemark() {
+        return remark;
     }
 
-    public void setExtraItemId(Long extraItemId) {
-        this.extraItemId = extraItemId;
+    public void setRemark(GeneralPriceItemEntity remark) {
+        this.remark = remark;
     }
 
-    public Long getOrderItemId() {
-        return orderItemId;
+    public boolean isCut() {
+        return cut;
     }
 
-    public void setOrderItemId(Long orderItemId) {
-        this.orderItemId = orderItemId;
+    public void setCut(boolean cut) {
+        this.cut = cut;
     }
 
-    public Long getOrderSummaryId() {
-        return orderSummaryId;
+    public Integer getQuantity() {
+        return quantity;
     }
 
-    public void setOrderSummaryId(Long orderSummaryId) {
-        this.orderSummaryId = orderSummaryId;
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public Long getUserid() {
+        return Userid;
+    }
+
+    public void setUserid(Long userid) {
+        Userid = userid;
     }
 
     public LocalDateTime getCreationTime() {
@@ -78,11 +89,11 @@ public class OrderEntity {
         this.creationTime = creationTime;
     }
 
-    public Long getUserid() {
-        return Userid;
+    public Long getOrderSummaryId() {
+        return orderSummaryId;
     }
 
-    public void setUserid(Long userid) {
-        Userid = userid;
+    public void setOrderSummaryId(Long orderSummaryId) {
+        this.orderSummaryId = orderSummaryId;
     }
 }

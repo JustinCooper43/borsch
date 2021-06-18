@@ -33,7 +33,7 @@ public class RepositoryUserImplementation implements GenericCrudRepository<UserE
                 "output inserted.* values  (?, ?, ?, ?, ?, ?)";
 
         return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(UserEntity.class),
-                entity.getDeleted(), entity.getRoleId(),
+                entity.getActive(), entity.getRoleId(),
                 entity.geteMail(), entity.getFirstName(), entity.getLastName(),
                 entity.getPhone()
         );
@@ -50,7 +50,7 @@ public class RepositoryUserImplementation implements GenericCrudRepository<UserE
         int result = 0;
         try {
             result = jdbcTemplate.update(sql,
-                    entity.getDeleted(), entity.getRoleId(), entity.geteMail(),
+                    entity.getActive(), entity.getRoleId(), entity.geteMail(),
                     entity.getFirstName(), entity.getLastName(), entity.getPhone(), entity.getId());
 //            TODO return type is boolean
 //            return result == 1;
@@ -79,7 +79,7 @@ public class RepositoryUserImplementation implements GenericCrudRepository<UserE
                     userEntity.seteMail(rs.getNString("userEmail"));
                     userEntity.setFirstName(rs.getNString("fName"));
                     userEntity.setLastName(rs.getNString("lName"));
-                    userEntity.setDeleted(rs.getString("deletedUser"));
+                    userEntity.setActive(rs.getString("deletedUser"));
                     userEntity.setPhone(rs.getNString("phNumber"));
                     userEntity.setRoleName(rs.getNString("roleName"));
                     return userEntity;
@@ -113,7 +113,7 @@ public class RepositoryUserImplementation implements GenericCrudRepository<UserE
                 userEntity.seteMail(rs.getNString("userEmail"));
                 userEntity.setFirstName(rs.getNString("fName"));
                 userEntity.setLastName(rs.getNString("lName"));
-                userEntity.setDeleted(rs.getString("deletedUser"));
+                userEntity.setActive(rs.getString("deletedUser"));
                 userEntity.setPhone(rs.getNString("phNumber"));
                 return userEntity;
             }

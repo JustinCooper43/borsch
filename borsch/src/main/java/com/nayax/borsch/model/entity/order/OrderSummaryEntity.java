@@ -1,54 +1,64 @@
 package com.nayax.borsch.model.entity.order;
 
-import com.nayax.borsch.model.entity.user.CashierEntity;
+import com.nayax.borsch.model.entity.user.UserEntity;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class OrderSummaryEntity {
+    private UserEntity user;
+    private List<OrderEntity> orders;
+    private Integer paymentType;
+    private BigDecimal totalOrdersCost;
+    private BigDecimal payedSum;
+    private LocalDateTime orderDate;
 
-    private Long id;
-    private CashierEntity cashier;
-    private LocalDateTime startTime;
-    private LocalDateTime stopTime;
-    private LocalDateTime finishTime;
-
-    public Long getId() {
-        return id;
+    public UserEntity getUser() {
+        return user;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setUser(UserEntity user) {
+        this.user = user;
     }
 
-    public CashierEntity getCashier() {
-        return cashier;
+    public List<OrderEntity> getOrders() {
+        return orders;
     }
 
-    public void setCashier(CashierEntity cashier) {
-        this.cashier = cashier;
+    public void setOrders(List<OrderEntity> orders) {
+        this.orders = orders;
     }
 
-    public LocalDateTime getStartTime() {
-        return startTime;
+    public Integer getPaymentType() {
+        return paymentType;
     }
 
-    public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
+    public void setPaymentType(Integer paymentType) {
+        this.paymentType = paymentType;
     }
 
-    public LocalDateTime getStopTime() {
-        return stopTime;
+    public BigDecimal getTotalOrdersCost() {
+        return totalOrdersCost;
     }
 
-    public void setStopTime(LocalDateTime stopTime) {
-        this.stopTime = stopTime;
+    public void setTotalOrdersCost(BigDecimal totalOrdersCost) {
+        this.totalOrdersCost = totalOrdersCost;
     }
 
-    public LocalDateTime getFinishTime() {
-        return finishTime;
+    public BigDecimal getPayedSum() {
+        return payedSum;
     }
 
-    public void setFinishTime(LocalDateTime finishTime) {
-        this.finishTime = finishTime;
+    public void setPayedSum(BigDecimal payedSum) {
+        this.payedSum = payedSum;
+    }
+
+    public LocalDateTime getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(LocalDateTime orderDate) {
+        this.orderDate = orderDate;
     }
 }

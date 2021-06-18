@@ -5,10 +5,10 @@ import com.nayax.borsch.model.dto.user.response.RespUserDto;
 
 public class RespPaymentInfoDto {
 
-    private RespUserDto cashier ;
-    private RespCashierDto paymentMethod ;
-    private boolean completed ;
-    private boolean confirmed ;
+    private RespUserDto cashier;
+    private RespCashierDto paymentMethod;
+    private boolean completed;
+    private boolean confirmed;
 
     public RespUserDto getCashier() {
         return cashier;

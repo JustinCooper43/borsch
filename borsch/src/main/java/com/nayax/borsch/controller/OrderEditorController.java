@@ -4,7 +4,6 @@ package com.nayax.borsch.controller;
 import com.nayax.borsch.model.dto.ResponseDto;
 import com.nayax.borsch.model.dto.assortment.response.RespAssortmentItemDto;
 import com.nayax.borsch.model.dto.assortment.response.RespPriceItemDto;
-import com.nayax.borsch.model.dto.assortment.response.RespPriceListDto;
 import com.nayax.borsch.model.dto.assortment.response.RespSimplePriceItemDto;
 import com.nayax.borsch.model.dto.assortment.response.RespSimpleItemDto;
 import org.springframework.http.ResponseEntity;
@@ -20,16 +19,14 @@ import java.util.List;
 public class OrderEditorController {
 
     @GetMapping("/price")
-    public ResponseEntity<ResponseDto<RespPriceListDto>> price() {
-
+    public ResponseEntity<ResponseDto<List<RespPriceItemDto>>> price() {
         RespPriceItemDto respPriceItemDto = new RespPriceItemDto();
         respPriceItemDto.setId(2l);
         respPriceItemDto.setPrice(new BigDecimal("2321.213"));
         respPriceItemDto.setType(0);
         respPriceItemDto.setName("Шаурма с курицей");
-        RespPriceListDto respPriceItemDtos = new RespPriceListDto();
-        respPriceItemDtos.setList(List.of(respPriceItemDto, respPriceItemDto, respPriceItemDto, respPriceItemDto, respPriceItemDto, respPriceItemDto));
-        ResponseDto<RespPriceListDto> responseDto = new ResponseDto<>(respPriceItemDtos);
+        ResponseDto<List<RespPriceItemDto>> responseDto = new ResponseDto<>(
+                List.of(respPriceItemDto, respPriceItemDto, respPriceItemDto, respPriceItemDto, respPriceItemDto, respPriceItemDto));
         return ResponseEntity.ok(responseDto);
     }
 
