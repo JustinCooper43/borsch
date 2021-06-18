@@ -1,5 +1,7 @@
-package com.nayax.borsch.mapper;
+package com.nayax.borsch.mapper.impl;
 
+import com.nayax.borsch.mapper.CashierMapper;
+import com.nayax.borsch.mapper.UserMapper;
 import com.nayax.borsch.model.dto.ResponseDto;
 import com.nayax.borsch.model.dto.user.request.ReqProfileAddDto;
 import com.nayax.borsch.model.dto.user.request.ReqProfileUpDto;
@@ -14,10 +16,10 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-@Mapper
-public interface ProfileMapper {
 
-    default RespProfileDto toDto(ProfileEntity entity) {
+public class ProfileMapper {
+
+     public  RespProfileDto toDto(ProfileEntity entity) {
         RespUserDto userDto = (Mappers.getMapper(UserMapper.class).toDto(entity.getUserEntity()));
         RespCashierDto cashierDto = Mappers.getMapper(CashierMapper.class).toDto(entity.getCashierEntity());
         RespProfileDto respUserDto = new RespProfileDto();
@@ -26,7 +28,7 @@ public interface ProfileMapper {
         return respUserDto;
     }
 
-    default ProfileEntity toAddEntity(ReqProfileAddDto dto) {
+     static ProfileEntity toAddEntity(ReqProfileAddDto dto) {
         UserEntity userEntity = (Mappers.getMapper(UserMapper.class).toAddEntity(dto.getUser()));
         CashierEntity cashierEntity = Mappers.getMapper(CashierMapper.class).toAddEntity(dto.getPayments());
         ProfileEntity profileEntity = new ProfileEntity();
@@ -35,7 +37,7 @@ public interface ProfileMapper {
         return profileEntity;
     }
 
-    default ProfileEntity toUpEntity(ReqProfileUpDto dto) {
+     static ProfileEntity toUpEntity(ReqProfileUpDto dto) {
         UserEntity userEntity = (Mappers.getMapper(UserMapper.class).toUpdateEntity(dto.getUser()));
         CashierEntity cashierEntity = Mappers.getMapper(CashierMapper.class).toUpEntity(dto.getPayments());
         ProfileEntity profileEntity = new ProfileEntity();
