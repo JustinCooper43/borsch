@@ -13,7 +13,6 @@ spring:
     maximumPoolSize: 2
 server:
   port: 8090
-
 swagger:
   config:
     basePackage: "com.nayax.borsch"

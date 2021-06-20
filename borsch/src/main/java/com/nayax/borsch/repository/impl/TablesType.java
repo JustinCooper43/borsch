@@ -3,10 +3,12 @@ package com.nayax.borsch.repository.impl;
 public enum TablesType {
 
     EXTRA("ExtraItem"),
-    ADDIT("Addition"),
+    ADDITION("Addition"),
     REM("Remark");
 
+    String nameTable;
 
     TablesType(String nameTable) {
+        this.nameTable = nameTable;
     }
 }

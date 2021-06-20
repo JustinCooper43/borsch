@@ -12,5 +12,5 @@ public interface CrudItemGenericRepository<T> {
     T update(T entity, TablesType nameTable);
     Optional<T> findById(Long id , TablesType nameTable);
     List<T> findAll(TablesType nameTable);
-    boolean delete(Long id , TablesType nameTable);
+    T delete(Long id , TablesType nameTable);
 }
