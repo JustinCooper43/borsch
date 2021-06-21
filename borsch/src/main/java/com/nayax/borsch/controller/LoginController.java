@@ -3,10 +3,12 @@ package com.nayax.borsch.controller;
 import com.nayax.borsch.model.dto.ResponseDto;
 import com.nayax.borsch.model.dto.user.request.ReqUserAddDto;
 import com.nayax.borsch.model.dto.user.response.RespLoginDto;
-import com.nayax.borsch.model.dto.user.response.RespUserDto;
+import com.nayax.borsch.model.dto.user.response.nested.RespLoginCashierDto;
 import com.nayax.borsch.model.dto.user.response.nested.RoleDto;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 
@@ -15,11 +17,12 @@ public class LoginController {
 
     private RespLoginDto getLoginMock() {
         RespLoginDto loginDto = new RespLoginDto();
-        RespUserDto user = new RespUserDto();
+        RespLoginCashierDto user = new RespLoginCashierDto();
         user.setId(14L);
         user.setFirstName("Fname");
         user.setLastName("Lname");
         user.seteMail("adress@server.com");
+        user.setCashier(false);
         RoleDto role = new RoleDto();
         role.setId(2L);
         role.setName("Cashier");
