@@ -3,6 +3,7 @@ package com.nayax.borsch.controller;
 
 import com.nayax.borsch.model.dto.ResponseDto;
 import com.nayax.borsch.model.dto.assortment.request.ReqSimplePriceItemAddDto;
+import com.nayax.borsch.model.dto.assortment.request.ReqSimplePriceItemUpDto;
 import com.nayax.borsch.model.dto.assortment.response.RespSimplePriceItemDto;
 import com.nayax.borsch.model.entity.assortment.GeneralPriceItemEntity;
 import com.nayax.borsch.repository.impl.AdditionsRepository;
@@ -16,7 +17,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
-@RequestMapping
+@RequestMapping("/test")
 public class TestControllerGeneralItems {
 
     @Autowired
@@ -36,7 +37,7 @@ public class TestControllerGeneralItems {
 
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     public ResponseEntity<ResponseDto<RespSimplePriceItemDto>> getByIdAddition(@PathVariable(value = "id") Long id) {
         GeneralPriceItemEntity entity = new GeneralPriceItemEntity();
         entity.setPrice(new BigDecimal("99"));
@@ -60,8 +61,22 @@ public class TestControllerGeneralItems {
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseDto<RespSimplePriceItemDto>> deleted(@PathParam(value = "id") Long id) {
-        additionsRepository.delete(id, TablesType.ADDITION);        RespSimplePriceItemDto mock = getRespSimplePriceItemDto();
+    public ResponseEntity<ResponseDto<RespSimplePriceItemDto>> deleted(@PathVariable(value = "id") Long id) {
+        additionsRepository.delete(id, TablesType.ADDITION);
+        RespSimplePriceItemDto mock = getRespSimplePriceItemDto();
+        return ResponseEntity.ok(new ResponseDto<>(mock));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ResponseDto<RespSimplePriceItemDto>> editAddition(@PathVariable(value = "id") Long id, @RequestBody ReqSimplePriceItemUpDto dto) {
+        GeneralPriceItemEntity entity = new GeneralPriceItemEntity();
+        entity.setPrice(new BigDecimal("222"));
+        entity.setName("TestTest");
+        entity.setId(id);
+
+        additionsRepository.update(entity, TablesType.ADDITION);
+        dto.setId(id);
+        RespSimplePriceItemDto mock = getRespSimplePriceItemDto();
         return ResponseEntity.ok(new ResponseDto<>(mock));
     }
 

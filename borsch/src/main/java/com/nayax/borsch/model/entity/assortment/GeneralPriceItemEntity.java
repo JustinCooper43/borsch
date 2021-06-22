@@ -7,7 +7,7 @@ public class GeneralPriceItemEntity {
     private Long id;
     private String name;
     private BigDecimal price;
-    private String active;
+    private String active = "Y";
 
     public Long getId() {
         return id;

@@ -7,14 +7,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Repository
@@ -28,16 +34,26 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
     public GeneralPriceItemEntity add(GeneralPriceItemEntity entity, TablesType nameTable) {
         String table = getNameTable(nameTable);
 
+
         String sql = " declare @table nvarchar(20) = ?  " +
                 " declare @name nvarchar(12) = ?  " +
                 " declare @cost decimal(10,2) = ?  " +
+                " declare @active nvarchar(1) = ?  " +
                 " declare @SqlStr nvarchar(max)  " +
-                " SET @SqlStr =  ' INSERT INTO '+  @table  +' ( [Name] , Cost ) " +
-                " OUTPUT INSERTED.* VALUES ( '''+ @name +''' , '+  convert(nvarchar,@cost)+' ) ' " +
+                " SET @SqlStr =  ' INSERT INTO ' +  @table  + ' ( [Name] , Cost , Active )  " +
+                " OUTPUT INSERTED.* VALUES ( '''+ @name +''' , '+  convert(nvarchar,@cost)+ ', ''' + @active +''' ) ' " +
                 " EXEC sp_executesql @SqlStr ";
 
-        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(GeneralPriceItemEntity.class),
-                table, entity.getName(), entity.getPrice()
+
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
+            GeneralPriceItemEntity entity2 = new GeneralPriceItemEntity();
+            entity2.setId((Long) rs.getObject("id"));
+            entity2.setPrice((BigDecimal) rs.getObject("Cost"));
+            entity2.setName((String) rs.getObject("Name"));
+            entity2.setActive((String) rs.getObject("Active"));
+            return entity2;
+        },
+                table, entity.getName(), entity.getPrice(), entity.getActive()
         );
     }
 
@@ -82,7 +98,7 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
         String sql = " declare @table nvarchar(20) = ? " +
                 " declare @id bigint = ? " +
                 " declare @SqlStr nvarchar(max)  " +
-                " SET  @SqlStr = ' SELECT id, [Name] , Cost FROM ' + @table + ' WHERE id = ' + convert(nvarchar,@id) " +
+                " SET  @SqlStr = ' SELECT id, [Name] , Cost FROM ' + @table + ' WHERE id = ' + convert(nvarchar,@id) + ' and Active LIKE  ''Y'' ' " +
                 " + 'AND (Active NOT LIKE ''N'' OR Active IS NULL)'  " +
                 " EXEC sp_executesql @SqlStr ";
 
@@ -94,7 +110,7 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
                     GeneralPriceItemEntity entity = new GeneralPriceItemEntity();
                     entity.setId((Long) rs.getObject("id"));
                     entity.setPrice((BigDecimal) rs.getObject("Cost"));
-                    entity.setName((String) rs.getObject("[Name]"));
+                    entity.setName((String) rs.getObject("Name"));
 
                     return entity;
                 }
@@ -112,7 +128,7 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
         String table = String.valueOf(nameTable);
         String sql = " declare @table nvarchar(20) = ? " +
                 " declare @SqlStr nvarchar(max) " +
-                " set @SqlStr = ' SELECT id, [Name], Cost  FROM ' + @table + ' WHERE Active LIKE ''Y'' OR Active IS NULL' " +
+                " set @SqlStr = ' SELECT id, [Name] , Cost  FROM ' + @table + ' WHERE Active LIKE ''Y'' ' " +
                 " EXEC sp_executesql @SqlStr";
 
         List<GeneralPriceItemEntity> listItems = new ArrayList<>();
@@ -122,7 +138,7 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
             public GeneralPriceItemEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
                 GeneralPriceItemEntity entity = new GeneralPriceItemEntity();
                 entity.setId((Long) rs.getObject("id"));
-                entity.setName((String) rs.getObject("[Name]"));
+                entity.setName((String) rs.getObject("Name"));
                 entity.setPrice((BigDecimal) rs.getObject("Cost"));
                 return entity;
             }
@@ -158,4 +174,35 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
         }
         return result;
     }
+
+
+//    public ShawarmaItemEntity add(ShawarmaItemEntity entity) {
+//        String table = getNameTable(nameTable);
+//
+//
+//        String sql = " declare @table nvarchar(20) = ?  " +
+//                " declare @name nvarchar(12) = ?  " +
+//                " declare @cost decimal(10,2) = ?  " +
+//                " declare @active nvarchar(1) = ?  " +
+//                " declare @SqlStr nvarchar(max)  " +
+//                " SET @SqlStr =  ' INSERT INTO '+  @table  +' ( [Name] , Cost , Active )  " +
+//                " VALUES ( '''+ @name +''' , '+  convert(nvarchar,@cost)+ ', ''' + @active +''' ) ' " +
+//                "EXEC sp_executesql @SqlStr " ;
+//
+//        KeyHolder keyHolder = new GeneratedKeyHolder();
+//
+//        jdbcTemplate.update(new PreparedStatementCreator() {
+//            @Override
+//            public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+//                PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
+//                ps.setString(1, table);
+//                ps.setString(2, entity.getName());
+//                ps.setBigDecimal(3, entity.getPrice());
+//                ps.setString(4, entity.getActive());
+//                return ps;
+//            }
+//        }, keyHolder);
+//        Long id = keyHolder.getKey().longValue();
+//        return findById(id,nameTable).orElse(new GeneralPriceItemEntity());
+//    }
 }
