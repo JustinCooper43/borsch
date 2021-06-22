@@ -21,7 +21,7 @@ import java.util.List;
 public class CashierController {
 
 
-    @PostMapping("/{id}")
+    @GetMapping ("/{id}")
     public ResponseEntity<ResponseDto<RespProfileDto>> getById(@PathVariable(value = "id") Long id) {
         ResponseDto<RespProfileDto> respDto = new ResponseDto<>(generatedMock());
         return ResponseEntity.ok(respDto);
@@ -33,7 +33,7 @@ public class CashierController {
         return ResponseEntity.ok(respListDto);
     }
 
-    @PostMapping("/current")
+    @GetMapping("/current")
     public ResponseEntity<ResponseDto<RespProfileDto>> get() {
         ResponseDto<RespProfileDto> respDto = new ResponseDto<>(generatedMock());
         return ResponseEntity.ok(respDto);
