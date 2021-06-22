@@ -19,7 +19,7 @@ import org.mapstruct.factory.Mappers;
 
 public class ProfileMapper {
 
-     public  RespProfileDto toDto(ProfileEntity entity) {
+     public  static RespProfileDto toDto(ProfileEntity entity) {
         RespUserDto userDto = (Mappers.getMapper(UserMapper.class).toDto(entity.getUserEntity()));
         RespCashierDto cashierDto = Mappers.getMapper(CashierMapper.class).toDto(entity.getCashierEntity());
         RespProfileDto respUserDto = new RespProfileDto();
@@ -28,7 +28,7 @@ public class ProfileMapper {
         return respUserDto;
     }
 
-     static ProfileEntity toAddEntity(ReqProfileAddDto dto) {
+    public  static  ProfileEntity toAddEntity(ReqProfileAddDto dto) {
         UserEntity userEntity = (Mappers.getMapper(UserMapper.class).toAddEntity(dto.getUser()));
         CashierEntity cashierEntity = Mappers.getMapper(CashierMapper.class).toAddEntity(dto.getPayments());
         ProfileEntity profileEntity = new ProfileEntity();
@@ -37,7 +37,7 @@ public class ProfileMapper {
         return profileEntity;
     }
 
-     static ProfileEntity toUpEntity(ReqProfileUpDto dto) {
+    public  static ProfileEntity toUpEntity(ReqProfileUpDto dto) {
         UserEntity userEntity = (Mappers.getMapper(UserMapper.class).toUpdateEntity(dto.getUser()));
         CashierEntity cashierEntity = Mappers.getMapper(CashierMapper.class).toUpEntity(dto.getPayments());
         ProfileEntity profileEntity = new ProfileEntity();

@@ -7,6 +7,9 @@ import com.nayax.borsch.model.dto.user.response.RespCashierDto;
 import com.nayax.borsch.model.dto.user.response.RespProfileDto;
 import com.nayax.borsch.model.dto.user.response.RespUserDto;
 import com.nayax.borsch.model.dto.user.response.nested.RoleDto;
+import com.nayax.borsch.service.impl.ProfileService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,10 +17,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/profile")
-public class UserController {
+public class ProfileController {
 
-//    @Autowired
-//    UserService service;
+    @Autowired
+    ProfileService service;
 
     public static RespUserDto getUserMock() {
         RespUserDto user = new RespUserDto();
@@ -35,19 +38,13 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<ResponseDto<RespProfileDto>> add(@RequestBody ReqProfileAddDto dto) {
-        RespUserDto user = getUserMock();
-        RespCashierDto payments = PaymentController.generatorPayDto().getPaymentMethod();
-        RespProfileDto profile = new RespProfileDto();
-        profile.setUser(user);
-        profile.setPayments(payments);
-        ResponseDto<RespProfileDto> responseDto = new ResponseDto<>(profile);
+        ResponseDto<RespProfileDto> responseDto = service.add(dto);
         return ResponseEntity.ok(responseDto);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResponseDto<RespUserDto>> get(@PathVariable(value = "id") Long id) {
-        RespUserDto user = getUserMock();
-        ResponseDto<RespUserDto> responseDto = new ResponseDto<>(user);
+    public ResponseEntity<ResponseDto<RespProfileDto>> get(@PathVariable(value = "id") Long id) {
+        ResponseDto<RespProfileDto> responseDto = service.getById(id);
         return ResponseEntity.ok(responseDto);
     }
 
@@ -75,9 +72,10 @@ public class UserController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<ResponseDto<List<RespUserDto>>> getAll() {
-        RespUserDto user = getUserMock();
-        ResponseDto<List<RespUserDto>> responseDto = new ResponseDto<>(List.of(user, user, user, user, user, user, user));
+    public ResponseEntity<ResponseDto<List<RespProfileDto>>> getAll() {
+
+        ResponseDto<List<RespProfileDto>> responseDto = service.getAll();
+
         return ResponseEntity.ok(responseDto);
     }
 }
