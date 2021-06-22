@@ -2,9 +2,9 @@ package com.nayax.borsch.repository.impl;
 
 public enum TablesType {
 
-    EXTRA("ExtraItem"),
+    EXTRAITEM("ExtraItem"),
     ADDITION("Addition"),
-    REM("Remark");
+    REMARK("Remark");
 
     String nameTable;
 
