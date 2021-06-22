@@ -24,6 +24,7 @@ public interface CashierMapper {
     @Mapping(target = "cardNote", source = "card.notes")
     @Mapping(target = "cardQrCode", source = "card.qr")
     @Mapping(target = "cashPaymentAllowed", source = "cash")
+    @Mapping(target = "cashierId", ignore = true)
     CashierEntity toAddEntity(ReqCashierAddDto addDto);
 
 

@@ -46,7 +46,7 @@ public class ShawarmaItemEntity {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", price=" + price +
-                ", isHalfAble=" + isHalfAble +
+                ", isHalfAble=" + halfAble +
                 '}';
     }
 }

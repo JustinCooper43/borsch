@@ -30,7 +30,7 @@ public class RepositoryShawarmaTypeImpl{
         int result = 0;
         try {
             result = jdbcTemplate.update(sql,
-                    entity.getName(), entity.getPrice(), entity.getHalfAble(), entity.getId());
+                    entity.getName(), entity.getPrice(), entity.isHalfAble(), entity.getId());
         }catch (EmptyResultDataAccessException e){
             System.out.println("Cannot be update Shawarma type!!!!");
         }
