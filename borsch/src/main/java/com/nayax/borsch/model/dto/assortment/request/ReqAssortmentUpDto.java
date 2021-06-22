@@ -6,8 +6,16 @@ public class ReqAssortmentUpDto {
 
     private Long dish;
     private List<Long> additions;
-    private boolean halfable;
     private List<Long> remarks;
+    private boolean halfAble;
+
+    public boolean isHalfAble() {
+        return halfAble;
+    }
+
+    public void setHalfAble(boolean halfAble) {
+        this.halfAble = halfAble;
+    }
 
     public Long getDish() {
         return dish;
@@ -25,13 +33,6 @@ public class ReqAssortmentUpDto {
         this.additions = additions;
     }
 
-    public boolean isHalfable() {
-        return halfable;
-    }
-
-    public void setHalfable(boolean halfable) {
-        this.halfable = halfable;
-    }
 
     public List<Long> getRemarks() {
         return remarks;

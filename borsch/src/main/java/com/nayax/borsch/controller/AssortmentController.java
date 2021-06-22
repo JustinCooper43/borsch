@@ -1,6 +1,7 @@
 package com.nayax.borsch.controller;
 
 import com.nayax.borsch.mapper.AssortmentMapper;
+import com.nayax.borsch.mapper.AssortmentMapper;
 import com.nayax.borsch.mapper.UserMapper;
 import com.nayax.borsch.model.dto.PageDto;
 import com.nayax.borsch.model.dto.ResponseDto;
@@ -31,7 +32,7 @@ public class AssortmentController {
     @GetMapping
     public ResponseEntity<ResponseDto<PageDto<RespAssortmentDto>>> getAssortment(@RequestParam int page, @RequestParam int pageSize) {
         RespAssortmentDto assortment = new RespAssortmentDto();
-        assortment.setHalfable(true);
+        assortment.setHalfAble(true);
         assortment.setAdditions(getMockList());
         assortment.setRemarks(getMockList());
         assortment.setDish(getMockList().get(0));
@@ -48,7 +49,7 @@ public class AssortmentController {
         rDto.setAdditions(getMockList());
         rDto.setRemarks(getMockList());
         rDto.setDish(getMockList().get(0));
-        rDto.setHalfable(true);
+        rDto.setHalfAble(true);
         ResponseDto<RespAssortmentDto> respDto = new ResponseDto<>(rDto);
         return ResponseEntity.ok(respDto);
     }
@@ -59,7 +60,7 @@ public class AssortmentController {
         respAssortmentDto.setAdditions(getMockList());
         respAssortmentDto.setRemarks(getMockList());
         respAssortmentDto.setDish(getMockList().get(0));
-        respAssortmentDto.setHalfable(true);
+        respAssortmentDto.setHalfAble(true);
         /////
 //
 //        GeneralPriceItemEntity general = new GeneralPriceItemEntity();

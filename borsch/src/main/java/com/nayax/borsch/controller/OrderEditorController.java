@@ -35,7 +35,7 @@ public class OrderEditorController {
         RespAssortmentItemDto respAssortmentItemDto = new RespAssortmentItemDto();
         respAssortmentItemDto.setId(2l);
         respAssortmentItemDto.setName("Шаурма с курицей");
-        respAssortmentItemDto.setHalfable(true);
+        respAssortmentItemDto.setHalfAble(true);
         respAssortmentItemDto.setPrice(new BigDecimal("60.22"));
         List<RespAssortmentItemDto> list = List.of(respAssortmentItemDto, respAssortmentItemDto, respAssortmentItemDto, respAssortmentItemDto, respAssortmentItemDto);
         ResponseDto<List<RespAssortmentItemDto>> responseDto = new ResponseDto<>(list);

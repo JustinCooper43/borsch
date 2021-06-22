@@ -11,7 +11,7 @@ import org.mapstruct.Mapping;
 
 import java.util.List;
 
-@Mapper
+@Mapper(uses = SimpleItemsMapper.class)
 public interface OrderItemMapper {
 
     @Mapping(source = "dish", target = "dish.id")
@@ -31,9 +31,6 @@ public interface OrderItemMapper {
     @Mapping(target = "price", ignore = true)
     GeneralPriceItemEntity toItemId(Long id);
 
+    @Mapping(target = "orderDate", source = "creationTime")
     RespOrderItemDto toDto(OrderEntity entity);
-
-    RespSimplePriceItemDto toPriceItemDto(GeneralPriceItemEntity entity);
-
-    RespSimpleItemDto toItemDto(GeneralPriceItemEntity entity);
 }
