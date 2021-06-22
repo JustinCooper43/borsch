@@ -1,16 +1,18 @@
 package com.nayax.borsch.model.dto.user.response;
 
+import com.nayax.borsch.model.dto.user.response.nested.RespLoginCashierDto;
+
 import java.time.LocalDateTime;
 
 public class RespLoginDto {
-    private RespUserDto user;
+    private RespLoginCashierDto user;
     private LocalDateTime time;
 
-    public RespUserDto getUser() {
+    public RespLoginCashierDto getUser() {
         return user;
     }
 
-    public void setUser(RespUserDto user) {
+    public void setUser(RespLoginCashierDto user) {
         this.user = user;
     }
 

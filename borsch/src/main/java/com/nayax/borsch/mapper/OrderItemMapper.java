@@ -29,6 +29,7 @@ public interface OrderItemMapper {
     @Mapping(target = "id")
     @Mapping(target = "name", ignore = true)
     @Mapping(target = "price", ignore = true)
+    @Mapping(target = "active", ignore = true)
     GeneralPriceItemEntity toItemId(Long id);
 
     @Mapping(target = "orderDate", source = "creationTime")

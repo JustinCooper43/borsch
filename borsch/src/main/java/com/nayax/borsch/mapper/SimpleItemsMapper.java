@@ -15,8 +15,10 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface SimpleItemsMapper {
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "active", ignore = true)
     GeneralPriceItemEntity toGeneralPriceItemEntity(ReqSimplePriceItemAddDto dto);
 
+    @Mapping(target = "active", ignore = true)
     GeneralPriceItemEntity toGeneralPriceItemEntity(ReqSimplePriceItemUpDto dto);
 
     RespSimplePriceItemDto toPriceItemDto(GeneralPriceItemEntity entity);
@@ -25,9 +27,11 @@ public interface SimpleItemsMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "price", ignore = true)
+    @Mapping(target = "active", ignore = true)
     GeneralPriceItemEntity toGeneralPriceItemEntity(ReqSimpleItemAddDto dto);
 
     @Mapping(target = "price", ignore = true)
+    @Mapping(target = "active", ignore = true)
     GeneralPriceItemEntity toGeneralPriceItemEntity(ReqSimpleItemUpDto dto);
 
     RespSimpleItemDto toItemDto(GeneralPriceItemEntity entity);
