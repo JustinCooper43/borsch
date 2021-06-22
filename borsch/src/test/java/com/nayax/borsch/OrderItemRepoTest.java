@@ -4,7 +4,6 @@ import com.nayax.borsch.model.entity.assortment.GeneralPriceItemEntity;
 import com.nayax.borsch.model.entity.order.OrderEntity;
 import com.nayax.borsch.repository.impl.OrderItemRepository;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,9 +37,9 @@ public class OrderItemRepoTest {
             additions.add(addition);
         }
         GeneralPriceItemEntity drink = new GeneralPriceItemEntity();
-        drink.setId(4L);
+        drink.setId(2L);
         GeneralPriceItemEntity remark = new GeneralPriceItemEntity();
-        remark.setId(2L);
+        remark.setId(3L);
         testIn.setDish(dish);
         testIn.setAdditions(additions);
         testIn.setDrink(drink);
