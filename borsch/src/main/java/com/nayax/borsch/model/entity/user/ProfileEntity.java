@@ -20,4 +20,5 @@ public class ProfileEntity {
     public void setUserEntity(UserEntity userEntity) {
         this.userEntity = userEntity;
     }
+
 }

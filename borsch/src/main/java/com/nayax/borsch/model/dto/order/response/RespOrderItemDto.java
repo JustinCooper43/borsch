@@ -7,14 +7,23 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class RespOrderItemDto {
-    //TODO add cost, orderId?
+    //TODO add cost?
     private RespSimplePriceItemDto dish;
     private List<RespSimplePriceItemDto> additions;
     private RespSimplePriceItemDto drink;
     private RespSimpleItemDto remark;
     private boolean cut;
     private Integer quantity;
+    private Long orderId;
     private LocalDateTime orderDate;
+
+    public Long getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
+    }
 
     public LocalDateTime getOrderDate() {
         return orderDate;
