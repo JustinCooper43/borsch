@@ -15,6 +15,7 @@ public class OrderEntity {
     private Integer quantity;
     private Long userId;
     private LocalDateTime creationTime;
+    //TODO set current order in service?
     private Long orderSummaryId;
 
     public Long getOrderId() {
