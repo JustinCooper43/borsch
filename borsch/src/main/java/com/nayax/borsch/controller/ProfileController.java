@@ -50,24 +50,19 @@ public class ProfileController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ResponseDto<RespProfileDto>> update(@PathVariable(value = "id") Long id, @RequestBody ReqProfileUpDto dto) {
+
         dto.getUser().setId(id);
-        RespUserDto user = getUserMock();
-        RespCashierDto payments = PaymentController.generatorPayDto().getPaymentMethod();
-        RespProfileDto profile = new RespProfileDto();
-        profile.setUser(user);
-        profile.setPayments(payments);
-        ResponseDto<RespProfileDto> responseDto = new ResponseDto<>(profile);
+        dto.getPayments().setCashierId(id);
+
+        ResponseDto<RespProfileDto> responseDto = service.update(dto);
         return ResponseEntity.ok(responseDto);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseDto<RespProfileDto>> delete(@PathVariable(value = "id") Long id) {
-        RespUserDto user = getUserMock();
-        RespCashierDto payments = PaymentController.generatorPayDto().getPaymentMethod();
-        RespProfileDto profile = new RespProfileDto();
-        profile.setUser(user);
-        profile.setPayments(payments);
-        ResponseDto<RespProfileDto> responseDto = new ResponseDto<>(profile);
+
+
+        ResponseDto<RespProfileDto> responseDto = service.delete(id);
         return ResponseEntity.ok(responseDto);
     }
 

@@ -8,6 +8,7 @@ import com.nayax.borsch.mapper.impl.ProfileMapper;
 import com.nayax.borsch.model.dto.ErrorDto;
 import com.nayax.borsch.model.dto.ResponseDto;
 import com.nayax.borsch.model.dto.user.request.ReqProfileAddDto;
+import com.nayax.borsch.model.dto.user.request.ReqProfileUpDto;
 import com.nayax.borsch.model.dto.user.request.ReqUserAddDto;
 import com.nayax.borsch.model.dto.user.response.RespCashierDto;
 import com.nayax.borsch.model.dto.user.response.RespProfileDto;
@@ -44,6 +45,24 @@ public class ProfileService {
         return new ResponseDto<>(respProfileDto);
 
     }
+    public ResponseDto<RespProfileDto> update (ReqProfileUpDto dto) {
+
+        ProfileEntity entity = ProfileMapper.toUpEntity(dto);
+
+        RespProfileDto respProfileDto = ProfileMapper.toDto(repo.update(entity));
+
+        return new ResponseDto<>(respProfileDto);
+
+    }
+
+    public ResponseDto<RespProfileDto> delete (Long id) {
+
+
+        RespProfileDto respProfileDto = ProfileMapper.toDto(repo.delete(id));
+
+        return new ResponseDto<>(respProfileDto);
+
+    }
 
   public ResponseDto<RespProfileDto> getById (Long id) {
 
@@ -64,7 +83,7 @@ public class ProfileService {
     public ResponseDto<List<RespProfileDto>> getAll() {
         List<ProfileEntity> entityList = repo.findAll();
 
-        List<RespProfileDto> respProfileDtos = entityList.stream().map(ProfileMapper :: toDto).collect(Collectors.toList());
+        List<RespProfileDto> respProfileDtos = entityList.stream().map(ProfileMapper::toDto).collect(Collectors.toList());
 
         return new ResponseDto<>(respProfileDtos);
     }
