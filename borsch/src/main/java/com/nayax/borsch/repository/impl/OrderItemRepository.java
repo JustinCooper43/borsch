@@ -21,9 +21,9 @@ public class OrderItemRepository {
 
     public OrderEntity add(OrderEntity entity) {
         String insOrder = "INSERT INTO [Order] " +
-                " (UserId, CreationTime, ShawarmaTypeId, ExtraItemId, RemarkId, CutInHalf, Quantity) " +
+                " (UserId, CreationTime, ShawarmaTypeId, ExtraItemId, RemarkId, CutInHalf, Quantity, OrderSummaryId) " +
                 //    1        2               3            4            5           6         7
-                " VALUES (?, ?, ?, ?, ?, ?, ?) ";
+                " VALUES (?, ?, ?, ?, ?, ?, ?, ?) ";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(new PreparedStatementCreator() {
             @Override
@@ -36,6 +36,7 @@ public class OrderItemRepository {
                 ps.setObject(5, entity.getRemark().getId(), Types.BIGINT);
                 ps.setObject(6, entity.isCut() ? 1 : 0, Types.BIT);
                 ps.setObject(7, entity.getQuantity(), Types.SMALLINT);
+                ps.setObject(8, entity.getOrderSummaryId(), Types.BIGINT);
                 return ps;
             }
         }, keyHolder);

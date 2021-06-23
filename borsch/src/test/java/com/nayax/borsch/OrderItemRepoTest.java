@@ -4,20 +4,21 @@ import com.nayax.borsch.model.entity.assortment.GeneralPriceItemEntity;
 import com.nayax.borsch.model.entity.order.OrderEntity;
 import com.nayax.borsch.repository.impl.OrderItemRepository;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class OrderItemRepoTest {
-    private static OrderItemRepository orderItemRepository;
-
-    @BeforeAll
-    public static void init() {
-        orderItemRepository = new OrderItemRepository();
-    }
+    @Autowired
+    private OrderItemRepository orderItemRepository;
 
     @Test
     public void testAdd() {
@@ -36,9 +37,9 @@ public class OrderItemRepoTest {
             additions.add(addition);
         }
         GeneralPriceItemEntity drink = new GeneralPriceItemEntity();
-        drink.setId(4L);
+        drink.setId(2L);
         GeneralPriceItemEntity remark = new GeneralPriceItemEntity();
-        remark.setId(2L);
+        remark.setId(3L);
         testIn.setDish(dish);
         testIn.setAdditions(additions);
         testIn.setDrink(drink);
