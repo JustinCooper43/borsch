@@ -2,6 +2,8 @@ package com.nayax.borsch.repository.impl;
 
 import com.nayax.borsch.model.entity.assortment.GeneralPriceItemEntity;
 import com.nayax.borsch.model.entity.order.OrderEntity;
+import com.nayax.borsch.model.entity.order.OrderSumTimerEntity;
+import com.nayax.borsch.model.entity.user.CashierEntity;
 import com.nayax.borsch.utility.OrderEntityHashNoAdditions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -11,6 +13,8 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -87,5 +91,48 @@ public class DeliverySummaryRepository {
             e.printStackTrace();
         }
         return new ArrayList<>();
+    }
+
+    public OrderSumTimerEntity getTimerBeforeDate(LocalDateTime date) {
+        String sql = " SELECT TOP (1) OrderSummary.id, StartTime, StopTime, EndTime, CashierId, " +
+                " Cashier.CashPaymentAllowed, Cashier.CCNumber, Cashier.CCBank, " +
+                " Cashier.CCNote, Cashier.CCQRCode " +
+                " FROM OrderSummary " +
+                " JOIN Cashier ON Cashier.id = CashierId " +
+                " WHERE StartTime < ? " +
+                " ORDER BY StartTime DESC ; ";
+        try {
+            return jdbcTemplate.queryForObject(sql, new RowMapper<>() {
+                @Override
+                public OrderSumTimerEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
+                    OrderSumTimerEntity e = new OrderSumTimerEntity();
+                    CashierEntity c = new CashierEntity();
+                    c.setCashierId(rs.getLong("CashierId"));
+                    c.setCashPaymentAllowed(rs.getBoolean("CashPaymentAllowed"));
+                    c.setCardNumber(rs.getNString("CCNumber"));
+                    c.setCardBank(rs.getNString("CCBank"));
+                    c.setCardNote(rs.getNString("CCNote"));
+                    c.setCardQrCode(rs.getNString("CCQRCode"));
+                    e.setCashier(c);
+                    e.setId(rs.getLong("id"));
+                    Timestamp startTime = rs.getTimestamp("StartTime");
+                    if (startTime != null) {
+                        e.setStartTime(startTime.toLocalDateTime());
+                    }
+                    Timestamp stopTime = rs.getTimestamp("StopTime");
+                    if (stopTime != null) {
+                        e.setStopTime(stopTime.toLocalDateTime());
+                    }
+                    Timestamp endTime = rs.getTimestamp("EndTime");
+                    if (endTime != null) {
+                        e.setFinishTime(endTime.toLocalDateTime());
+                    }
+                    return e;
+                }
+            }, date);
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
