@@ -2,6 +2,7 @@ package com.nayax.borsch;
 
 import com.nayax.borsch.model.entity.assortment.ShawarmaItemEntity;
 import com.nayax.borsch.repository.impl.RepositoryShawarmaTypeImpl;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -25,6 +26,6 @@ public class RepositoryShawarmaTypeTest {
 
         ShawarmaItemEntity added = repositoryShawarmaType.add(add);
         System.out.println(added);
-//        Assertions.assertEquals(27,added.getId());
+        Assertions.assertEquals(27,added.getId());
     }
 }

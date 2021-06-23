@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,7 +30,10 @@ public class BorschController {
 
     @GetMapping("/hello")
     public ResponseEntity<?> greetings() {
-       List<AssortmentRespEntity> list = assortment.findAll(1,5);
+       List<AssortmentRespEntity> list = assortment.findAll();
+       List<Long> add = List.of(10L,11L,12L);
+        List<Long> rem = List.of(4L,1L,5L);
+       AssortmentRespEntity update = assortment.update(11L,add,rem);
         return  ResponseEntity.ok(list);
     }
 

@@ -3,65 +3,43 @@ package com.nayax.borsch.repository.impl;
 import com.nayax.borsch.model.entity.assortment.AssortmentRespEntity;
 import com.nayax.borsch.model.entity.assortment.GeneralPriceItemEntity;
 import com.nayax.borsch.model.entity.assortment.ShawarmaItemEntity;
-import com.nayax.borsch.model.entity.user.UserEntity;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
-import javax.crypto.MacSpi;
 import java.math.BigDecimal;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Repository
 public class RepositoryAssortmentImpl {
 
     @Autowired
-    private final JdbcTemplate jdbcTemplate = new JdbcTemplate();
+    private  JdbcTemplate jdbcTemplate;
+    @Autowired
+    private  NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 
-    public List<AssortmentRespEntity> findAll(int number, int sizePage) {
+    public List<AssortmentRespEntity> findAll() {
         List<AssortmentRespEntity> list = new ArrayList<>();
         Map<ShawarmaItemEntity, List<GeneralPriceItemEntity>> additions = new HashMap<>();
-        Map<ShawarmaItemEntity, List<GeneralPriceItemEntity>> remarks = new HashMap<>();
-        String sql = "declare @page int = ?;\n" +
-                "declare @pageSize int = ?;\n" +
-                " \n" +
-                "with tmpl as (\n" +
-                " \n" +
-                "select ShawarmaType.id shawId , ShawarmaType.[Name] shawName ,\n" +
-                "ShawarmaType.Cost shawCost, ShawarmaType.Halfable shawHalf, ShawarmaType.Active shawAct,\n" +
-                "Addition.id adId, Addition.[Name] adName , Addition.Cost adCost, Addition.Active adAct,\n" +
-                "Remark.id remId, Remark.[Name] remName, Remark.Active remAct\n" +
-                " \n" +
-                "from ShawarmaType \n" +
-                "left join AdditionAllowedShawarmaType addShaw on ShawarmaType.id = addShaw.ShawarmaTypeId \n" +
-                "left join Addition on addShaw.AllowedAdditionId = Addition.id \n" +
-                "left join RemarkAllowedShawarmaType remShaw on remShaw.ShawarmaTypeId = ShawarmaType.id \n" +
-                "left join Remark on Remark.id = remShaw.RemarkId\n" +
-                " \n" +
-                "WHERE (ShawarmaType.Active LIKE 'Y' ) and\n" +
-                "(addShaw.Active LIKE 'Y' ) and\n" +
-                "(Addition.Active LIKE 'Y' ) and\n" +
-                "(remShaw.Active LIKE 'Y') and\n" +
-                "(Remark.Active LIKE 'Y' )\n" +
-                ")\n" +
-                "select * from (select*\n" +
-                " \n" +
-                "from tmpl\n" +
-                "order by shawId, shawName, shawCost\n" +
-                " \n" +
-                " offset @pageSize*(@page-1) rows fetch next @pageSize rows only ) sub\n" +
-                "right join (SELECT count(*) FROM tmpl) c (total) on 1=1";
-        List<AssortmentRespEntity> aa = new ArrayList<>();
-        list = jdbcTemplate.query(sql, new RowMapper<AssortmentRespEntity>() {
+        Set<Long> listShawarmaId = new HashSet<>();
+
+        String sql = "Select sh.id shawId,sh.[Name] shawName,sh.Cost shawCost,sh.Halfable shawHalf,sh.Active shawAct,\n" +
+                "a.id adId, a.[Name] adName,a.Cost adCost, a.Active adAct\n" +
+                "from ShawarmaType sh\n" +
+                "left join AdditionAllowedShawarmaType addShawarm on sh.id = addShawarm.ShawarmaTypeId and sh.Active = 'Y' \n" +
+                "left join Addition a on addShawarm.AllowedAdditionId = a.id and A.Active = 'Y'";
+
+        jdbcTemplate.query(sql,new RowMapper<AssortmentRespEntity>() {
+
             @Override
             public AssortmentRespEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
                 ShawarmaItemEntity shawarma = new ShawarmaItemEntity();
@@ -69,32 +47,100 @@ public class RepositoryAssortmentImpl {
                 shawarma.setName((String) rs.getObject("shawName"));
                 shawarma.setPrice((BigDecimal) rs.getObject("shawCost"));
                 shawarma.setHalfAble(rs.getInt("shawHalf") > 0);
-                remarks.putIfAbsent(shawarma, new ArrayList<>());
                 additions.putIfAbsent(shawarma, new ArrayList<>());
-                /////////////////////////
-                GeneralPriceItemEntity addition = new GeneralPriceItemEntity();
-                addition.setId(rs.getLong("adId"));
-                addition.setName((String) rs.getObject("adName"));
-                addition.setPrice((BigDecimal) rs.getObject("adCost"));
-                additions.get(shawarma).add(addition);
-                /////////////////////////
+                listShawarmaId.add(shawarma.getId());
+                ///////////////
+                if (rs.getObject("adId") != null) {
+                    GeneralPriceItemEntity addition = new GeneralPriceItemEntity();
+                    addition.setId((Long) rs.getObject("adId"));
+                    addition.setName((String) rs.getObject("adName"));
+                    addition.setPrice((BigDecimal) rs.getObject("adCost"));
+                    addition.setActive(rs.getString("adAct"));
+                    additions.get(shawarma).add(addition);
+                }
+                return null;
+                }
+            });
+            Map<ShawarmaItemEntity, List<GeneralPriceItemEntity>> remarks = findAllRemarks(listShawarmaId);
+
+            for (ShawarmaItemEntity var : additions.keySet()){
+                AssortmentRespEntity entity = new AssortmentRespEntity();
+                entity.setDish(var);
+                entity.setAdditions(additions.get(var));
+                entity.setHalfAble(var.isHalfAble());
+                entity.setRemarks(remarks.get(var));
+                list.add(entity);
+            }
+        return list;
+    }
+
+    private Map<ShawarmaItemEntity, List<GeneralPriceItemEntity>> findAllRemarks(Set<Long> ids) {
+        Map<ShawarmaItemEntity, List<GeneralPriceItemEntity>> remarks = new HashMap<>();
+        SqlParameterSource parameters = new MapSqlParameterSource("ids", ids);
+        String sql =
+                "Select sh.id shawId,sh.[Name] shawName,sh.Cost shawCost,sh.Halfable shawHalf,sh.Active shawAct,\n" +
+                "r.id remId, r.[Name] remName, r.Active remAct\n" +
+                "from ShawarmaType sh\n" +
+                "left join RemarkAllowedShawarmaType remAll on sh.id = remAll.ShawarmaTypeId and sh.Active = 'Y' \n" +
+                "left join Remark r on remAll.RemarkId = r.id and r.Active = 'Y' \n" +
+                "where sh.id in (:ids)";
+        namedParameterJdbcTemplate.query(sql,parameters, (RowMapper<AssortmentRespEntity>) (rs, rowNum) -> {
+            ShawarmaItemEntity shawarma = new ShawarmaItemEntity();
+            shawarma.setId((Long) rs.getObject("shawId"));
+            shawarma.setName((String) rs.getObject("shawName"));
+            shawarma.setPrice((BigDecimal) rs.getObject("shawCost"));
+            shawarma.setHalfAble(rs.getInt("shawHalf") > 0);
+            remarks.putIfAbsent(shawarma, new ArrayList<>());
+            ///////////////
+            if (rs.getObject("remId") != null) {
                 GeneralPriceItemEntity remark = new GeneralPriceItemEntity();
                 remark.setId((Long) rs.getObject("remId"));
                 remark.setName((String) rs.getObject("remName"));
                 remark.setActive((String) rs.getObject("remAct"));
                 remarks.get(shawarma).add(remark);
-
-                return new AssortmentRespEntity();
             }
-        }, number, sizePage);
-
-        for (ShawarmaItemEntity var : remarks.keySet()) {
-            AssortmentRespEntity entity = new AssortmentRespEntity();
-            entity.setDish(var);
-            entity.setAdditions(additions.get(var));
-            entity.setRemarks(remarks.get(var));
-            list.add(entity);
-        }
-        return list;
+            return null;
+        });
+        return remarks;
     }
+
+
+
+    public AssortmentRespEntity update(Long id, List<Long> additions,List<Long> remarks){
+
+        String sqlUpdate = "update RemarkAllowedShawarmaType set Active = 'N' where ShawarmaTypeId = ? ;" +
+                           "update AdditionAllowedShawarmaType set Active = 'N' where ShawarmaTypeId = ? ;";
+
+        String sqlInsert1 = "Insert into RemarkAllowedShawarmaType (ShawarmaTypeId,RemarkId,Active) values(?,?,?)";
+        String sqlInsert2 = "Insert into AdditionAllowedShawarmaType (ShawarmaTypeId,AllowedAdditionId,Active) values(?,?,?)";
+        jdbcTemplate.update(sqlUpdate,id,id);
+        jdbcTemplate.batchUpdate(sqlInsert1, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                ps.setLong(1,id);
+                ps.setLong(2,remarks.get(i));
+                ps.setString(3,"Y");
+            }
+            @Override
+            public int getBatchSize() {
+                return remarks.size();
+            }
+        });
+        jdbcTemplate.batchUpdate(sqlInsert2, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                ps.setLong(1,id);
+                ps.setLong(2,additions.get(i));
+                ps.setString(3,"Y");
+            }
+            @Override
+            public int getBatchSize() {
+                return additions.size();
+            }
+        });
+        return null;
+    }
+
+
+
 }
