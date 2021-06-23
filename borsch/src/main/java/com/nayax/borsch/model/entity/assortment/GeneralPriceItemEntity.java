@@ -1,6 +1,7 @@
 package com.nayax.borsch.model.entity.assortment;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 public class GeneralPriceItemEntity {
 
@@ -39,5 +40,18 @@ public class GeneralPriceItemEntity {
 
     public void setActive(String active) {
         this.active = active;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GeneralPriceItemEntity that = (GeneralPriceItemEntity) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
