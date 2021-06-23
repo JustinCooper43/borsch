@@ -7,7 +7,7 @@ public class ShawarmaItemEntity {
     private String name;
     private BigDecimal price;
     private boolean halfAble;
-
+    private String active = "Y";
     public Long getId() {
         return id;
     }
@@ -38,6 +38,14 @@ public class ShawarmaItemEntity {
 
     public void setHalfAble(boolean halfable) {
         halfAble = halfable;
+    }
+
+    public String getActive() {
+        return active;
+    }
+
+    public void setActive(String active) {
+        this.active = active;
     }
 
     @Override

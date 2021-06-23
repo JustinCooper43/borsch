@@ -1,9 +1,11 @@
 package com.nayax.borsch.controller;
 
 
+import com.nayax.borsch.model.dto.PageDto;
 import com.nayax.borsch.model.dto.ResponseDto;
 import com.nayax.borsch.model.dto.assortment.request.ReqSimplePriceItemAddDto;
 import com.nayax.borsch.model.dto.assortment.request.ReqSimplePriceItemUpDto;
+import com.nayax.borsch.model.dto.assortment.response.RespAssortmentDto;
 import com.nayax.borsch.model.dto.assortment.response.RespSimplePriceItemDto;
 import com.nayax.borsch.model.entity.assortment.GeneralPriceItemEntity;
 import com.nayax.borsch.repository.impl.AdditionsRepository;
@@ -80,6 +82,20 @@ public class TestControllerGeneralItems {
         return ResponseEntity.ok(new ResponseDto<>(mock));
     }
 
+    @GetMapping("/page")
+    public ResponseEntity<ResponseDto<PageDto<RespSimplePriceItemDto>>> getAllPage(@RequestParam int page, @RequestParam int pageSize) {
+        RespSimplePriceItemDto priceItemDto = new RespSimplePriceItemDto();
+        priceItemDto.setPrice(new BigDecimal("937"));
+        priceItemDto.setName("TestPageGen");
+
+        additionsRepository.findAllPage(page, pageSize, TablesType.ADDITION);
+
+        PageDto<RespSimplePriceItemDto> pageDto = PageDto.getPagedList(page, pageSize,
+                List.of(priceItemDto, priceItemDto, priceItemDto, priceItemDto, priceItemDto, priceItemDto, priceItemDto, priceItemDto));
+        ResponseDto<PageDto<RespSimplePriceItemDto>> responseDto = new ResponseDto<>(pageDto);
+        return ResponseEntity.ok(responseDto);
+    }
+
     private RespSimplePriceItemDto getRespSimplePriceItemDto() {
         RespSimplePriceItemDto dto = new RespSimplePriceItemDto();
         dto.setId(18L);
@@ -87,4 +103,6 @@ public class TestControllerGeneralItems {
         dto.setName("Картошка фри");
         return dto;
     }
+
+
 }

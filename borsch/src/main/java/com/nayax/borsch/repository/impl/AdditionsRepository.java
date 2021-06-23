@@ -24,7 +24,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Repository
-public class AdditionsRepository implements CrudItemGenericRepository<GeneralPriceItemEntity> {
+public class AdditionsRepository implements CrudItemGenericRepository<GeneralPriceItemEntity, TablesType> {
 
 
     @Autowired
@@ -46,13 +46,13 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
 
 
         return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
-            GeneralPriceItemEntity entity2 = new GeneralPriceItemEntity();
-            entity2.setId((Long) rs.getObject("id"));
-            entity2.setPrice((BigDecimal) rs.getObject("Cost"));
-            entity2.setName((String) rs.getObject("Name"));
-            entity2.setActive((String) rs.getObject("Active"));
-            return entity2;
-        },
+                    GeneralPriceItemEntity entity2 = new GeneralPriceItemEntity();
+                    entity2.setId((Long) rs.getObject("id"));
+                    entity2.setPrice((BigDecimal) rs.getObject("Cost"));
+                    entity2.setName((String) rs.getObject("Name"));
+                    entity2.setActive((String) rs.getObject("Active"));
+                    return entity2;
+                },
                 table, entity.getName(), entity.getPrice(), entity.getActive()
         );
     }
@@ -131,8 +131,7 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
                 " set @SqlStr = ' SELECT id, [Name] , Cost  FROM ' + @table + ' WHERE Active LIKE ''Y'' ' " +
                 " EXEC sp_executesql @SqlStr";
 
-        List<GeneralPriceItemEntity> listItems = new ArrayList<>();
-        // jdbcTemplate.query doesn't throws EmptyResultDataAccessException
+        List<GeneralPriceItemEntity> listItems;
         listItems = jdbcTemplate.query(sql, new RowMapper<GeneralPriceItemEntity>() {
             @Override
             public GeneralPriceItemEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -165,6 +164,39 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
         }
     }
 
+    @Override
+    public List<GeneralPriceItemEntity> findAllPage(int page, int pageSize, TablesType nameTable) {
+
+        String table = String.valueOf(nameTable);
+        String sql = " declare @page int = ?  " +
+                " declare @pageSize int = ?  " +
+                " declare @table nvarchar(20) = ? " +
+                " declare @SqlStr nvarchar(max) " +
+                " declare @TableResult as table ( id bigint , [Name] nvarchar(200), Cost decimal (10,2) ) " +
+                " SET @SqlStr = ' SELECT id, [Name] , Cost  FROM ' + @table + ' WHERE Active LIKE ''Y'' ' " +
+                " insert into @TableResult  " +
+                " EXEC sp_executesql  @SqlStr " +
+                " select * from (select* " +
+                " from @TableResult " +
+                " order by id " +
+                " offset @pageSize*(@page-1) rows fetch next @pageSize rows only ) sub  " +
+                " right join (SELECT count(*) FROM @TableResult) c (total) on 1=1 " ;
+
+        List<GeneralPriceItemEntity> listItems;
+        listItems = jdbcTemplate.query(sql, new RowMapper<GeneralPriceItemEntity>() {
+            @Override
+            public GeneralPriceItemEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
+                GeneralPriceItemEntity entity = new GeneralPriceItemEntity();
+                entity.setId((Long) rs.getObject("id"));
+                entity.setName((String) rs.getObject("Name"));
+                entity.setPrice((BigDecimal) rs.getObject("Cost"));
+                return entity;
+            }
+        }, page, pageSize, table);
+        return listItems;
+
+    }
+
     private String getNameTable(TablesType tablesType) {
         String result = null;
         for (TablesType tab : TablesType.values()) {
@@ -175,34 +207,4 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
         return result;
     }
 
-
-//    public ShawarmaItemEntity add(ShawarmaItemEntity entity) {
-//        String table = getNameTable(nameTable);
-//
-//
-//        String sql = " declare @table nvarchar(20) = ?  " +
-//                " declare @name nvarchar(12) = ?  " +
-//                " declare @cost decimal(10,2) = ?  " +
-//                " declare @active nvarchar(1) = ?  " +
-//                " declare @SqlStr nvarchar(max)  " +
-//                " SET @SqlStr =  ' INSERT INTO '+  @table  +' ( [Name] , Cost , Active )  " +
-//                " VALUES ( '''+ @name +''' , '+  convert(nvarchar,@cost)+ ', ''' + @active +''' ) ' " +
-//                "EXEC sp_executesql @SqlStr " ;
-//
-//        KeyHolder keyHolder = new GeneratedKeyHolder();
-//
-//        jdbcTemplate.update(new PreparedStatementCreator() {
-//            @Override
-//            public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-//                PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
-//                ps.setString(1, table);
-//                ps.setString(2, entity.getName());
-//                ps.setBigDecimal(3, entity.getPrice());
-//                ps.setString(4, entity.getActive());
-//                return ps;
-//            }
-//        }, keyHolder);
-//        Long id = keyHolder.getKey().longValue();
-//        return findById(id,nameTable).orElse(new GeneralPriceItemEntity());
-//    }
 }

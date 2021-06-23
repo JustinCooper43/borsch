@@ -1,6 +1,7 @@
 package com.nayax.borsch.repository.impl;
 
 import com.nayax.borsch.model.entity.assortment.GeneralPriceItemEntity;
+import com.nayax.borsch.model.entity.assortment.ShawarmaItemEntity;
 import com.nayax.borsch.model.entity.order.OrderEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -85,7 +86,7 @@ public class OrderItemRepository {
                     e.setCut(rs.getBoolean("cut"));
                     e.setOrderSummaryId(rs.getLong("orderSummaryId"));
                     e.setQuantity(rs.getInt("quantity"));
-                    GeneralPriceItemEntity dish = new GeneralPriceItemEntity();
+                    ShawarmaItemEntity dish = new ShawarmaItemEntity();
                     dish.setName(rs.getNString("dishName"));
                     dish.setPrice(rs.getBigDecimal("dishCost"));
                     dish.setActive(rs.getString("dishActive"));
@@ -118,7 +119,7 @@ public class OrderItemRepository {
             }, id);
             return Optional.ofNullable(entity);
         } catch (DataAccessException dataAccessException) {
-            dataAccessException.printStackTrace();
+
         }
         return Optional.empty();
     }
