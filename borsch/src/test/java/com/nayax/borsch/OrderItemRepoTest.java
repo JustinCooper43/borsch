@@ -1,10 +1,11 @@
 package com.nayax.borsch;
 
 import com.nayax.borsch.model.entity.assortment.GeneralPriceItemEntity;
+import com.nayax.borsch.model.entity.assortment.ShawarmaItemEntity;
 import com.nayax.borsch.model.entity.order.OrderEntity;
 import com.nayax.borsch.repository.impl.OrderItemRepository;
+import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,7 +29,7 @@ public class OrderItemRepoTest {
         testIn.setQuantity(2);
         testIn.setCut(true);
         testIn.setCreationTime(LocalDateTime.of(2020, 10, 10, 10, 10));
-        GeneralPriceItemEntity dish = new GeneralPriceItemEntity();
+        ShawarmaItemEntity dish = new ShawarmaItemEntity();
         dish.setId(11L);
         List<GeneralPriceItemEntity> additions = new ArrayList<>();
         for (int i = 0; i < 4; i += 2) {

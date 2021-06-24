@@ -19,20 +19,19 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 @Repository
-public class ProfileRepositoryImplementation implements GenericCrudRepository<ProfileEntity, Object> {
+public class ProfileRepositoryImplementation  {
 
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
 
-    @Override
+
     public ProfileEntity add(ProfileEntity entity) {
 
         String sqlUser = "INSERT INTO [User] (Active, RoleId ,Email , FirstName ,LastName , PhoneNumber)" +
@@ -57,9 +56,9 @@ public class ProfileRepositoryImplementation implements GenericCrudRepository<Pr
         entity.getCashierEntity().setCashierId(i);
 
         String sqlCashier = "INSERT INTO Cashier " +
-                "( UserId, CashPaymentAllowed " +
+                "(UserId, CashPaymentAllowed " +
                 ",CCNumber, CCBank, CCNote, CCQRCode)" +
-                " OUTPUT INSERTED.* VALUES (?,?, ?, ?, ?, ?)";
+                " OUTPUT INSERTED.* VALUES (?, ?, ?, ?, ?, ?)";
 
         CashierEntity cashierEntity = jdbcTemplate.queryForObject(sqlCashier, new BeanPropertyRowMapper<>(CashierEntity.class),
                  entity.getCashierEntity().getCashierId(),
@@ -68,22 +67,44 @@ public class ProfileRepositoryImplementation implements GenericCrudRepository<Pr
                 entity.getCashierEntity().getCardQrCode());
 
 
-
-
         return findById(entity.getUserEntity().getId()).orElseThrow(NotUpdateException::new);
 
     }
 
-    @Override
+
     public ProfileEntity update(ProfileEntity entity) throws NotUpdateException {
 
+        String sql = "Declare @mainId bigint = ?; "+
+                "UPDATE [User] " +
+                "SET Active  = ?, " +
+                "RoleId  = ?, " +
+                "Email  = ?, " +
+                "FirstName  = ?, " +
+                "LastName = ?, " +
+                "PhoneNumber  = ? " +
+                "WHERE id = @mainId; " +
+
+                "UPDATE Cashier " +
+                "SET  " +
+                "CashPaymentAllowed = ?, " +
+                "CCNumber = ?, " +
+                "CCBank = ?, " +
+                "CCNote = ?, " +
+                "CCQRCode = ? " +
+                "WHERE UserId  = @mainId;";
 
 
+            jdbcTemplate.update(sql, entity.getUserEntity().getId(), entity.getUserEntity().getActive(),
+                    entity.getUserEntity().getRoleId(), entity.getUserEntity().geteMail(), entity.getUserEntity().getFirstName(),
+                    entity.getUserEntity().getLastName(), entity.getUserEntity().getPhone(), entity.getCashierEntity().isCashPaymentAllowed(),
+                    entity.getCashierEntity().getCardNumber(), entity.getCashierEntity().getCardBank(), entity.getCashierEntity().getCardNote(),
+                    entity.getCashierEntity().getCardQrCode());
 
-        return null;
+
+        return findById(entity.getUserEntity().getId()).orElseThrow(NotUpdateException::new);
     }
 
-    @Override
+
     public Optional<ProfileEntity> findById(Long id) {
 
         String sql = "SELECT u.id  userId, u.Active activeUser, u.RoleId roleId, \n" +
@@ -137,7 +158,7 @@ public class ProfileRepositoryImplementation implements GenericCrudRepository<Pr
     }
 
 
-    @Override
+
     public List<ProfileEntity> findAll() {
 
         String query = "SELECT u.id  userId, u.Active activeUser, u.RoleId roleId, \n" +
@@ -189,18 +210,23 @@ public class ProfileRepositoryImplementation implements GenericCrudRepository<Pr
 
     }
 
-    @Override
-    public boolean delete(Long id) {
-        return false;
+
+    public ProfileEntity delete(Long id) {
+
+
+        Optional<ProfileEntity> entity = findById(id);
+
+        if (entity.isPresent()) {
+
+            String query = "Update [User] SET Active = 'N' where id = ?";
+            jdbcTemplate.update(query, id);
+            return entity.get();
+
+        }
+
+        throw new NotUpdateException();
+
     }
 
-    @Override
-    public boolean delete(ProfileEntity entity) {
-        return false;
-    }
 
-    @Override
-    public List<ProfileEntity> getAllByFilter(Object filter) {
-        return null;
-    }
 }

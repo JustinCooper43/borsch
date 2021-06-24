@@ -17,7 +17,6 @@ import static java.lang.String.format;
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
-
     private String appName;
     private String title;
     private String description;
