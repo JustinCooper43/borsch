@@ -93,7 +93,7 @@ public class OrderController {
         List<RespOrderItemDto> itemList = List.of(orderItem, orderItem, orderItem, orderItem, orderItem, orderItem, orderItem);
         orderSumDto.setOrderDate(LocalDateTime.now().minusMinutes(10));
         orderSumDto.setOrders(itemList);
-        orderSumDto.setUser(ProfileController.getUserMock());
+       // orderSumDto.setUser(ProfileController.getUserMock());
         orderSumDto.setAmount(new BigDecimal("40.3"));
         orderSumDto.setPaidAmount(new BigDecimal("40.2"));
         orderSumDto.setPaymentType(2);

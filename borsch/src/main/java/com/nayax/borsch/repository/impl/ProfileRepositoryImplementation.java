@@ -11,6 +11,9 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSourceExtensionsKt;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -24,13 +27,14 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Repository
-public class ProfileRepositoryImplementation  {
+public class ProfileRepositoryImplementation {
 
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-
+    @Autowired
+    NamedParameterJdbcTemplate namedParam;
 
     public ProfileEntity add(ProfileEntity entity) {
 
@@ -50,7 +54,7 @@ public class ProfileRepositoryImplementation  {
                 ps.setNString(6, entity.getUserEntity().getPhone());
                 return ps;
             }
-        },keyHolder);
+        }, keyHolder);
 
         Long i = Objects.requireNonNull(keyHolder.getKey()).longValue();
         entity.getCashierEntity().setCashierId(i);
@@ -61,8 +65,8 @@ public class ProfileRepositoryImplementation  {
                 " OUTPUT INSERTED.* VALUES (?, ?, ?, ?, ?, ?)";
 
         CashierEntity cashierEntity = jdbcTemplate.queryForObject(sqlCashier, new BeanPropertyRowMapper<>(CashierEntity.class),
-                 entity.getCashierEntity().getCashierId(),
-                 entity.getCashierEntity().isCashPaymentAllowed(), entity.getCashierEntity().getCardNumber(),
+                entity.getCashierEntity().getCashierId(),
+                entity.getCashierEntity().isCashPaymentAllowed(), entity.getCashierEntity().getCardNumber(),
                 entity.getCashierEntity().getCardBank(), entity.getCashierEntity().getCardNote(),
                 entity.getCashierEntity().getCardQrCode());
 
@@ -74,7 +78,7 @@ public class ProfileRepositoryImplementation  {
 
     public ProfileEntity update(ProfileEntity entity) throws NotUpdateException {
 
-        String sql = "Declare @mainId bigint = ?; "+
+        String sql = "Declare @mainId bigint = ?; " +
                 "UPDATE [User] " +
                 "SET Active  = ?, " +
                 "RoleId  = ?, " +
@@ -94,11 +98,11 @@ public class ProfileRepositoryImplementation  {
                 "WHERE UserId  = @mainId;";
 
 
-            jdbcTemplate.update(sql, entity.getUserEntity().getId(), entity.getUserEntity().getActive(),
-                    entity.getUserEntity().getRoleId(), entity.getUserEntity().geteMail(), entity.getUserEntity().getFirstName(),
-                    entity.getUserEntity().getLastName(), entity.getUserEntity().getPhone(), entity.getCashierEntity().isCashPaymentAllowed(),
-                    entity.getCashierEntity().getCardNumber(), entity.getCashierEntity().getCardBank(), entity.getCashierEntity().getCardNote(),
-                    entity.getCashierEntity().getCardQrCode());
+        jdbcTemplate.update(sql, entity.getUserEntity().getId(), entity.getUserEntity().getActive(),
+                entity.getUserEntity().getRoleId(), entity.getUserEntity().geteMail(), entity.getUserEntity().getFirstName(),
+                entity.getUserEntity().getLastName(), entity.getUserEntity().getPhone(), entity.getCashierEntity().isCashPaymentAllowed(),
+                entity.getCashierEntity().getCardNumber(), entity.getCashierEntity().getCardBank(), entity.getCashierEntity().getCardNote(),
+                entity.getCashierEntity().getCardQrCode());
 
 
         return findById(entity.getUserEntity().getId()).orElseThrow(NotUpdateException::new);
@@ -158,7 +162,6 @@ public class ProfileRepositoryImplementation  {
     }
 
 
-
     public List<ProfileEntity> findAll() {
 
         String query = "SELECT u.id  userId, u.Active activeUser, u.RoleId roleId, \n" +
@@ -172,41 +175,41 @@ public class ProfileRepositoryImplementation  {
 
         List<ProfileEntity> entityList;
 
-            entityList = jdbcTemplate.query(query, new RowMapper<ProfileEntity>() {
+        entityList = jdbcTemplate.query(query, new RowMapper<ProfileEntity>() {
 
-                @Override
-                public ProfileEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
-
-
-                    ProfileEntity profile = new ProfileEntity();
-                    CashierEntity cashier = new CashierEntity();
-                    UserEntity user = new UserEntity();
-
-                    user.setId((Long) rs.getObject("userId"));
-                    user.setActive(rs.getString("activeUser"));
-                    user.setRoleId((Long) rs.getObject("roleId"));
-                    user.seteMail(rs.getNString("userEmail"));
-                    user.setFirstName(rs.getNString("fName"));
-                    user.setLastName(rs.getNString("lName"));
-                    user.setPhone(rs.getNString("phNumber"));
-                    user.setRoleName(rs.getNString("roleName"));
-
-                    cashier.setCashierId((Long) rs.getObject("cashierId"));
-                    cashier.setCashPaymentAllowed(rs.getBoolean("CashPay"));
-                    cashier.setCardNumber(rs.getNString("Card"));
-                    cashier.setCardBank(rs.getNString("Bank"));
-                    cashier.setCardNote(rs.getNString("Note"));
-                    cashier.setCardQrCode(rs.getNString("QrCode"));
-
-                    profile.setUserEntity(user);
-                    profile.setCashierEntity(cashier);
+            @Override
+            public ProfileEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
 
 
-                    return profile;
-                }
-            });
+                ProfileEntity profile = new ProfileEntity();
+                CashierEntity cashier = new CashierEntity();
+                UserEntity user = new UserEntity();
 
-           return entityList;
+                user.setId((Long) rs.getObject("userId"));
+                user.setActive(rs.getString("activeUser"));
+                user.setRoleId((Long) rs.getObject("roleId"));
+                user.seteMail(rs.getNString("userEmail"));
+                user.setFirstName(rs.getNString("fName"));
+                user.setLastName(rs.getNString("lName"));
+                user.setPhone(rs.getNString("phNumber"));
+                user.setRoleName(rs.getNString("roleName"));
+
+                cashier.setCashierId((Long) rs.getObject("cashierId"));
+                cashier.setCashPaymentAllowed(rs.getBoolean("CashPay"));
+                cashier.setCardNumber(rs.getNString("Card"));
+                cashier.setCardBank(rs.getNString("Bank"));
+                cashier.setCardNote(rs.getNString("Note"));
+                cashier.setCardQrCode(rs.getNString("QrCode"));
+
+                profile.setUserEntity(user);
+                profile.setCashierEntity(cashier);
+
+
+                return profile;
+            }
+        });
+
+        return entityList;
 
     }
 
@@ -229,4 +232,35 @@ public class ProfileRepositoryImplementation  {
     }
 
 
+    public Optional<ProfileEntity> checkCashierLoginig(String email) {
+
+
+        String query = "SELECT [OrderSummary].[id] \n" +
+                " ,[OrderSummary].[CashierId] cashierId \n" +
+                " ,[User].Email \n" +
+                "  FROM [OrderSummary] \n" +
+                "  join [Cashier] on [Cashier].id = [OrderSummary].CashierId \n" +
+                "  join [User] on [User].id = [Cashier].UserId \n" +
+                "  where [User].Email like ?  and [OrderSummary].StopTime is null";
+
+
+        Long id = jdbcTemplate.queryForObject(query,new RowMapper<Long>() {
+
+            @Override
+            public Long mapRow(ResultSet rs, int rowNum) throws SQLException {
+               return ((Long) rs.getObject("cashierId"));
+
+            }
+        },email);
+
+        return findById(id);
+
+    }
+
+
+
+
 }
+
+
+

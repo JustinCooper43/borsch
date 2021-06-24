@@ -132,12 +132,136 @@ public class OrderItemRepo {
                         Long orderId = (Long) rs.getObject("orderId");
                         mapAddition.putIfAbsent(orderId, new ArrayList<>());
                         mapAddition.get(orderId).add(addition);
+
                         return null;
                     }
                 }
         );
 
         return mapAddition;
+    }
+
+
+
+    private Map<Long, List<GeneralPriceItemEntity>> getMapAdditions(Set<Long> setOrderId) {
+        Map<Long, List<GeneralPriceItemEntity>> mapAddition = new HashMap<>();
+
+        MapSqlParameterSource parameter = new MapSqlParameterSource();
+
+        parameter.addValue("setOrderId",setOrderId);
+
+
+        String sql = " SELECT [Order].id orderId, Addition.id [addition.id], Addition.[Name] [addition.name], " +
+                "Addition.Cost [addition.price],  Addition.Active actAdd " +
+                "FROM [Order]  " +
+                "JOIN AdditionSelectedOrder ON AdditionSelectedOrder.OrderId = [Order].id  " +
+                "JOIN Addition ON Addition.id = AdditionSelectedOrder.AdditionId  " +
+                "WHERE [Order].id IN (:setOrderId ) " +
+                "ORDER BY [Order].id DESC";
+
+
+        namedParameterJdbcTemplate.query(sql, parameter, new RowMapper<GeneralPriceItemEntity>() {
+                    @Override
+                    public GeneralPriceItemEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        GeneralPriceItemEntity addition = new GeneralPriceItemEntity();
+                        addition.setId((Long)rs.getObject("addition.id"));
+                        addition.setPrice((BigDecimal) rs.getObject("addition.price"));
+                        addition.setName(rs.getNString("addition.name"));
+                        addition.setActive(rs.getString("actAdd"));
+
+                        Long orderId = (Long) rs.getObject("orderId");
+                        mapAddition.putIfAbsent(orderId, new ArrayList<>());
+                        mapAddition.get(orderId).add(addition);
+
+                        return null;
+                    }
+                }
+        );
+
+        return mapAddition;
+    }
+
+
+
+
+    public List<OrderEntity> getPagedHistory(Long userId, int page, int pageSize){
+
+        String query = "declare @page int = ? ;" +
+                " declare @pageSize int = ? ;" +
+                " with tmpl as(" +
+                " SELECT [Order].UserId userId , [Order].CreationTime creatTime , [Order].id orderId, [Order].Quantity quantity, [Order].CutInHalf cut, [Order].OrderSummaryId sumId,   \n" +
+                " [Order].ShawarmaTypeId [dish.id], ShawarmaType.[Name] [dish.name], ShawarmaType.Cost [dish.price], ShawarmaType.Active actShaw , ShawarmaType.Halfable shawHalv, \n" +
+                " ExtraItem.id [drink.id], ExtraItem.[Name] [drink.name], ExtraItem.Cost [drink.price], ExtraItem.Active actExtr," +
+                " [Order].RemarkId [remark.id], Remark.[Name] [remark.name],  Remark.Active actRem " +
+                " FROM [Order] " +
+                " JOIN ShawarmaType ON ShawarmaType.id = [Order].ShawarmaTypeId  " +
+                " JOIN ExtraItem ON ExtraItem.id = [Order].ExtraItemId " +
+                " JOIN Remark ON Remark.id = [Order].RemarkId " +
+                " WHERE [Order].UserId = ?" +
+                " )" +
+                " SELECT * FROM (select * from tmpl " +
+                " order by creatTime DESC " +
+                " offset @pageSize*(@page-1) rows fetch next @pageSize rows only ) sub " +
+                " right join (SELECT count(*) FROM tmpl) c (total) on 1=1; ";
+
+
+        Set<Long> ordersId = new HashSet<>();
+        List<OrderEntity> listOrders = new ArrayList<>();
+        List<OrderEntity> listItems = new ArrayList<>();
+
+
+        listItems = jdbcTemplate.query(query, new RowMapper<OrderEntity>() {
+            @Override
+            public OrderEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
+                ShawarmaItemEntity dish = new ShawarmaItemEntity();
+                dish.setId((Long)rs.getObject("dish.id"));
+                dish.setName(rs.getNString("dish.name"));
+                dish.setPrice(rs.getBigDecimal("dish.price"));
+                dish.setActive(rs.getString("actShaw"));
+                dish.setHalfAble(rs.getBoolean("shawHalv"));
+
+
+                GeneralPriceItemEntity drink = new GeneralPriceItemEntity();
+                drink.setId((Long) rs.getObject("drink.id"));
+                drink.setActive(rs.getString("actExtra"));
+                drink.setName(rs.getNString("drink.name"));
+                drink.setPrice(rs.getBigDecimal("drink.price"));
+
+                GeneralPriceItemEntity remark = new GeneralPriceItemEntity();
+                remark.setId((Long) rs.getObject("remark.id"));
+                remark.setName(rs.getNString("remark.name"));
+                remark.setActive(rs.getString("actRem"));
+
+                OrderEntity entity = new OrderEntity();
+                entity.setOrderId((Long) rs.getObject("orderId"));
+                entity.setDish(dish);
+                entity.setDrink(drink);
+                entity.setRemark(remark);
+                entity.setCut(rs.getBoolean("cut"));
+                entity.setQuantity((int) rs.getShort("quantity"));
+                entity.setUserId((Long) rs.getObject("userId"));
+                Timestamp creatTime = rs.getTimestamp("creatTime");
+                if (creatTime != null) {
+                    entity.setCreationTime(creatTime.toLocalDateTime());
+                }
+                entity.setOrderSummaryId((Long) rs.getObject("sumId"));
+
+                listOrders.add(entity);
+
+                Long id = (Long) rs.getObject("orderId");
+                ordersId.add(id);
+
+
+                return entity;
+            }
+        });
+
+        Map<Long, List<GeneralPriceItemEntity>> map = getMapAdditions(ordersId);
+
+        for (OrderEntity orderEntity : listOrders){
+            orderEntity.setAdditions(map.get(orderEntity.getOrderId()));
+        }
+        return listOrders;
     }
 
 }

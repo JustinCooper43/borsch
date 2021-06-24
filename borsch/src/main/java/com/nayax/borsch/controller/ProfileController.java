@@ -22,19 +22,6 @@ public class ProfileController {
     @Autowired
     ProfileService service;
 
-    public static RespUserDto getUserMock() {
-        RespUserDto user = new RespUserDto();
-        user.setId(14L);
-        user.setFirstName("Fname");
-        user.setLastName("Lname");
-        user.seteMail("adress@server.com");
-        RoleDto role = new RoleDto();
-        role.setId(2L);
-        role.setName("Cashier");
-        user.setRole(role);
-        user.setPhone("+380123456789");
-        return user;
-    }
 
     @PostMapping
     public ResponseEntity<ResponseDto<RespProfileDto>> add(@RequestBody ReqProfileAddDto dto) {
