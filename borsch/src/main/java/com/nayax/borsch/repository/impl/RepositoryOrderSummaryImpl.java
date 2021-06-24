@@ -2,6 +2,7 @@ package com.nayax.borsch.repository.impl;
 
 import com.nayax.borsch.model.entity.assortment.AssortmentRespEntity;
 import com.nayax.borsch.model.entity.assortment.GeneralPriceItemEntity;
+import com.nayax.borsch.model.entity.assortment.ShawarmaItemEntity;
 import com.nayax.borsch.model.entity.order.OrderEntity;
 import com.nayax.borsch.model.entity.order.OrderSummaryEntity;
 import com.nayax.borsch.model.entity.user.UserEntity;
@@ -73,7 +74,7 @@ public class RepositoryOrderSummaryImpl {
             userEntity.setActive(rs.getString("userAct"));
 
             orderByUserMap.putIfAbsent(userEntity,new ArrayList<>());
-            GeneralPriceItemEntity shawarmaEntity = new GeneralPriceItemEntity();
+            ShawarmaItemEntity shawarmaEntity = new ShawarmaItemEntity();
             shawarmaEntity.setId((Long) rs.getObject("shawId"));
             shawarmaEntity.setName((String) rs.getObject("shawName"));
             shawarmaEntity.setPrice((BigDecimal) rs.getObject("shawCost"));
