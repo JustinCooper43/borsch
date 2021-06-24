@@ -3,6 +3,7 @@ package com.nayax.borsch.model.entity.order;
 import com.nayax.borsch.model.entity.assortment.GeneralPriceItemEntity;
 import com.nayax.borsch.model.entity.assortment.ShawarmaItemEntity;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class OrderEntity {
     private Long userId;
     private LocalDateTime creationTime;
     //TODO set current order in service?
+    private BigDecimal cost;
     private Long orderSummaryId;
 
     public Long getOrderId() {
@@ -98,5 +100,13 @@ public class OrderEntity {
 
     public void setOrderSummaryId(Long orderSummaryId) {
         this.orderSummaryId = orderSummaryId;
+    }
+
+    public BigDecimal getCost() {
+        return cost;
+    }
+
+    public void setCost(BigDecimal cost) {
+        this.cost = cost;
     }
 }

@@ -1,4 +1,4 @@
-package com.nayax.borsch.controller;
+package com.nayax.borsch.controller.testController;
 
 
 import com.nayax.borsch.model.dto.PageDto;
