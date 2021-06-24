@@ -25,6 +25,6 @@ public class RepositoryShawarmaTypeTest {
 
         ShawarmaItemEntity added = repositoryShawarmaType.add(add);
         System.out.println(added);
-//        Assertions.assertEquals(27,added.getId());
+        //Assertions.assertEquals(27,added.getId());
     }
 }

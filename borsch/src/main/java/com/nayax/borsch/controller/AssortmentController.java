@@ -43,7 +43,7 @@ public class AssortmentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ResponseDto<RespAssortmentDto>> getById(@PathVariable(value = "id") Long id, @RequestBody ReqAssortmentUpDto dto) {
+    public ResponseEntity<ResponseDto<RespAssortmentDto>> updateById(@PathVariable(value = "id") Long id, @RequestBody ReqAssortmentUpDto dto) {
         dto.setDish(id);
         RespAssortmentDto rDto = new RespAssortmentDto();
         rDto.setAdditions(getMockList());
@@ -55,7 +55,7 @@ public class AssortmentController {
     }
 
     @PutMapping
-    public ResponseEntity<ResponseDto<RespAssortmentDto>> editAssortment(@RequestBody ReqAssortmentUpDto dto) {
+    public ResponseEntity<ResponseDto<RespAssortmentDto>> addAssortment(@RequestBody ReqAssortmentUpDto dto) {
         RespAssortmentDto respAssortmentDto = new RespAssortmentDto();
         respAssortmentDto.setAdditions(getMockList());
         respAssortmentDto.setRemarks(getMockList());
