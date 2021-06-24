@@ -116,7 +116,7 @@ public class OrderItemRepo {
                 "FROM [Order]  " +
                 "JOIN AdditionSelectedOrder ON AdditionSelectedOrder.OrderId = [Order].id  " +
                 "JOIN Addition ON Addition.id = AdditionSelectedOrder.AdditionId  " +
-                "WHERE [Order].UserId IN (:setOrderId ) AND [Order].CreationTime = :dateTime " +
+                "WHERE [Order].id IN (:setOrderId ) AND [Order].CreationTime = :dateTime " +
                 "ORDER BY [Order].id DESC";
 
 
@@ -130,6 +130,7 @@ public class OrderItemRepo {
                         addition.setActive(rs.getString("actAdd"));
 
                         Long orderId = (Long) rs.getObject("orderId");
+                        mapAddition.putIfAbsent(orderId, new ArrayList<>());
                         mapAddition.get(orderId).add(addition);
                         return null;
                     }
