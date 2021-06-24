@@ -43,7 +43,7 @@ public class AssortmentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ResponseDto<RespAssortmentDto>> getById(@PathVariable(value = "id") Long id, @RequestBody ReqAssortmentUpDto dto) {
+    public ResponseEntity<ResponseDto<RespAssortmentDto>> updateById(@PathVariable(value = "id") Long id, @RequestBody ReqAssortmentUpDto dto) {
         dto.setDish(id);
         RespAssortmentDto rDto = new RespAssortmentDto();
         rDto.setAdditions(getMockList());
@@ -55,36 +55,36 @@ public class AssortmentController {
     }
 
     @PutMapping
-    public ResponseEntity<ResponseDto<RespAssortmentDto>> editAssortment(@RequestBody ReqAssortmentUpDto dto) {
+    public ResponseEntity<ResponseDto<RespAssortmentDto>> addAssortment(@RequestBody ReqAssortmentUpDto dto) {
         RespAssortmentDto respAssortmentDto = new RespAssortmentDto();
         respAssortmentDto.setAdditions(getMockList());
         respAssortmentDto.setRemarks(getMockList());
         respAssortmentDto.setDish(getMockList().get(0));
         respAssortmentDto.setHalfAble(true);
         /////
-
-        GeneralPriceItemEntity general = new GeneralPriceItemEntity();
-        general.setId(99L);
-        general.setName("Vlad");
-        general.setPrice(new BigDecimal("1000"));
-        GeneralPriceItemEntity general2 = new GeneralPriceItemEntity();
-        general.setId(992L);
-        general.setName("Vlad2");
-        general.setPrice(new BigDecimal("10002"));
-        AssortmentRespEntity entity = new AssortmentRespEntity();
-        List<GeneralPriceItemEntity> priceItemEntities = new ArrayList<>();
-        priceItemEntities.add(0,general);
-        priceItemEntities.add(1,general2);
-        //////////////
-        entity.setDish(general);
-        entity.setHalfAble(true);
-        entity.setRemarks(priceItemEntities);
-
-        entity.setAdditions(priceItemEntities);
-
-
-
-        RespAssortmentDto testRespDto = Mappers.getMapper(AssortmentMapper.class).assortmentEntityToDto(entity);
+//
+//        GeneralPriceItemEntity general = new GeneralPriceItemEntity();
+//        general.setId(99L);
+//        general.setName("Vlad");
+//        general.setPrice(new BigDecimal("1000"));
+//        GeneralPriceItemEntity general2 = new GeneralPriceItemEntity();
+//        general.setId(992L);
+//        general.setName("Vlad2");
+//        general.setPrice(new BigDecimal("10002"));
+//        AssortmentRespEntity entity = new AssortmentRespEntity();
+//        List<GeneralPriceItemEntity> priceItemEntities = new ArrayList<>();
+//        priceItemEntities.add(0,general);
+//        priceItemEntities.add(1,general2);
+//        //////////////
+//        entity.setDish(general);
+//        entity.setHalfAble(true);
+//        entity.setRemarks(priceItemEntities);
+//
+//        entity.setAdditions(priceItemEntities);
+//
+//
+//
+//        RespAssortmentDto testRespDto = Mappers.getMapper(AssortmentMapper.class).assortmentEntityToDto(entity);
         return ResponseEntity.ok(new ResponseDto<>(respAssortmentDto));
     }
 }

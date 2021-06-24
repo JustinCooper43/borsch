@@ -5,16 +5,16 @@ import java.util.List;
 
 public class AssortmentRespEntity {
 
-    private GeneralPriceItemEntity dish;
+    private ShawarmaItemEntity dish;
     private List<GeneralPriceItemEntity> additions;
     private List<GeneralPriceItemEntity> remarks;
     private boolean halfAble;
 
-    public GeneralPriceItemEntity getDish() {
+    public ShawarmaItemEntity getDish() {
         return dish;
     }
 
-    public void setDish(GeneralPriceItemEntity dish) {
+    public void setDish(ShawarmaItemEntity dish) {
         this.dish = dish;
     }
 
