@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class ReqOrderItemAddDto {
-    //TODO add cost
+    private Long userId;
     private Long dish;
     private List<Long> additions;
     private Long drink;
@@ -12,6 +12,14 @@ public class ReqOrderItemAddDto {
     private boolean cut;
     private Integer quantity;
     private LocalDateTime orderDate;
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
     public LocalDateTime getOrderDate() {
         return orderDate;

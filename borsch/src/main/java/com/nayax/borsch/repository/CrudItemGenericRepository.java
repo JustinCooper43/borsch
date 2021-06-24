@@ -5,12 +5,17 @@ import com.nayax.borsch.repository.impl.TablesType;
 import java.util.List;
 import java.util.Optional;
 
-public interface CrudItemGenericRepository<T> {
+public interface CrudItemGenericRepository<T, U> {
 
-    T add(T entity , TablesType nameTable);
+    T add(T entity, U nameTable);
 
-    T update(T entity, TablesType nameTable);
-    Optional<T> findById(Long id , TablesType nameTable);
-    List<T> findAll(TablesType nameTable);
-    boolean delete(Long id , TablesType nameTable);
+    T update(T entity, U nameTable);
+
+    Optional<T> findById(Long id, U nameTable);
+
+    List<T> findAll(U nameTable);
+
+    T delete(Long id, U nameTable);
+
+    List<T> findAllPage(int page, int pageSize, U nameTable);
 }

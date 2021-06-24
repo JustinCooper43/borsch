@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -92,7 +93,7 @@ public class OrderController {
         List<RespOrderItemDto> itemList = List.of(orderItem, orderItem, orderItem, orderItem, orderItem, orderItem, orderItem);
         orderSumDto.setOrderDate(LocalDateTime.now().minusMinutes(10));
         orderSumDto.setOrders(itemList);
-        orderSumDto.setUser(UserController.getUserMock());
+        orderSumDto.setUser(ProfileController.getUserMock());
         orderSumDto.setAmount(new BigDecimal("40.3"));
         orderSumDto.setPaidAmount(new BigDecimal("40.2"));
         orderSumDto.setPaymentType(2);
@@ -110,8 +111,11 @@ public class OrderController {
         info.setPayConfirmed(new BigDecimal("1000"));
         info.setPayUnconfirmed(new BigDecimal("3000"));
         ResponseDto<RespOrderSumInfoDto> responseDto = new ResponseDto<>(info);
+
         return ResponseEntity.ok(responseDto);
     }
+
+
 
     @GetMapping("/delivery")
     public ResponseEntity<ResponseDto<List<RespOrderDeliveryDto>>> getDelivery(@RequestParam(required = false) LocalDateTime dateTime) {

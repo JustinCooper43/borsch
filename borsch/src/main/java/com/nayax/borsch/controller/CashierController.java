@@ -10,7 +10,11 @@ import com.nayax.borsch.model.dto.user.response.nested.RoleDto;
 import com.nayax.borsch.model.entity.user.CashierEntity;
 import com.nayax.borsch.model.entity.user.ProfileEntity;
 import com.nayax.borsch.model.entity.user.UserEntity;
+import com.nayax.borsch.service.impl.ProfileService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -20,22 +24,32 @@ import java.util.List;
 @RequestMapping("/cashier")
 public class CashierController {
 
+    @Autowired
+    ProfileService service;
 
-    @PostMapping("/{id}")
+    @GetMapping ("/{id}")
     public ResponseEntity<ResponseDto<RespProfileDto>> getById(@PathVariable(value = "id") Long id) {
-        ResponseDto<RespProfileDto> respDto = new ResponseDto<>(generatedMock());
+        ResponseDto<RespProfileDto> respDto = service.getById(id);
         return ResponseEntity.ok(respDto);
     }
 
     @GetMapping("/dropdown")
     public ResponseEntity<ResponseDto<List<RespUserDto>>> getAllUsers() {
-        ResponseDto<List<RespUserDto>> respListDto = new ResponseDto<>(generateMockList());
-        return ResponseEntity.ok(respListDto);
+
+        ResponseDto<List<RespProfileDto>> respListDto = service.getAll();
+
+        List<RespUserDto> respUserDtoList = new ArrayList<>();
+
+        for(RespProfileDto respProf : respListDto.getData()){
+            respUserDtoList.add(respProf.getUser());
+        }
+
+        return ResponseEntity.ok(new ResponseDto<>(respUserDtoList));
     }
 
-    @PostMapping("/current")
+    @GetMapping("/current")
     public ResponseEntity<ResponseDto<RespProfileDto>> get() {
-        ResponseDto<RespProfileDto> respDto = new ResponseDto<>(generatedMock());
+        ResponseDto<RespProfileDto> respDto = new ResponseDto<>();
         return ResponseEntity.ok(respDto);
     }
 

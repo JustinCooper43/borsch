@@ -1,13 +1,15 @@
 package com.nayax.borsch.model.entity.order;
 
 import com.nayax.borsch.model.entity.assortment.GeneralPriceItemEntity;
+import com.nayax.borsch.model.entity.assortment.ShawarmaItemEntity;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class OrderEntity {
+
     private Long orderId;
-    private GeneralPriceItemEntity dish;
+    private ShawarmaItemEntity dish;
     private List<GeneralPriceItemEntity> additions;
     private GeneralPriceItemEntity drink;
     private GeneralPriceItemEntity remark;
@@ -15,6 +17,7 @@ public class OrderEntity {
     private Integer quantity;
     private Long userId;
     private LocalDateTime creationTime;
+    //TODO set current order in service?
     private Long orderSummaryId;
 
     public Long getOrderId() {
@@ -25,11 +28,11 @@ public class OrderEntity {
         this.orderId = orderId;
     }
 
-    public GeneralPriceItemEntity getDish() {
+    public ShawarmaItemEntity getDish() {
         return dish;
     }
 
-    public void setDish(GeneralPriceItemEntity dish) {
+    public void setDish(ShawarmaItemEntity dish) {
         this.dish = dish;
     }
 

@@ -1,6 +1,7 @@
 package com.nayax.borsch.model.entity.assortment;
 
 public class PriceItemType extends GeneralPriceItemEntity{
+
     private Integer type;
 
     public Integer getType() {

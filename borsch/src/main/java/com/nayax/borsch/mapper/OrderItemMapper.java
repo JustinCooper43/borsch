@@ -1,11 +1,10 @@
 package com.nayax.borsch.mapper;
 
-import com.nayax.borsch.model.dto.assortment.response.RespSimpleItemDto;
-import com.nayax.borsch.model.dto.assortment.response.RespSimplePriceItemDto;
 import com.nayax.borsch.model.dto.order.request.ReqOrderItemAddDto;
 import com.nayax.borsch.model.dto.order.response.RespOrderItemDto;
 import com.nayax.borsch.model.entity.assortment.GeneralPriceItemEntity;
 import com.nayax.borsch.model.entity.order.OrderEntity;
+import com.nayax.borsch.utility.OrderEntityHashNoOrderUserTime;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -20,7 +19,6 @@ public interface OrderItemMapper {
     @Mapping(source = "remark", target = "remark.id")
     @Mapping(source = "orderDate", target = "creationTime")
     @Mapping(target = "orderId", ignore = true)
-    @Mapping(target = "userId", ignore = true)
     @Mapping(target = "orderSummaryId", ignore = true)
     OrderEntity toAddEntity(ReqOrderItemAddDto dto);
 
@@ -34,4 +32,6 @@ public interface OrderItemMapper {
 
     @Mapping(target = "orderDate", source = "creationTime")
     RespOrderItemDto toDto(OrderEntity entity);
+    OrderEntityHashNoOrderUserTime transferEntity(OrderEntity entity);
+
 }

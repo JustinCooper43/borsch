@@ -10,6 +10,10 @@ public class CashierEntity {
     private String cardNote;
     private String cardQrCode;
 
+
+
+
+
     public Long getCashierId() {
         return cashierId;
     }
@@ -56,5 +60,17 @@ public class CashierEntity {
 
     public void setCardQrCode(String cardQrCode) {
         this.cardQrCode = cardQrCode;
+    }
+
+    @Override
+    public String toString() {
+        return "CashierEntity{" +
+                "cashierId=" + cashierId +
+                ", cashPaymentAllowed=" + cashPaymentAllowed +
+                ", cardNumber='" + cardNumber + '\'' +
+                ", cardBank='" + cardBank + '\'' +
+                ", cardNote='" + cardNote + '\'' +
+                ", cardQrCode='" + cardQrCode + '\'' +
+                '}';
     }
 }

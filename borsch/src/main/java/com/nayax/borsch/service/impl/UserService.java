@@ -1,6 +1,7 @@
 package com.nayax.borsch.service.impl;
 
 
+import com.nayax.borsch.exceptions.NotUpdateException;
 import com.nayax.borsch.mapper.UserMapper;
 import com.nayax.borsch.model.dto.ErrorDto;
 import com.nayax.borsch.model.dto.ResponseDto;
@@ -35,7 +36,10 @@ public class UserService implements UserServiceInterface {
 
     @Override
     public ResponseDto<RespUserDto> update(ReqUserUpdateDto dto) {
-        UserEntity user = repository.update(Mappers.getMapper(UserMapper.class).toUpdateEntity(dto));
+        UserEntity user = null;
+
+            user = repository.update(Mappers.getMapper(UserMapper.class).toUpdateEntity(dto));
+
         RespUserDto respUserDto = Mappers.getMapper(UserMapper.class).toDto(user);
         return new ResponseDto<>(respUserDto);
     }
