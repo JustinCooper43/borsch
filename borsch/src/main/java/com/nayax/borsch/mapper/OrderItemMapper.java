@@ -20,6 +20,7 @@ public interface OrderItemMapper {
     @Mapping(source = "orderDate", target = "creationTime")
     @Mapping(target = "orderId", ignore = true)
     @Mapping(target = "orderSummaryId", ignore = true)
+    @Mapping(target = "cost", ignore = true)
     OrderEntity toAddEntity(ReqOrderItemAddDto dto);
 
     List<GeneralPriceItemEntity> toItemList(List<Long> ids);

@@ -4,15 +4,12 @@ import com.nayax.borsch.exceptions.NotUpdateException;
 import com.nayax.borsch.model.entity.user.CashierEntity;
 import com.nayax.borsch.model.entity.user.ProfileEntity;
 import com.nayax.borsch.model.entity.user.UserEntity;
-import com.nayax.borsch.repository.GenericCrudRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSourceExtensionsKt;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -57,22 +54,19 @@ public class ProfileRepositoryImplementation {
         }, keyHolder);
 
         Long i = Objects.requireNonNull(keyHolder.getKey()).longValue();
-        entity.getCashierEntity().setCashierId(i);
-
-        String sqlCashier = "INSERT INTO Cashier " +
-                "(UserId, CashPaymentAllowed " +
-                ",CCNumber, CCBank, CCNote, CCQRCode)" +
-                " OUTPUT INSERTED.* VALUES (?, ?, ?, ?, ?, ?)";
-
-        CashierEntity cashierEntity = jdbcTemplate.queryForObject(sqlCashier, new BeanPropertyRowMapper<>(CashierEntity.class),
-                entity.getCashierEntity().getCashierId(),
-                entity.getCashierEntity().isCashPaymentAllowed(), entity.getCashierEntity().getCardNumber(),
-                entity.getCashierEntity().getCardBank(), entity.getCashierEntity().getCardNote(),
-                entity.getCashierEntity().getCardQrCode());
-
-
+        if (entity.getCashierEntity() != null) {
+            entity.getCashierEntity().setCashierId(i);
+            String sqlCashier = "INSERT INTO Cashier " +
+                    "(UserId, CashPaymentAllowed " +
+                    ",CCNumber, CCBank, CCNote, CCQRCode)" +
+                    " OUTPUT INSERTED.* VALUES (?, ?, ?, ?, ?, ?)";
+            CashierEntity cashierEntity = jdbcTemplate.queryForObject(sqlCashier, new BeanPropertyRowMapper<>(CashierEntity.class),
+                    entity.getCashierEntity().getCashierId(),
+                    entity.getCashierEntity().isCashPaymentAllowed(), entity.getCashierEntity().getCardNumber(),
+                    entity.getCashierEntity().getCardBank(), entity.getCashierEntity().getCardNote(),
+                    entity.getCashierEntity().getCardQrCode());
+        }
         return findById(entity.getUserEntity().getId()).orElseThrow(NotUpdateException::new);
-
     }
 
 
