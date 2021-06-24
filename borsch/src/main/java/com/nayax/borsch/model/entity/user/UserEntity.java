@@ -1,5 +1,7 @@
 package com.nayax.borsch.model.entity.user;
 
+import java.util.Objects;
+
 public class UserEntity {
 
     private Long id;
@@ -73,5 +75,18 @@ public class UserEntity {
 
     public void setRoleName(String roleName) {
         this.roleName = roleName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserEntity that = (UserEntity) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

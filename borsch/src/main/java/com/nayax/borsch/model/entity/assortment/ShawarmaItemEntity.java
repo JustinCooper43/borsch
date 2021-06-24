@@ -1,6 +1,7 @@
 package com.nayax.borsch.model.entity.assortment;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 public class ShawarmaItemEntity {
     private Long id;
@@ -56,5 +57,18 @@ public class ShawarmaItemEntity {
                 ", price=" + price +
                 ", isHalfAble=" + halfAble +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ShawarmaItemEntity entity = (ShawarmaItemEntity) o;
+        return Objects.equals(id, entity.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

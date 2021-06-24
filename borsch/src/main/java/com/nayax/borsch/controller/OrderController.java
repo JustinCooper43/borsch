@@ -85,7 +85,7 @@ public class OrderController {
         return ResponseEntity.ok(responseDto);
     }
 
-    @GetMapping("/summary")
+    @GetMapping("/summary")///Vlad
     public ResponseEntity<ResponseDto<PageDto<RespOrderSumDto>>> getOrderSummary(
             @RequestParam Integer page, @RequestParam Integer pageSize, @RequestParam(required = false) LocalDateTime dateTime) {
         RespOrderSumDto orderSumDto = new RespOrderSumDto();
@@ -93,7 +93,7 @@ public class OrderController {
         List<RespOrderItemDto> itemList = List.of(orderItem, orderItem, orderItem, orderItem, orderItem, orderItem, orderItem);
         orderSumDto.setOrderDate(LocalDateTime.now().minusMinutes(10));
         orderSumDto.setOrders(itemList);
-        orderSumDto.setUser(ProfileController.getUserMock());
+       // orderSumDto.setUser(ProfileController.getUserMock());
         orderSumDto.setAmount(new BigDecimal("40.3"));
         orderSumDto.setPaidAmount(new BigDecimal("40.2"));
         orderSumDto.setPaymentType(2);

@@ -11,8 +11,11 @@ import com.nayax.borsch.model.dto.user.request.ReqProfileAddDto;
 import com.nayax.borsch.model.dto.user.request.ReqProfileUpDto;
 import com.nayax.borsch.model.dto.user.request.ReqUserAddDto;
 import com.nayax.borsch.model.dto.user.response.RespCashierDto;
+import com.nayax.borsch.model.dto.user.response.RespLoginDto;
 import com.nayax.borsch.model.dto.user.response.RespProfileDto;
 import com.nayax.borsch.model.dto.user.response.RespUserDto;
+import com.nayax.borsch.model.dto.user.response.nested.RespLoginCashierDto;
+import com.nayax.borsch.model.dto.user.response.nested.RoleDto;
 import com.nayax.borsch.model.entity.user.CashierEntity;
 import com.nayax.borsch.model.entity.user.ProfileEntity;
 import com.nayax.borsch.model.entity.user.UserEntity;
@@ -86,6 +89,51 @@ public class ProfileService {
         List<RespProfileDto> respProfileDtos = entityList.stream().map(ProfileMapper::toDto).collect(Collectors.toList());
 
         return new ResponseDto<>(respProfileDtos);
+    }
+
+
+    public ResponseDto<RespLoginCashierDto> checkCashierLogining(String email){
+        RespLoginCashierDto respLoginCashierDto = new RespLoginCashierDto();
+        Optional<ProfileEntity> entity =  repo.checkCashierLoginig(email);
+
+        if (entity.isPresent()){
+           respLoginCashierDto.setCashier(true);
+           respLoginCashierDto.seteMail(entity.get().getUserEntity().geteMail());
+           respLoginCashierDto.setFirstName(entity.get().getUserEntity().getFirstName());
+           respLoginCashierDto.setLastName(entity.get().getUserEntity().getLastName());
+           respLoginCashierDto.setPhone(entity.get().getUserEntity().getPhone());
+           respLoginCashierDto.setId(entity.get().getUserEntity().getId());
+
+            RoleDto roleDto = new RoleDto();
+            roleDto.setId(entity.get().getUserEntity().getRoleId());
+            roleDto.setName(entity.get().getUserEntity().getRoleName());
+           respLoginCashierDto.setRole(roleDto);
+
+        }
+
+        return new ResponseDto<>(respLoginCashierDto);
+
+    }
+
+
+    public ResponseDto<RespLoginCashierDto> registration(ReqUserAddDto dto) {
+        RespLoginCashierDto cashierDto = new RespLoginCashierDto();
+        ProfileEntity profileEntity = new ProfileEntity();
+        UserEntity userEntity = Mappers.getMapper(UserMapper.class).toAddEntity(dto);
+        profileEntity.setCashierEntity(null);
+        profileEntity.setUserEntity(userEntity);
+
+        RespProfileDto respProfileDto = ProfileMapper.toDto(repo.add(profileEntity));
+
+        cashierDto.setCashier(repo.checkCashierLoginig(dto.geteMail()).isPresent());
+        cashierDto.setId(respProfileDto.getUser().getId());
+        cashierDto.setRole(respProfileDto.getUser().getRole());
+        cashierDto.seteMail(respProfileDto.getUser().geteMail());
+        cashierDto.setFirstName(respProfileDto.getUser().getFirstName());
+        cashierDto.setLastName(respProfileDto.getUser().getLastName());
+        cashierDto.setPhone(respProfileDto.getUser().getPhone());
+
+        return new ResponseDto<>(cashierDto);
     }
 
 }

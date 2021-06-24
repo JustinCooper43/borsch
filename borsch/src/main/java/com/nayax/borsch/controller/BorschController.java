@@ -1,9 +1,15 @@
 package com.nayax.borsch.controller;
 
 import com.nayax.borsch.model.dto.ResponseDto;
+import com.nayax.borsch.model.dto.assortment.response.RespAssortmentItemDto;
 import com.nayax.borsch.model.dto.user.response.RespUserDto;
+import com.nayax.borsch.model.entity.assortment.AssortmentRespEntity;
 import com.nayax.borsch.model.entity.assortment.ShawarmaItemEntity;
+import com.nayax.borsch.model.entity.order.OrderSummaryEntity;
+import com.nayax.borsch.repository.impl.RepositoryAssortmentImpl;
+import com.nayax.borsch.repository.impl.RepositoryOrderSummaryImpl;
 import com.nayax.borsch.repository.impl.RepositoryShawarmaTypeImpl;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,27 +17,44 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/vlad")
 public class BorschController {
-    @GetMapping("/hello")
-    public ResponseEntity<?> greetings() {
-        return ResponseEntity.ok().body(new RespUserDto());
-    }
-
     @Autowired
     private RepositoryShawarmaTypeImpl shawarmaType;
 
+    @Autowired
+    private RepositoryAssortmentImpl assortment;
+
+    @Autowired
+    private RepositoryOrderSummaryImpl orderSummary;
+
+    @GetMapping("/hello")
+    public ResponseEntity<?> greetings() {
+       List<AssortmentRespEntity> list = assortment.findAll();
+       List<Long> add = List.of(10L,11L,12L);
+        List<Long> rem = List.of(4L,1L,5L);
+      // AssortmentRespEntity update = assortment.update(11L,add,rem);
+        Date date= Date.valueOf("2020-10-10");
+        List<OrderSummaryEntity> orderSum = orderSummary.findAll(1,10,date);
+        return  ResponseEntity.ok(list);
+    }
+
+
     @GetMapping("/user")
-    public ResponseEntity<ResponseDto<ShawarmaItemEntity>> getUserExample() {
+    public ResponseEntity<ResponseDto<RespAssortmentItemDto>> getUserExample() {
         RespUserDto respUserDto = new RespUserDto();
         respUserDto.setId(1L);
         respUserDto.seteMail("efil@gmail.com");
         respUserDto.setLastName("John Dou");
-        Optional<ShawarmaItemEntity> entity = shawarmaType.findById(103L);
+        Optional<ShawarmaItemEntity> entity = shawarmaType.findById(15L);
         System.out.println(entity.get());
 
         List<ShawarmaItemEntity> list = shawarmaType.findAll();
@@ -39,11 +62,41 @@ public class BorschController {
         list.forEach(System.out::println);
 
         ShawarmaItemEntity shawarmaItemEntity = new ShawarmaItemEntity();
-        shawarmaItemEntity.setId(22L);
-//        shawarmaItemEntity.setHalfAble(true);
-        shawarmaItemEntity.setName("Updated");
+        shawarmaItemEntity.setId(15L);
+        shawarmaItemEntity.setHalfAble(true);
+        shawarmaItemEntity.setName("армянская22");
         shawarmaItemEntity.setPrice(new BigDecimal("0"));
         ShawarmaItemEntity updated = shawarmaType.update(shawarmaItemEntity);
-        return ResponseEntity.ok().body(new ResponseDto<>(entity.get()));
+        System.out.println(updated);
+
+
+//        System.out.println("Deleted::::::::::::::");
+//        Optional<ShawarmaItemEntity> deletedById = shawarmaType.delete(22L);
+//        System.out.println(deletedById.get());
+//        System.out.println("______________________________________");
+//        Optional<ShawarmaItemEntity> deletedByEntity = shawarmaType.delete(shawarmaItemEntity);
+//        System.out.println(deletedByEntity.get());
+
+
+        System.out.println("add:");
+        ShawarmaItemEntity add = new ShawarmaItemEntity();
+        add.setName("TestedAdd00000000000");
+        add.setPrice(new BigDecimal("1"));
+        add.setHalfAble(true);
+
+        ShawarmaItemEntity added = shawarmaType.add(add);
+        System.out.println(added);
+
+//
+//        List<ShawarmaItemEntity> shawarmaItemEntityList = shawarmaType.findAll(1,5);
+//        shawarmaItemEntityList.forEach(System.out::println);
+
+
+        RespAssortmentItemDto dto = new RespAssortmentItemDto();
+        dto.setId(entity.get().getId());
+        dto.setName(entity.get().getName());
+        dto.setPrice(entity.get().getPrice());
+        dto.setHalfAble(entity.get().isHalfAble());
+        return ResponseEntity.ok().body(new ResponseDto<>(dto));
     }
 }
