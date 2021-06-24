@@ -1,6 +1,7 @@
 package com.nayax.borsch.repository.impl;
 
 import com.nayax.borsch.model.entity.assortment.GeneralPriceItemEntity;
+import com.nayax.borsch.model.entity.assortment.ShawarmaItemEntity;
 import com.nayax.borsch.model.entity.order.OrderEntity;
 import com.nayax.borsch.model.entity.order.OrderSumTimerEntity;
 import com.nayax.borsch.model.entity.user.CashierEntity;
@@ -27,8 +28,9 @@ public class DeliverySummaryRepository {
 
     public List<OrderEntity> getByOrderSummaryId(Long orderSummaryId) {
         String sql = " SELECT [Order].id orderId, [Order].Quantity quantity, [Order].CutInHalf cut, " +
-                " [Order].ShawarmaTypeId dishId, ShawarmaType.[Name] dishName, ShawarmaType.Cost dishCost, " +
-                " Addition.id additionId, Addition.[Name] additionName, Addition.Cost additionCost, " +
+                " [Order].ShawarmaTypeId dishId, [Order].CreationTime creationTime, ShawarmaType.[Name] dishName, " +
+                " ShawarmaType.Cost dishCost, Addition.id additionId, " +
+                "Addition.[Name] additionName, Addition.Cost additionCost, " +
                 " ExtraItem.id drinkId, ExtraItem.[Name] drinkName, ExtraItem.Cost drinkCost, " +
                 " [Order].RemarkId remarkId, Remark.[Name] remarkName " +
                 " FROM [Order] " +
@@ -37,8 +39,7 @@ public class DeliverySummaryRepository {
                 " JOIN Addition ON Addition.id = AdditionSelectedOrder.AdditionId " +
                 " JOIN ExtraItem ON ExtraItem.id = [Order].ExtraItemId " +
                 " JOIN Remark ON Remark.id = [Order].RemarkId " +
-                " WHERE [Order].OrderSummaryId = ? " +
-                " ORDER BY [Order].id ASC, Addition.id ; ";
+                " WHERE [Order].OrderSummaryId = ? ; ";
         try {
             List<OrderEntityHashNoAdditions> rawList = jdbcTemplate.query(sql, new RowMapper<>() {
                 @Override
@@ -47,31 +48,25 @@ public class DeliverySummaryRepository {
                     e.setOrderId(rs.getLong("orderId"));
                     e.setQuantity(rs.getInt("quantity"));
                     e.setCut(rs.getBoolean("cut"));
-//                e.setCreationTime(rs.getTimestamp("creationTime").toLocalDateTime());
-//                e.setUserId(rs.getLong("userId"));
-//                e.setOrderSummaryId(rs.getLong("orderSummaryId"));
-                    GeneralPriceItemEntity dish = new GeneralPriceItemEntity();
+                    e.setCreationTime(rs.getTimestamp("creationTime").toLocalDateTime());
+                    ShawarmaItemEntity dish = new ShawarmaItemEntity();
                     dish.setName(rs.getNString("dishName"));
                     dish.setPrice(rs.getBigDecimal("dishCost"));
                     dish.setId(rs.getLong("dishId"));
-//                dish.setActive(rs.getString("dishActive"));
                     e.setDish(dish);
                     GeneralPriceItemEntity extraItem = new GeneralPriceItemEntity();
                     extraItem.setName(rs.getNString("drinkName"));
                     extraItem.setPrice(rs.getBigDecimal("drinkCost"));
                     extraItem.setId(rs.getLong("drinkId"));
-//                extraItem.setActive(rs.getString("extraItemActive"));
                     e.setDrink(extraItem);
                     GeneralPriceItemEntity remark = new GeneralPriceItemEntity();
                     remark.setName(rs.getNString("remarkName"));
                     remark.setId(rs.getLong("remarkId"));
-//                remark.setActive(rs.getString("remarkActive"));
                     e.setRemark(remark);
                     GeneralPriceItemEntity addition = new GeneralPriceItemEntity();
                     addition.setName(rs.getNString("additionName"));
                     addition.setPrice(rs.getBigDecimal("additionCost"));
                     addition.setId(rs.getLong("additionId"));
-//                addition.setActive(rs.getString("additionActive"));
                     e.setAdditions(List.of(addition));
                     return e;
                 }
@@ -84,7 +79,7 @@ public class DeliverySummaryRepository {
             List<OrderEntity> results = new ArrayList<>();
             for (OrderEntityHashNoAdditions e : orderToAdditions.keySet()) {
                 e.setAdditions(orderToAdditions.get(e));
-                results.add(e);
+                results.add((OrderEntity) e);
             }
             return results;
         } catch (DataAccessException e) {
