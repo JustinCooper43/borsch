@@ -11,18 +11,24 @@ import com.nayax.borsch.model.dto.order.response.RespOrderItemDto;
 import com.nayax.borsch.model.dto.order.response.RespOrderSumDto;
 import com.nayax.borsch.model.dto.order.response.RespOrderSumInfoDto;
 import com.nayax.borsch.model.entity.order.OrderEntity;
+import com.nayax.borsch.service.impl.OrderSummaryInfoService;
 import org.mapstruct.factory.Mappers;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 
 @RestController
 @RequestMapping("/order")
 public class OrderController {
+
+    @Autowired
+    OrderSummaryInfoService summaryInfoService;
 
     private RespOrderItemDto getRespOrderMock() {
         RespOrderItemDto orderItem = new RespOrderItemDto();
@@ -87,20 +93,10 @@ public class OrderController {
 
     @GetMapping("/summary")///Vlad
     public ResponseEntity<ResponseDto<PageDto<RespOrderSumDto>>> getOrderSummary(
-            @RequestParam Integer page, @RequestParam Integer pageSize, @RequestParam(required = false) LocalDateTime dateTime) {
-        RespOrderSumDto orderSumDto = new RespOrderSumDto();
-        RespOrderItemDto orderItem = getRespOrderMock();
-        List<RespOrderItemDto> itemList = List.of(orderItem, orderItem, orderItem, orderItem, orderItem, orderItem, orderItem);
-        orderSumDto.setOrderDate(LocalDateTime.now().minusMinutes(10));
-        orderSumDto.setOrders(itemList);
-       // orderSumDto.setUser(ProfileController.getUserMock());
-        orderSumDto.setAmount(new BigDecimal("40.3"));
-        orderSumDto.setPaidAmount(new BigDecimal("40.2"));
-        orderSumDto.setPaymentType(2);
-        List<RespOrderSumDto> listOfOrders = List.of(orderSumDto, orderSumDto, orderSumDto, orderSumDto, orderSumDto, orderSumDto, orderSumDto);
-        PageDto<RespOrderSumDto> pages = PageDto.getPagedList(page, pageSize, listOfOrders);
-        ResponseDto<PageDto<RespOrderSumDto>> responseDto = new ResponseDto<>(pages);
-        return ResponseEntity.ok(responseDto);
+            @RequestParam Integer page, @RequestParam Integer pageSize, @RequestParam(required = false) String date) {
+        LocalDate localDate = LocalDate.parse(date);
+        //ResponseDto<PageDto<RespOrderSumDto>> b =  summaryInfoService.getSummaryOrder(localDate,page,pageSize);
+        return ResponseEntity.ok().body(summaryInfoService.getSummaryOrder(localDate,page,pageSize));
     }
 
     @GetMapping("/summary/info")

@@ -1,8 +1,10 @@
 package com.nayax.borsch.repository.impl;
 
 import com.nayax.borsch.model.entity.assortment.AssortmentRespEntity;
+import com.nayax.borsch.model.entity.assortment.AssortmentUpEntity;
 import com.nayax.borsch.model.entity.assortment.GeneralPriceItemEntity;
 import com.nayax.borsch.model.entity.assortment.ShawarmaItemEntity;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -26,6 +28,10 @@ public class RepositoryAssortmentImpl {
     @Autowired
     private  NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
+    @Autowired
+    RepositoryShawarmaTypeImpl shawarmaType;
+
+
 
     public List<AssortmentRespEntity> findAll() {
         List<AssortmentRespEntity> list = new ArrayList<>();
@@ -38,29 +44,26 @@ public class RepositoryAssortmentImpl {
                 "left join AdditionAllowedShawarmaType addShawarm on sh.id = addShawarm.ShawarmaTypeId and sh.Active = 'Y' \n" +
                 "left join Addition a on addShawarm.AllowedAdditionId = a.id and A.Active = 'Y'";
 
-        jdbcTemplate.query(sql,new RowMapper<AssortmentRespEntity>() {
-
-            @Override
-            public AssortmentRespEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
-                ShawarmaItemEntity shawarma = new ShawarmaItemEntity();
-                shawarma.setId((Long) rs.getObject("shawId"));
-                shawarma.setName((String) rs.getObject("shawName"));
-                shawarma.setPrice((BigDecimal) rs.getObject("shawCost"));
-                shawarma.setHalfAble(rs.getInt("shawHalf") > 0);
-                additions.putIfAbsent(shawarma, new ArrayList<>());
-                listShawarmaId.add(shawarma.getId());
-                ///////////////
-                if (rs.getObject("adId") != null) {
-                    GeneralPriceItemEntity addition = new GeneralPriceItemEntity();
-                    addition.setId((Long) rs.getObject("adId"));
-                    addition.setName((String) rs.getObject("adName"));
-                    addition.setPrice((BigDecimal) rs.getObject("adCost"));
-                    addition.setActive(rs.getString("adAct"));
-                    additions.get(shawarma).add(addition);
-                }
-                return null;
-                }
+        jdbcTemplate.query(sql, (RowMapper<AssortmentRespEntity>) (rs, rowNum) -> {
+            ShawarmaItemEntity shawarma = new ShawarmaItemEntity();
+            shawarma.setId((Long) rs.getObject("shawId"));
+            shawarma.setName((String) rs.getObject("shawName"));
+            shawarma.setPrice((BigDecimal) rs.getObject("shawCost"));
+            shawarma.setHalfAble(rs.getInt("shawHalf") > 0);
+            additions.putIfAbsent(shawarma, new ArrayList<>());
+            listShawarmaId.add(shawarma.getId());
+            ///////////////
+            if (rs.getObject("adId") != null) {
+                GeneralPriceItemEntity addition = new GeneralPriceItemEntity();
+                addition.setId((Long) rs.getObject("adId"));
+                addition.setName((String) rs.getObject("adName"));
+                addition.setPrice((BigDecimal) rs.getObject("adCost"));
+                addition.setActive(rs.getString("adAct"));
+                additions.get(shawarma).add(addition);
+            }
+            return null;
             });
+        if (listShawarmaId.size() != 0) {
             Map<ShawarmaItemEntity, List<GeneralPriceItemEntity>> remarks = findAllRemarks(listShawarmaId);
 
             for (ShawarmaItemEntity var : additions.keySet()){
@@ -71,19 +74,20 @@ public class RepositoryAssortmentImpl {
                 entity.setRemarks(remarks.get(var));
                 list.add(entity);
             }
+        }
         return list;
     }
 
-    private Map<ShawarmaItemEntity, List<GeneralPriceItemEntity>> findAllRemarks(Set<Long> ids) {
+    public Map<ShawarmaItemEntity, List<GeneralPriceItemEntity>> findAllRemarks(Set<Long> ids) {
         Map<ShawarmaItemEntity, List<GeneralPriceItemEntity>> remarks = new HashMap<>();
         SqlParameterSource parameters = new MapSqlParameterSource("ids", ids);
         String sql =
-                "Select sh.id shawId,sh.[Name] shawName,sh.Cost shawCost,sh.Halfable shawHalf,sh.Active shawAct,\n" +
-                "r.id remId, r.[Name] remName, r.Active remAct\n" +
-                "from ShawarmaType sh\n" +
-                "left join RemarkAllowedShawarmaType remAll on sh.id = remAll.ShawarmaTypeId and sh.Active = 'Y' \n" +
-                "left join Remark r on remAll.RemarkId = r.id and r.Active = 'Y' \n" +
-                "where sh.id in (:ids)";
+                "  Select sh.id shawId,sh.[Name] shawName,sh.Cost shawCost,sh.Halfable shawHalf,sh.Active shawAct,\n" +
+                        "r.id remId, r.[Name] remName, r.Active remAct\n" +
+                        "from ShawarmaType sh\n" +
+                        "left join RemarkAllowedShawarmaType remAll on sh.id = remAll.ShawarmaTypeId and sh.Active = 'Y' and remAll.Active = 'Y'\n" +
+                        "left join Remark r on remAll.RemarkId = r.id and r.Active = 'Y' \n" +
+                        "where sh.id in (:ids)";
         namedParameterJdbcTemplate.query(sql,parameters, (RowMapper<AssortmentRespEntity>) (rs, rowNum) -> {
             ShawarmaItemEntity shawarma = new ShawarmaItemEntity();
             shawarma.setId((Long) rs.getObject("shawId"));
@@ -91,7 +95,7 @@ public class RepositoryAssortmentImpl {
             shawarma.setPrice((BigDecimal) rs.getObject("shawCost"));
             shawarma.setHalfAble(rs.getInt("shawHalf") > 0);
             remarks.putIfAbsent(shawarma, new ArrayList<>());
-            ///////////////
+
             if (rs.getObject("remId") != null) {
                 GeneralPriceItemEntity remark = new GeneralPriceItemEntity();
                 remark.setId((Long) rs.getObject("remId"));
@@ -106,41 +110,41 @@ public class RepositoryAssortmentImpl {
 
 
 
-    public AssortmentRespEntity update(Long id, List<Long> additions,List<Long> remarks){
+    public AssortmentRespEntity update(Long id, AssortmentUpEntity entity){
 
         String sqlUpdate = "update RemarkAllowedShawarmaType set Active = 'N' where ShawarmaTypeId = ? ;" +
-                           "update AdditionAllowedShawarmaType set Active = 'N' where ShawarmaTypeId = ? ;";
+                           "update AdditionAllowedShawarmaType set Active = 'N' where ShawarmaTypeId = ? ;" +
+                           "update ShawarmaType set Halfable = ? where id = ?";
 
         String sqlInsert1 = "Insert into RemarkAllowedShawarmaType (ShawarmaTypeId,RemarkId,Active) values(?,?,?)";
         String sqlInsert2 = "Insert into AdditionAllowedShawarmaType (ShawarmaTypeId,AllowedAdditionId,Active) values(?,?,?)";
-        jdbcTemplate.update(sqlUpdate,id,id);
+        jdbcTemplate.update(sqlUpdate,id,id,entity.isHalfAble() ? 1 : 0, id);
         jdbcTemplate.batchUpdate(sqlInsert1, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
                 ps.setLong(1,id);
-                ps.setLong(2,remarks.get(i));
+                ps.setLong(2,entity.getRemarksId().get(i));
                 ps.setString(3,"Y");
             }
             @Override
             public int getBatchSize() {
-                return remarks.size();
+                return entity.getRemarksId().size();
             }
         });
         jdbcTemplate.batchUpdate(sqlInsert2, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
                 ps.setLong(1,id);
-                ps.setLong(2,additions.get(i));
+                ps.setLong(2,entity.getAdditionsId().get(i));
                 ps.setString(3,"Y");
             }
             @Override
             public int getBatchSize() {
-                return additions.size();
+                return entity.getAdditionsId().size();
             }
         });
+//        AssortmentRespEntity respEntity = new AssortmentRespEntity();
+//        respEntity.
         return null;
     }
-
-
-
 }

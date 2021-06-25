@@ -26,4 +26,7 @@ public interface AssortmentMapper {
 
     List<RespSimpleItemDto> fromEntityToRespDto(List<GeneralPriceItemEntity> itemEntities);
 
+
+    //RespSimpleItemDto toRespSimpleItemDto(ShawarmaItemEntity entity);
+
 }
