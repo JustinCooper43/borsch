@@ -225,7 +225,7 @@ public class ProfileRepositoryImplementation {
 
     }
 
-    public Long getCurrentCashierUserIdByEmail(String email) {
+    public Optional<Long> getCurrentCashierUserIdByEmail(String email) {
         String query = "SELECT [OrderSummary].[id] \n" +
                 " ,[User].id userId \n" +
                 " ,[User].Email \n" +
@@ -233,12 +233,25 @@ public class ProfileRepositoryImplementation {
                 "  join [Cashier] on [Cashier].id = [OrderSummary].CashierId \n" +
                 "  join [User] on [User].id = [Cashier].UserId \n" +
                 "  where [User].Email like ?  and [OrderSummary].StopTime is null";
-        return jdbcTemplate.queryForObject(query, new RowMapper<Long>() {
+        return Optional.ofNullable(jdbcTemplate.queryForObject(query, new RowMapper<Long>() {
             @Override
             public Long mapRow(ResultSet rs, int rowNum) throws SQLException {
                 return ((Long) rs.getObject("userId"));
             }
-        }, email);
+        }, email));
+    }
+
+    public Long latestOrderSummaryCashier() {
+        String sql = " SELECT TOP (1) UserId " +
+                " FROM Cashier " +
+                " JOIN OrderSummary on OrderSummary.CashierId = Cashier.id " +
+                " ORDER BY OrderSummary.StartTime DESC ;";
+        return jdbcTemplate.queryForObject(sql, new RowMapper<Long>() {
+            @Override
+            public Long mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return ((Long) rs.getObject("UserId"));
+            }
+        });
     }
 }
 

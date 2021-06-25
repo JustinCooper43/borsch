@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.*;
 public class PaymentController {
 
 
-    @GetMapping("/")
-    public ResponseEntity<ResponseDto<RespPaymentInfoDto>> get() {
+    @GetMapping("/{id}")
+    public ResponseEntity<ResponseDto<RespPaymentInfoDto>> get(@PathVariable(value = "id") Long id) {
         ResponseDto<RespPaymentInfoDto> responseDto = new ResponseDto<>(generatorPayDto());
         return ResponseEntity.ok(responseDto);
     }

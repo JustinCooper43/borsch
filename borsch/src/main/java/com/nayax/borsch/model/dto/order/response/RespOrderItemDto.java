@@ -3,7 +3,7 @@ package com.nayax.borsch.model.dto.order.response;
 import com.nayax.borsch.model.dto.assortment.response.RespSimpleItemDto;
 import com.nayax.borsch.model.dto.assortment.response.RespSimplePriceItemDto;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 public class RespOrderItemDto {
@@ -15,7 +15,7 @@ public class RespOrderItemDto {
     private boolean cut;
     private Integer quantity;
     private Long orderId;
-    private Date orderDate;
+    private LocalDate orderDate;
 
     public Long getOrderId() {
         return orderId;
@@ -25,11 +25,11 @@ public class RespOrderItemDto {
         this.orderId = orderId;
     }
 
-    public Date getOrderDate() {
+    public LocalDate getOrderDate() {
         return orderDate;
     }
 
-    public void setOrderDate(Date orderDate) {
+    public void setOrderDate(LocalDate orderDate) {
         this.orderDate = orderDate;
     }
 

@@ -84,7 +84,7 @@ public class ProfileService {
 
     public ResponseDto<RespLoginCashierDto> checkCashierLogining(String email) {
         RespLoginCashierDto respLoginCashierDto = new RespLoginCashierDto();
-        Optional<ProfileEntity> entity = repo.findById(repo.getCurrentCashierUserIdByEmail(email));
+        Optional<ProfileEntity> entity = repo.findById(repo.getCurrentCashierUserIdByEmail(email).get());
 
         if (entity.isPresent()) {
             respLoginCashierDto.setCashier(true);
@@ -115,7 +115,7 @@ public class ProfileService {
 
         RespProfileDto respProfileDto = ProfileMapper.toDto(repo.add(profileEntity));
 
-        cashierDto.setCashier(repo.findById(repo.getCurrentCashierUserIdByEmail(dto.geteMail())).isPresent());
+        cashierDto.setCashier(repo.findById(repo.getCurrentCashierUserIdByEmail(dto.geteMail()).get()).isPresent());
         cashierDto.setId(respProfileDto.getUser().getId());
         cashierDto.setRole(respProfileDto.getUser().getRole());
         cashierDto.seteMail(respProfileDto.getUser().geteMail());
