@@ -6,6 +6,7 @@ import com.nayax.borsch.model.dto.PageDto;
 import com.nayax.borsch.model.dto.ResponseDto;
 import com.nayax.borsch.model.dto.order.response.RespOrderDeliveryDto;
 import com.nayax.borsch.model.entity.assortment.GeneralPriceItemEntity;
+import com.nayax.borsch.model.entity.assortment.ShawarmaItemEntity;
 import com.nayax.borsch.model.entity.order.OrderDeliveryEntity;
 import com.nayax.borsch.model.entity.order.OrderEntity;
 import com.nayax.borsch.model.entity.order.OrderSumTimerEntity;
@@ -54,6 +55,16 @@ public class DeliveryService {
         for (GeneralPriceItemEntity e : drinks.keySet()) {
             OrderEntity drink = new OrderEntity();
             drink.setDrink(e);
+            //hacks to avoid NPE
+            drink.setOrderId(-1L);
+            drink.setCreationTime(LocalDateTime.MIN);
+            drink.setRemark(e);
+            drink.setAdditions(List.of(e));
+            drink.setQuantity(-1);
+            drink.setCut(false);
+            drink.setOrderSummaryId(-1L);
+            drink.setDish(new ShawarmaItemEntity());
+            //TODO find better solution for latter 8 lines
             OrderDeliveryEntity composed = new OrderDeliveryEntity();
             composed.setOrder(drink);
             composed.setQuantity(drinks.get(e));

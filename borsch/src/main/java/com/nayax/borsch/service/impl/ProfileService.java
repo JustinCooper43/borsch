@@ -1,8 +1,6 @@
 package com.nayax.borsch.service.impl;
 
 
-import com.nayax.borsch.exceptions.NotUpdateException;
-import com.nayax.borsch.mapper.CashierMapper;
 import com.nayax.borsch.mapper.UserMapper;
 import com.nayax.borsch.mapper.impl.ProfileMapper;
 import com.nayax.borsch.model.dto.ErrorDto;
@@ -10,26 +8,19 @@ import com.nayax.borsch.model.dto.ResponseDto;
 import com.nayax.borsch.model.dto.user.request.ReqProfileAddDto;
 import com.nayax.borsch.model.dto.user.request.ReqProfileUpDto;
 import com.nayax.borsch.model.dto.user.request.ReqUserAddDto;
-import com.nayax.borsch.model.dto.user.response.RespCashierDto;
-import com.nayax.borsch.model.dto.user.response.RespLoginDto;
 import com.nayax.borsch.model.dto.user.response.RespProfileDto;
-import com.nayax.borsch.model.dto.user.response.RespUserDto;
 import com.nayax.borsch.model.dto.user.response.nested.RespLoginCashierDto;
 import com.nayax.borsch.model.dto.user.response.nested.RoleDto;
-import com.nayax.borsch.model.entity.user.CashierEntity;
 import com.nayax.borsch.model.entity.user.ProfileEntity;
 import com.nayax.borsch.model.entity.user.UserEntity;
 import com.nayax.borsch.repository.impl.ProfileRepositoryImplementation;
-import com.nayax.borsch.repository.impl.RepositoryCashierImplementation;
-import com.nayax.borsch.repository.impl.RepositoryUserImplementation;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -39,101 +30,140 @@ public class ProfileService {
     @Autowired
     ProfileRepositoryImplementation repo;
 
-    public ResponseDto<RespProfileDto> add (ReqProfileAddDto dto) {
-
+    public ResponseDto<RespProfileDto> add(ReqProfileAddDto dto) {
         ProfileEntity entity = ProfileMapper.toAddEntity(dto);
-
+        entity.getUserEntity().setActive("Y");
         RespProfileDto respProfileDto = ProfileMapper.toDto(repo.add(entity));
-
         return new ResponseDto<>(respProfileDto);
-
     }
-    public ResponseDto<RespProfileDto> update (ReqProfileUpDto dto) {
 
+    public ResponseDto<RespProfileDto> update(ReqProfileUpDto dto) {
         ProfileEntity entity = ProfileMapper.toUpEntity(dto);
-
         RespProfileDto respProfileDto = ProfileMapper.toDto(repo.update(entity));
-
         return new ResponseDto<>(respProfileDto);
-
     }
 
-    public ResponseDto<RespProfileDto> delete (Long id) {
-
-
+    public ResponseDto<RespProfileDto> delete(Long id) {
         RespProfileDto respProfileDto = ProfileMapper.toDto(repo.delete(id));
-
         return new ResponseDto<>(respProfileDto);
-
     }
 
-  public ResponseDto<RespProfileDto> getById (Long id) {
-
-      Optional<ProfileEntity> entity =  repo.findById(id);
-      ResponseDto<RespProfileDto> response = new ResponseDto<>();
-        if (entity.isPresent()){
+    public ResponseDto<RespProfileDto> getById(Long id) {
+        Optional<ProfileEntity> entity = repo.findById(id);
+        ResponseDto<RespProfileDto> response = new ResponseDto<>();
+        if (entity.isPresent()) {
             response.setData(ProfileMapper.toDto(entity.get()));
-        }else {
+        } else {
             ErrorDto e = new ErrorDto();
             e.setMessage("Profile is not found by id " + id);
             response.setErrors(List.of(e));
         }
         return response;
-
     }
-
 
     public ResponseDto<List<RespProfileDto>> getAll() {
         List<ProfileEntity> entityList = repo.findAll();
-
         List<RespProfileDto> respProfileDtos = entityList.stream().map(ProfileMapper::toDto).collect(Collectors.toList());
-
         return new ResponseDto<>(respProfileDtos);
     }
 
-
-    public ResponseDto<RespLoginCashierDto> checkCashierLogining(String email){
-        RespLoginCashierDto respLoginCashierDto = new RespLoginCashierDto();
-        Optional<ProfileEntity> entity =  repo.checkCashierLoginig(email);
-
-        if (entity.isPresent()){
-           respLoginCashierDto.setCashier(true);
-           respLoginCashierDto.seteMail(entity.get().getUserEntity().geteMail());
-           respLoginCashierDto.setFirstName(entity.get().getUserEntity().getFirstName());
-           respLoginCashierDto.setLastName(entity.get().getUserEntity().getLastName());
-           respLoginCashierDto.setPhone(entity.get().getUserEntity().getPhone());
-           respLoginCashierDto.setId(entity.get().getUserEntity().getId());
-
-            RoleDto roleDto = new RoleDto();
-            roleDto.setId(entity.get().getUserEntity().getRoleId());
-            roleDto.setName(entity.get().getUserEntity().getRoleName());
-           respLoginCashierDto.setRole(roleDto);
-
+    public ResponseDto<RespLoginCashierDto> checkCashierLogining(String email) {
+        Long currentCashierId = null;
+        Long currentUserId = null;
+        ProfileEntity cashier = null;
+        ProfileEntity user = null;
+        RespLoginCashierDto dto = new RespLoginCashierDto();
+        ResponseDto<RespLoginCashierDto> response = new ResponseDto<>();
+        List<ErrorDto> listErrors = new ArrayList<>();
+        if (repo.getCurrentCashierUserIdByEmail(email).isPresent()) {
+            currentCashierId = repo.getCurrentCashierUserIdByEmail(email).get();
+        } else {
+            ErrorDto e = new ErrorDto();
+            e.setMessage("Cashier Id by email %s not found " + email);
+            listErrors.add(e);
         }
+        if (repo.getCurrentUserIdByEmail(email).isPresent()) {
+            currentUserId = repo.getCurrentUserIdByEmail(email).get();
+        } else {
+            ErrorDto e = new ErrorDto();
+            e.setMessage("User Id by email %s not found " + email);
+            listErrors.add(e);
+        }
+        if (repo.findById(currentCashierId).isPresent()) {
+            cashier = repo.findById(currentCashierId).get();
+        } else {
+            ErrorDto e = new ErrorDto();
+            e.setMessage("Cashier by id %s not found " + currentCashierId);
+            listErrors.add(e);
+        }
+        if (repo.findById(currentUserId).isPresent()) {
+            user = repo.findById(currentUserId).get();
 
-        return new ResponseDto<>(respLoginCashierDto);
-
+        } else {
+            ErrorDto e = new ErrorDto();
+            e.setMessage("User by id %s not found " + currentUserId);
+            listErrors.add(e);
+        }
+        if (cashier != null && user != null) {
+            if (Objects.equals(cashier.getUserEntity().getId(), user.getUserEntity().getId())) {
+                dto.setCashier(true);
+                dto.setId(cashier.getUserEntity().getId());
+                dto.setPhone(cashier.getUserEntity().getPhone());
+                dto.setFirstName(cashier.getUserEntity().getFirstName());
+                dto.setLastName(cashier.getUserEntity().getLastName());
+                dto.seteMail(cashier.getUserEntity().geteMail());
+                RoleDto roleDto = new RoleDto();
+                roleDto.setId(cashier.getUserEntity().getRoleId());
+                roleDto.setName(cashier.getUserEntity().getRoleName());
+                dto.setRole(roleDto);
+                response.setData(dto);
+            } else {
+                dto.setCashier(false);
+                dto.setId(user.getUserEntity().getId());
+                dto.setPhone(user.getUserEntity().getPhone());
+                dto.setFirstName(user.getUserEntity().getFirstName());
+                dto.setLastName(user.getUserEntity().getLastName());
+                dto.seteMail(user.getUserEntity().geteMail());
+                RoleDto roleDto = new RoleDto();
+                roleDto.setId(user.getUserEntity().getRoleId());
+                roleDto.setName(user.getUserEntity().getRoleName());
+                dto.setRole(roleDto);
+                response.setData(dto);
+            }
+        } else if (cashier == null) {
+            dto.setCashier(false);
+            if (user != null) {
+                dto.setId(user.getUserEntity().getId());
+                dto.setPhone(user.getUserEntity().getPhone());
+                dto.setFirstName(user.getUserEntity().getFirstName());
+                dto.setLastName(user.getUserEntity().getLastName());
+                dto.seteMail(user.getUserEntity().geteMail());
+                RoleDto roleDto = new RoleDto();
+                roleDto.setId(user.getUserEntity().getRoleId());
+                roleDto.setName(user.getUserEntity().getRoleName());
+                dto.setRole(roleDto);
+                response.setData(dto);
+            }
+        }
+        response.setErrors(listErrors);
+        return response;
     }
-
 
     public ResponseDto<RespLoginCashierDto> registration(ReqUserAddDto dto) {
-        RespLoginCashierDto cashierDto = new RespLoginCashierDto();
+        RespLoginCashierDto resp = new RespLoginCashierDto();
         ProfileEntity profileEntity = new ProfileEntity();
-        UserEntity userEntity = Mappers.getMapper(UserMapper.class).toAddEntity(dto);
         profileEntity.setCashierEntity(null);
+        UserEntity userEntity = Mappers.getMapper(UserMapper.class).toAddEntity(dto);
+        userEntity.setActive("Y");
         profileEntity.setUserEntity(userEntity);
-
         RespProfileDto respProfileDto = ProfileMapper.toDto(repo.add(profileEntity));
-
-        cashierDto.setCashier(repo.checkCashierLoginig(dto.geteMail()).isPresent());
-        cashierDto.setId(respProfileDto.getUser().getId());
-        cashierDto.setRole(respProfileDto.getUser().getRole());
-        cashierDto.seteMail(respProfileDto.getUser().geteMail());
-        cashierDto.setFirstName(respProfileDto.getUser().getFirstName());
-        cashierDto.setLastName(respProfileDto.getUser().getLastName());
-        cashierDto.setPhone(respProfileDto.getUser().getPhone());
-
-        return new ResponseDto<>(cashierDto);
+        resp.setCashier(false);
+        resp.seteMail(respProfileDto.getUser().geteMail());
+        resp.setRole(respProfileDto.getUser().getRole());
+        resp.setFirstName(respProfileDto.getUser().getFirstName());
+        resp.setLastName(respProfileDto.getUser().getLastName());
+        resp.setId(respProfileDto.getUser().getId());
+        resp.setPhone(respProfileDto.getUser().getPhone());
+        return new ResponseDto<>(resp);
     }
-
 }

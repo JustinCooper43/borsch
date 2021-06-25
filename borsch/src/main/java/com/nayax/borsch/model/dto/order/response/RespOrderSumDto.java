@@ -3,6 +3,7 @@ package com.nayax.borsch.model.dto.order.response;
 import com.nayax.borsch.model.dto.user.response.RespUserDto;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -14,7 +15,7 @@ public class RespOrderSumDto {
     private Integer paymentType;
     private BigDecimal amount;
     private BigDecimal paidAmount;
-    private LocalDateTime orderDate;
+    private LocalDate orderDate;
 
 
     public Integer getPaymentType() {
@@ -58,11 +59,11 @@ public class RespOrderSumDto {
         this.paidAmount = paidAmount;
     }
 
-    public LocalDateTime getOrderDate() {
+    public LocalDate getOrderDate() {
         return orderDate;
     }
 
-    public void setOrderDate(LocalDateTime orderDate) {
+    public void setOrderDate(LocalDate orderDate) {
         this.orderDate = orderDate;
     }
 }

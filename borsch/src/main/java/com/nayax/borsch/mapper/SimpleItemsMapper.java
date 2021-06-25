@@ -14,9 +14,8 @@ import com.nayax.borsch.model.entity.assortment.PriceItemType;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 
 @Mapper
@@ -41,13 +40,20 @@ public interface SimpleItemsMapper {
     GeneralPriceItemEntity toGeneralPriceItemEntity(ReqSimpleItemUpDto dto);
 
     PageDto<RespSimplePriceItemDto> toPagePriceDto(PageEntity<GeneralPriceItemEntity> entityPage);
+
     List<RespSimplePriceItemDto> toListPagePriceItemDto(List<GeneralPriceItemEntity> entityList);
+
     RespSimplePriceItemDto toPriceItemDto(GeneralPriceItemEntity entity);
 
     PageDto<RespSimpleItemDto> toPageDto(PageEntity<GeneralPriceItemEntity> entityPage);
+
     RespSimpleItemDto toItemDto(GeneralPriceItemEntity entity);
 
-    default Date ldtToDate(LocalDateTime localDateTime) {
-        return (Date) Date.from(localDateTime.atZone(ZoneId.of("GMT")).toInstant());
+    default LocalDateTime dateToLdt(LocalDate date) {
+        return date.atStartOfDay();
+    }
+
+    default LocalDate ldtToDate(LocalDateTime localDateTime) {
+        return localDateTime.toLocalDate();
     }
 }

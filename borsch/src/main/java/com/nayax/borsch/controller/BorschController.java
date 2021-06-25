@@ -1,7 +1,9 @@
 package com.nayax.borsch.controller;
 
+import com.nayax.borsch.model.dto.PageDto;
 import com.nayax.borsch.model.dto.ResponseDto;
 import com.nayax.borsch.model.dto.assortment.response.RespAssortmentItemDto;
+import com.nayax.borsch.model.dto.order.response.RespOrderSumDto;
 import com.nayax.borsch.model.dto.user.response.RespUserDto;
 import com.nayax.borsch.model.entity.assortment.AssortmentRespEntity;
 import com.nayax.borsch.model.entity.assortment.ShawarmaItemEntity;
@@ -9,6 +11,8 @@ import com.nayax.borsch.model.entity.order.OrderSummaryEntity;
 import com.nayax.borsch.repository.impl.RepositoryAssortmentImpl;
 import com.nayax.borsch.repository.impl.RepositoryOrderSummaryImpl;
 import com.nayax.borsch.repository.impl.RepositoryShawarmaTypeImpl;
+import com.nayax.borsch.service.impl.OrderSummaryInfoService;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +23,7 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -35,15 +40,19 @@ public class BorschController {
     @Autowired
     private RepositoryOrderSummaryImpl orderSummary;
 
+    @Autowired
+    OrderSummaryInfoService  summaryInfoService;
+
     @GetMapping("/hello")
     public ResponseEntity<?> greetings() {
        List<AssortmentRespEntity> list = assortment.findAll();
        List<Long> add = List.of(10L,11L,12L);
         List<Long> rem = List.of(4L,1L,5L);
       // AssortmentRespEntity update = assortment.update(11L,add,rem);
-        Date date= Date.valueOf("2020-10-10");
-        List<OrderSummaryEntity> orderSum = orderSummary.findAll(1,10,date);
-        return  ResponseEntity.ok(list);
+        LocalDate localDate = LocalDate.parse("2020-10-10");
+//        List<OrderSummaryEntity> orderSum = orderSummary.findAll(date);
+        ResponseDto<PageDto<RespOrderSumDto>> dto =  summaryInfoService.getSummaryOrder(localDate,1,1);
+        return  ResponseEntity.ok().body(dto.getData().getResponseList());
     }
 
 
