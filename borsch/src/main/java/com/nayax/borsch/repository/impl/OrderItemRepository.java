@@ -3,6 +3,7 @@ package com.nayax.borsch.repository.impl;
 import com.nayax.borsch.model.entity.assortment.GeneralPriceItemEntity;
 import com.nayax.borsch.model.entity.assortment.ShawarmaItemEntity;
 import com.nayax.borsch.model.entity.order.OrderEntity;
+import com.nayax.borsch.model.entity.payment.PaymentConfirmation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.*;
@@ -122,6 +123,23 @@ public class OrderItemRepository {
 
         }
         return Optional.empty();
+    }
+
+    public Optional<List<Long>> getOrderIdByUser(PaymentConfirmation entity) {
+        String sql = " SELECT TOP (1) [Order].id, s.CashierId " +
+                " FROM [Order] " +
+                " JOIN [OrderSummary] s ON s.id = [Order].OrderSummaryId " +
+                " WHERE [Order].UserId = ? " +
+                " AND s.StartTime BETWEEN ? AND ? ; ";
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, new RowMapper<>() {
+            @Override
+            public List<Long> mapRow(ResultSet rs, int rowNum) throws SQLException {
+                List<Long> orderWithCashier = new ArrayList<>(2);
+                orderWithCashier.add(rs.getLong("id"));
+                orderWithCashier.add(rs.getLong("CashierId"));
+                return orderWithCashier;
+            }
+        }, entity.getUserId(), entity.getOrderDate(), entity.getOrderDate().plusDays(1)));
     }
 
     public OrderEntity deleteById(Long id) {

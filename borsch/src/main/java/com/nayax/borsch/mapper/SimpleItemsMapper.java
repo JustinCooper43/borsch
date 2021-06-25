@@ -7,16 +7,13 @@ import com.nayax.borsch.model.dto.assortment.request.ReqSimplePriceItemUpDto;
 import com.nayax.borsch.model.dto.assortment.response.RespPriceItemDto;
 import com.nayax.borsch.model.dto.assortment.response.RespSimpleItemDto;
 import com.nayax.borsch.model.dto.assortment.response.RespSimplePriceItemDto;
-import com.nayax.borsch.model.entity.assortment.AssortmentRespEntity;
 import com.nayax.borsch.model.entity.assortment.GeneralPriceItemEntity;
 import com.nayax.borsch.model.entity.assortment.PriceItemType;
-import com.nayax.borsch.model.entity.assortment.ShawarmaItemEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 @Mapper
 public interface SimpleItemsMapper {
@@ -42,10 +39,11 @@ public interface SimpleItemsMapper {
 
     RespSimpleItemDto toItemDto(GeneralPriceItemEntity entity);
 
-    default java.sql.Date ldtToDate(LocalDateTime localDateTime) {
-        return new java.sql.Date(java.util.Date.from(localDateTime.atZone(ZoneId.of("GMT")).toInstant()).getTime());
+    default LocalDateTime dateToLdt(LocalDate date) {
+        return date.atStartOfDay();
     }
 
-
-    AssortmentRespEntity toAssortmentRespEntity(ShawarmaItemEntity entity);
+    default LocalDate ldtToDate(LocalDateTime localDateTime) {
+        return localDateTime.toLocalDate();
+    }
 }

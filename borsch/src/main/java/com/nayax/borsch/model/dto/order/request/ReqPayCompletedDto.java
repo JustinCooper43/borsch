@@ -1,6 +1,5 @@
+/*
 package com.nayax.borsch.model.dto.order.request;
-
-import java.time.LocalDateTime;
 
 public class ReqPayCompletedDto {
 
@@ -23,3 +22,4 @@ public class ReqPayCompletedDto {
         this.paymentType = paymentType;
     }
 }
+*/
