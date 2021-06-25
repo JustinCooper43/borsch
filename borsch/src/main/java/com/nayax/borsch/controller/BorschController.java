@@ -9,7 +9,6 @@ import com.nayax.borsch.model.entity.order.OrderSummaryEntity;
 import com.nayax.borsch.repository.impl.RepositoryAssortmentImpl;
 import com.nayax.borsch.repository.impl.RepositoryOrderSummaryImpl;
 import com.nayax.borsch.repository.impl.RepositoryShawarmaTypeImpl;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

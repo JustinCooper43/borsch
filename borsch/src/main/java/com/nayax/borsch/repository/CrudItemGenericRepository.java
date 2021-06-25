@@ -1,5 +1,7 @@
 package com.nayax.borsch.repository;
 
+import com.nayax.borsch.model.entity.PageEntity;
+import com.nayax.borsch.model.entity.assortment.GeneralPriceItemEntity;
 import com.nayax.borsch.repository.impl.TablesType;
 
 import java.util.List;
@@ -15,7 +17,7 @@ public interface CrudItemGenericRepository<T, U> {
 
     List<T> findAll(U nameTable);
 
-    T delete(Long id, U nameTable);
+    Optional<T> delete(Long id, U nameTable);
 
-    List<T> findAllPage(int page, int pageSize, U nameTable);
+    PageEntity<T> findAllPage(int page, int pageSize, U nameTable);
 }

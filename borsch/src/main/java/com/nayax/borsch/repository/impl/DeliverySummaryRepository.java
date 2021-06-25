@@ -83,7 +83,7 @@ public class DeliverySummaryRepository {
             }
             return results;
         } catch (DataAccessException e) {
-            e.printStackTrace();
+
         }
         return new ArrayList<>();
     }
@@ -126,7 +126,7 @@ public class DeliverySummaryRepository {
                 }
             }, date);
         } catch (DataAccessException e) {
-            e.printStackTrace();
+
         }
         return null;
     }

@@ -7,7 +7,6 @@ public class ReqSimplePriceItemAddDto {
     private String name;
     private BigDecimal price;
 
-
     public String getName() {
         return name;
     }

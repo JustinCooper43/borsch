@@ -28,25 +28,19 @@ public class OrderItemRepo {
     NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 
-    public List<OrderEntity> getPagedOrders(Long userId, LocalDateTime dateTime, int page, int pageSize) {
+    public List<OrderEntity> getPagedOrders(Long userId, LocalDateTime dateTime) {
 
-        String sql = " declare @page int = ? ;" +
-                " declare @pageSize int = ? ;" +
-                " with tmpl as( " +
-                " SELECT [Order].UserId userId , [Order].CreationTime creatTime , [Order].id orderId, [Order].Quantity quantity, [Order].CutInHalf cut, [Order].OrderSummaryId sumId,    " +
-                " [Order].ShawarmaTypeId [dish.id], ShawarmaType.[Name] [dish.name], ShawarmaType.Cost [dish.price], ShawarmaType.Active actShaw , ShawarmaType.Halfable shawHalv, " +
-                " ExtraItem.id [drink.id], ExtraItem.[Name] [drink.name], ExtraItem.Cost [drink.price], ExtraItem.Active actExtr ,  " +
-                " [Order].RemarkId [remark.id], Remark.[Name] [remark.name],  Remark.Active actRem  " +
-                " FROM [Order] " +
-                " JOIN ShawarmaType ON ShawarmaType.id = [Order].ShawarmaTypeId  " +
-                " JOIN ExtraItem ON ExtraItem.id = [Order].ExtraItemId  " +
-                " JOIN Remark ON Remark.id = [Order].RemarkId  " +
-                " WHERE [Order].UserId = ? AND [Order].CreationTime = ? " +
-                " ) " +
-                " SELECT * FROM (select * from tmpl  " +
-                "  order by creatTime DESC " +
-                "  offset @pageSize*(@page-1) rows fetch next @pageSize rows only ) sub  " +
-                " right join (SELECT count(*) FROM tmpl) c (total) on 1=1; ";
+        String sql =
+                " SELECT [Order].UserId userId , [Order].CreationTime creatTime , [Order].id orderId, [Order].Quantity quantity, [Order].CutInHalf cut, [Order].OrderSummaryId sumId, " +
+                        " [Order].ShawarmaTypeId [dish.id], ShawarmaType.[Name] [dish.name], ShawarmaType.Cost [dish.price], ShawarmaType.Active actShaw , ShawarmaType.Halfable shawHalv, " +
+                        " ExtraItem.id [drink.id], ExtraItem.[Name] [drink.name], ExtraItem.Cost [drink.price], ExtraItem.Active actExtr ,  " +
+                        " [Order].RemarkId [remark.id], Remark.[Name] [remark.name],  Remark.Active actRem  " +
+                        " FROM [Order] " +
+                        " JOIN ShawarmaType ON ShawarmaType.id = [Order].ShawarmaTypeId  " +
+                        " JOIN ExtraItem ON ExtraItem.id = [Order].ExtraItemId  " +
+                        " JOIN Remark ON Remark.id = [Order].RemarkId  " +
+                        " WHERE [Order].UserId = ? AND [Order].CreationTime = ? ";
+
 
         Set<Long> setOrderId = new HashSet<>();
 
@@ -94,7 +88,7 @@ public class OrderItemRepo {
 
                 return entity;
             }
-        }, page, pageSize, userId, dateTime);
+        }, userId, dateTime);
 
         Map<Long, List<GeneralPriceItemEntity>> map = getMapAdditions(setOrderId, dateTime);
 
@@ -115,12 +109,12 @@ public class OrderItemRepo {
         parameter.addValue("dateTime", dateTime);
 
         String sql = " SELECT [Order].id orderId, Addition.id [addition.id], Addition.[Name] [addition.name], " +
-                "Addition.Cost [addition.price],  Addition.Active actAdd " +
-                "FROM [Order]  " +
-                "JOIN AdditionSelectedOrder ON AdditionSelectedOrder.OrderId = [Order].id  " +
-                "JOIN Addition ON Addition.id = AdditionSelectedOrder.AdditionId  " +
-                "WHERE [Order].id IN (:setOrderId ) AND [Order].CreationTime = :dateTime " +
-                "ORDER BY [Order].id DESC";
+                " Addition.Cost [addition.price],  Addition.Active actAdd " +
+                " FROM [Order]  " +
+                " JOIN AdditionSelectedOrder ON AdditionSelectedOrder.OrderId = [Order].id  " +
+                " JOIN Addition ON Addition.id = AdditionSelectedOrder.AdditionId  " +
+                " WHERE [Order].id IN (:setOrderId ) AND [Order].CreationTime = :dateTime " +
+                " ORDER BY [Order].id DESC";
 
 
         namedParameterJdbcTemplate.query(sql, parameter, new RowMapper<GeneralPriceItemEntity>() {
@@ -139,7 +133,6 @@ public class OrderItemRepo {
                     }
                 }
         );
-
         return mapAddition;
     }
 
@@ -173,7 +166,6 @@ public class OrderItemRepo {
                 " FROM [Order]  " +
                 " JOIN ShawarmaType ON ShawarmaType.id = [Order].ShawarmaTypeId   " +
                 " JOIN ExtraItem ON ExtraItem.id = [Order].ExtraItemId   " +
-                " JOIN Remark ON Remark.id = [Order].RemarkId   " +
                 " JOIN AdditionSelectedOrder ON AdditionSelectedOrder.OrderId = [Order].id  " +
                 " JOIN Addition ON Addition.id = AdditionSelectedOrder.AdditionId  " +
                 " JOIN Payment ON Payment.OrderId = [Order].id " +
@@ -181,7 +173,7 @@ public class OrderItemRepo {
                 " AND Payment.Confirmation = 1 " +
                 " GROUP BY [Order].UserId, [Order].CreationTime, [Order].id , [Order].Quantity, ShawarmaType.Cost, ExtraItem.Cost ";
 
-        List<OrderItemTotalCostInfo> listResult = new ArrayList<>();
+        List<OrderItemTotalCostInfo> listResult;
 
         listResult = jdbcTemplate.query(sql, new RowMapper<OrderItemTotalCostInfo>() {
             @Override
@@ -199,10 +191,8 @@ public class OrderItemRepo {
             }
         }, dateTime);
 
-
         return listResult;
     }
-
 
     public Map<Long, BigDecimal> getPayedSumById(LocalDateTime dateTime) {
 
@@ -226,7 +216,6 @@ public class OrderItemRepo {
         }, dateTime);
         return mapPaymentUser;
     }
-
 
     private Map<Long, List<GeneralPriceItemEntity>> getMapAdditions(Set<Long> setOrderId) {
         Map<Long, List<GeneralPriceItemEntity>> mapAddition = new HashMap<>();
@@ -265,7 +254,6 @@ public class OrderItemRepo {
 
         return mapAddition;
     }
-
 
     public List<OrderEntity> getPagedHistory(Long userId, int page, int pageSize) {
 

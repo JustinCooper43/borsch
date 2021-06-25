@@ -27,7 +27,7 @@ public class TestControllerPageOrderItem {
         RespOrderItemDto orderItem = getRespOrderMock();
 
         LocalDateTime time = LocalDateTime.of(2020,10,10, 10,10);
-        orderItemRepo.getPagedOrders(userId,time,page,pageSize);
+        orderItemRepo.getPagedOrders(userId,time);
 
         List<RespOrderItemDto> itemList = List.of(orderItem, orderItem, orderItem, orderItem, orderItem, orderItem, orderItem);
         PageDto<RespOrderItemDto> pageDto = PageDto.getPagedList(page, pageSize, itemList);

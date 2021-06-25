@@ -1,39 +1,30 @@
 package com.nayax.borsch.repository.impl;
 
+import com.nayax.borsch.model.entity.PageEntity;
 import com.nayax.borsch.model.entity.assortment.GeneralPriceItemEntity;
-import com.nayax.borsch.model.entity.user.UserEntity;
 import com.nayax.borsch.repository.CrudItemGenericRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Repository
 public class AdditionsRepository implements CrudItemGenericRepository<GeneralPriceItemEntity, TablesType> {
-
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Override
     public GeneralPriceItemEntity add(GeneralPriceItemEntity entity, TablesType nameTable) {
-        String table = getNameTable(nameTable);
 
+        String table = getNameTable(nameTable);
 
         String sql = " declare @table nvarchar(20) = ?  " +
                 " declare @name nvarchar(12) = ?  " +
@@ -45,21 +36,21 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
                 " EXEC sp_executesql @SqlStr ";
 
 
-        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
-                    GeneralPriceItemEntity entity2 = new GeneralPriceItemEntity();
-                    entity2.setId((Long) rs.getObject("id"));
-                    entity2.setPrice((BigDecimal) rs.getObject("Cost"));
-                    entity2.setName((String) rs.getObject("Name"));
-                    entity2.setActive((String) rs.getObject("Active"));
-                    return entity2;
+        GeneralPriceItemEntity entity1 = jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
+                    GeneralPriceItemEntity entityDB = new GeneralPriceItemEntity();
+                    entityDB.setId((Long) rs.getObject("id"));
+                    entityDB.setPrice((BigDecimal) rs.getObject("Cost"));
+                    entityDB.setName((String) rs.getObject("Name"));
+                    entityDB.setActive((String) rs.getObject("Active"));
+                    return entityDB;
                 },
                 table, entity.getName(), entity.getPrice(), entity.getActive()
         );
+        return entity1;
     }
 
     @Override
     public GeneralPriceItemEntity update(GeneralPriceItemEntity entity, TablesType nameTable) {
-
 
         String table = String.valueOf(nameTable);
 
@@ -87,7 +78,7 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
             itemFromDB = findById(id, nameTable);
             return itemFromDB.orElse(new GeneralPriceItemEntity());
         } catch (EmptyResultDataAccessException e) {
-            // TODO perhaps needs logs
+
         }
         return itemFromDB.orElse(new GeneralPriceItemEntity());
     }
@@ -98,8 +89,7 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
         String sql = " declare @table nvarchar(20) = ? " +
                 " declare @id bigint = ? " +
                 " declare @SqlStr nvarchar(max)  " +
-                " SET  @SqlStr = ' SELECT id, [Name] , Cost FROM ' + @table + ' WHERE id = ' + convert(nvarchar,@id) + ' and Active LIKE  ''Y'' ' " +
-                " + 'AND (Active NOT LIKE ''N'' OR Active IS NULL)'  " +
+                " SET  @SqlStr = ' SELECT id, [Name] , Cost FROM ' + @table + ' WHERE id = ' + convert(nvarchar,@id) " +
                 " EXEC sp_executesql @SqlStr ";
 
         Optional<GeneralPriceItemEntity> result = Optional.empty();
@@ -146,9 +136,8 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
     }
 
     @Override
-    public GeneralPriceItemEntity delete(Long id, TablesType nameTable) {
+    public Optional<GeneralPriceItemEntity> delete(Long id, TablesType nameTable) {
         String table = String.valueOf(nameTable);
-        GeneralPriceItemEntity deletedEntity = findById(id, nameTable).orElse(new GeneralPriceItemEntity());
 
         String sql = " declare @table nvarchar(20) = ? " +
                 " declare @id bigint = ? " +
@@ -158,16 +147,17 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
 
         try {
             int rows = jdbcTemplate.update(sql, table, id);
-            return deletedEntity;
+            return findById(id, nameTable);
         } catch (EmptyResultDataAccessException e) {
-            return deletedEntity;
+            return findById(id, nameTable);
         }
     }
 
     @Override
-    public List<GeneralPriceItemEntity> findAllPage(int page, int pageSize, TablesType nameTable) {
+    public PageEntity<GeneralPriceItemEntity> findAllPage(int page, int pageSize, TablesType nameTable) {
 
         String table = String.valueOf(nameTable);
+
         String sql = " declare @page int = ?  " +
                 " declare @pageSize int = ?  " +
                 " declare @table nvarchar(20) = ? " +
@@ -183,6 +173,8 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
                 " right join (SELECT count(*) FROM @TableResult) c (total) on 1=1 " ;
 
         List<GeneralPriceItemEntity> listItems;
+        PageEntity<GeneralPriceItemEntity> listItemsPage = new PageEntity<>();
+
         listItems = jdbcTemplate.query(sql, new RowMapper<GeneralPriceItemEntity>() {
             @Override
             public GeneralPriceItemEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -190,11 +182,13 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
                 entity.setId((Long) rs.getObject("id"));
                 entity.setName((String) rs.getObject("Name"));
                 entity.setPrice((BigDecimal) rs.getObject("Cost"));
+                listItemsPage.setTotalElements((int)rs.getShort("total"));
                 return entity;
             }
         }, page, pageSize, table);
-        return listItems;
+        listItemsPage.setResponseList(listItems);
 
+        return listItemsPage;
     }
 
     private String getNameTable(TablesType tablesType) {
