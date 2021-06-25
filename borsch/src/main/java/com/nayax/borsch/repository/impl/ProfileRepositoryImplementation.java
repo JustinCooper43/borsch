@@ -54,6 +54,8 @@ public class ProfileRepositoryImplementation {
         }, keyHolder);
 
         Long i = Objects.requireNonNull(keyHolder.getKey()).longValue();
+
+
         if (entity.getCashierEntity() != null) {
             entity.getCashierEntity().setCashierId(i);
             String sqlCashier = "INSERT INTO Cashier " +
@@ -66,7 +68,7 @@ public class ProfileRepositoryImplementation {
                     entity.getCashierEntity().getCardBank(), entity.getCashierEntity().getCardNote(),
                     entity.getCashierEntity().getCardQrCode());
         }
-        return findById(entity.getUserEntity().getId()).orElseThrow(NotUpdateException::new);
+        return findById(i).orElseThrow(NotUpdateException::new);
     }
 
 
@@ -225,7 +227,8 @@ public class ProfileRepositoryImplementation {
 
     }
 
-    public Long getCurrentCashierUserIdByEmail(String email) {
+
+    public Optional <Long> getCurrentCashierUserIdByEmail(String email) {
         String query = "SELECT [OrderSummary].[id] \n" +
                 " ,[User].id userId \n" +
                 " ,[User].Email \n" +
@@ -233,12 +236,45 @@ public class ProfileRepositoryImplementation {
                 "  join [Cashier] on [Cashier].id = [OrderSummary].CashierId \n" +
                 "  join [User] on [User].id = [Cashier].UserId \n" +
                 "  where [User].Email like ?  and [OrderSummary].StopTime is null";
-        return jdbcTemplate.queryForObject(query, new RowMapper<Long>() {
-            @Override
-            public Long mapRow(ResultSet rs, int rowNum) throws SQLException {
-                return ((Long) rs.getObject("userId"));
-            }
-        }, email);
+
+        Optional<Long> result = Optional.empty();
+        try {
+            Long id = jdbcTemplate.queryForObject(query, new RowMapper<Long>() {
+                @Override
+                public Long mapRow(ResultSet rs, int rowNum) throws SQLException {
+                    return ((Long) rs.getObject("userId"));
+                }
+            }, email);
+
+            result = Optional.ofNullable(id);
+
+        } catch (EmptyResultDataAccessException e) {
+
+            System.err.printf("Cashier Id by email  %s not found\n", email == null ? null : email.toString());
+        }
+
+        return result;
+    }
+
+
+    public Optional<Long> getCurrentUserIdByEmail(String email) {
+
+        String query = "SELECT id FROM [User] where email like ?";
+
+        Optional<Long> result = Optional.empty();
+        try {
+            Long id = jdbcTemplate.queryForObject(query, new RowMapper<Long>() {
+                @Override
+                public Long mapRow(ResultSet rs, int rowNum) throws SQLException {
+                    return ((Long) rs.getObject("id"));
+                }
+            }, email);
+            result = Optional.ofNullable(id);
+        } catch (EmptyResultDataAccessException e) {
+
+            System.err.printf("Cashier Id by email  %s not found\n", email == null ? null : email.toString());
+        }
+        return result;
     }
 }
 

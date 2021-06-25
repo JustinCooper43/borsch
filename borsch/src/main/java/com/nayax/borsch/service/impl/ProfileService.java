@@ -8,6 +8,7 @@ import com.nayax.borsch.model.dto.ResponseDto;
 import com.nayax.borsch.model.dto.user.request.ReqProfileAddDto;
 import com.nayax.borsch.model.dto.user.request.ReqProfileUpDto;
 import com.nayax.borsch.model.dto.user.request.ReqUserAddDto;
+import com.nayax.borsch.model.dto.user.response.RespLoginDto;
 import com.nayax.borsch.model.dto.user.response.RespProfileDto;
 import com.nayax.borsch.model.dto.user.response.nested.RespLoginCashierDto;
 import com.nayax.borsch.model.dto.user.response.nested.RoleDto;
@@ -18,7 +19,9 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -31,6 +34,7 @@ public class ProfileService {
     public ResponseDto<RespProfileDto> add(ReqProfileAddDto dto) {
 
         ProfileEntity entity = ProfileMapper.toAddEntity(dto);
+        entity.getUserEntity().setActive("Y");
 
         RespProfileDto respProfileDto = ProfileMapper.toDto(repo.add(entity));
 
@@ -83,47 +87,133 @@ public class ProfileService {
 
 
     public ResponseDto<RespLoginCashierDto> checkCashierLogining(String email) {
-        RespLoginCashierDto respLoginCashierDto = new RespLoginCashierDto();
-        Optional<ProfileEntity> entity = repo.findById(repo.getCurrentCashierUserIdByEmail(email));
 
-        if (entity.isPresent()) {
-            respLoginCashierDto.setCashier(true);
-            respLoginCashierDto.seteMail(entity.get().getUserEntity().geteMail());
-            respLoginCashierDto.setFirstName(entity.get().getUserEntity().getFirstName());
-            respLoginCashierDto.setLastName(entity.get().getUserEntity().getLastName());
-            respLoginCashierDto.setPhone(entity.get().getUserEntity().getPhone());
-            respLoginCashierDto.setId(entity.get().getUserEntity().getId());
+        Long currentCashierId = null;
+        Long currentUserId = null;
+        ProfileEntity cashier = null;
+        ProfileEntity user = null;
+        RespLoginCashierDto dto = new RespLoginCashierDto();
 
-            RoleDto roleDto = new RoleDto();
-            roleDto.setId(entity.get().getUserEntity().getRoleId());
-            roleDto.setName(entity.get().getUserEntity().getRoleName());
-            respLoginCashierDto.setRole(roleDto);
+        ResponseDto<RespLoginCashierDto> response = new ResponseDto<>();
+        List<ErrorDto> listErrors = new ArrayList<>();
 
+        if (repo.getCurrentCashierUserIdByEmail(email).isPresent()) {
+            currentCashierId = repo.getCurrentCashierUserIdByEmail(email).get();
+        }
+        else {
+            ErrorDto e = new ErrorDto();
+            e.setMessage("Cashier Id by email %s not found " + email);
+            listErrors.add(e);
+        }
+        if (repo.getCurrentUserIdByEmail(email).isPresent()) {
+            currentUserId = repo.getCurrentUserIdByEmail(email).get();
+        }
+        else {
+            ErrorDto e = new ErrorDto();
+            e.setMessage("User Id by email %s not found " + email);
+            listErrors.add(e);
         }
 
-        return new ResponseDto<>(respLoginCashierDto);
+        if (repo.findById(currentCashierId).isPresent()) {
+            cashier = repo.findById(currentCashierId).get();
 
+        } else {
+            ErrorDto e = new ErrorDto();
+            e.setMessage("Cashier by id %s not found " + currentCashierId);
+            listErrors.add(e);
+        }
+        if (repo.findById(currentUserId).isPresent()) {
+           user = repo.findById(currentUserId).get();
+
+        } else {
+            ErrorDto e = new ErrorDto();
+            e.setMessage("User by id %s not found " + currentUserId);
+            listErrors.add(e);
+        }
+
+        if (cashier != null &&  user != null){
+
+            if (Objects.equals(cashier.getUserEntity().getId(), user.getUserEntity().getId())){
+
+                dto.setCashier(true);
+                dto.setId(cashier.getUserEntity().getId());
+                dto.setPhone(cashier.getUserEntity().getPhone());
+                dto.setFirstName(cashier.getUserEntity().getFirstName());
+                dto.setLastName(cashier.getUserEntity().getLastName());
+                dto.seteMail(cashier.getUserEntity().geteMail());
+                RoleDto roleDto = new RoleDto();
+                roleDto.setId(cashier.getUserEntity().getRoleId());
+                roleDto.setName(cashier.getUserEntity().getRoleName());
+                dto.setRole(roleDto);
+                response.setData(dto);
+            }
+            else{
+                dto.setCashier(false);
+                dto.setId(user.getUserEntity().getId());
+                dto.setPhone(user.getUserEntity().getPhone());
+                dto.setFirstName(user.getUserEntity().getFirstName());
+                dto.setLastName(user.getUserEntity().getLastName());
+                dto.seteMail(user.getUserEntity().geteMail());
+                RoleDto roleDto = new RoleDto();
+                roleDto.setId(user.getUserEntity().getRoleId());
+                roleDto.setName(user.getUserEntity().getRoleName());
+                dto.setRole(roleDto);
+                response.setData(dto);
+            }
+        }
+        else if (cashier == null){
+
+            dto.setCashier(false);
+            if (user != null) {
+                dto.setId(user.getUserEntity().getId());
+
+                dto.setPhone(user.getUserEntity().getPhone());
+                dto.setFirstName(user.getUserEntity().getFirstName());
+                dto.setLastName(user.getUserEntity().getLastName());
+                dto.seteMail(user.getUserEntity().geteMail());
+                RoleDto roleDto = new RoleDto();
+                roleDto.setId(user.getUserEntity().getRoleId());
+                roleDto.setName(user.getUserEntity().getRoleName());
+                dto.setRole(roleDto);
+                response.setData(dto);
+            }
+        }
+
+
+
+        response.setErrors(listErrors);
+
+        return response;
     }
 
 
+
+
+
+
+
+
     public ResponseDto<RespLoginCashierDto> registration(ReqUserAddDto dto) {
-        RespLoginCashierDto cashierDto = new RespLoginCashierDto();
-        ProfileEntity profileEntity = new ProfileEntity();
-        UserEntity userEntity = Mappers.getMapper(UserMapper.class).toAddEntity(dto);
+
+        RespLoginCashierDto resp = new RespLoginCashierDto();
+        ProfileEntity profileEntity  = new ProfileEntity();
         profileEntity.setCashierEntity(null);
+
+        UserEntity userEntity = Mappers.getMapper(UserMapper.class).toAddEntity(dto);
+        userEntity.setActive("Y");
         profileEntity.setUserEntity(userEntity);
 
         RespProfileDto respProfileDto = ProfileMapper.toDto(repo.add(profileEntity));
 
-        cashierDto.setCashier(repo.findById(repo.getCurrentCashierUserIdByEmail(dto.geteMail())).isPresent());
-        cashierDto.setId(respProfileDto.getUser().getId());
-        cashierDto.setRole(respProfileDto.getUser().getRole());
-        cashierDto.seteMail(respProfileDto.getUser().geteMail());
-        cashierDto.setFirstName(respProfileDto.getUser().getFirstName());
-        cashierDto.setLastName(respProfileDto.getUser().getLastName());
-        cashierDto.setPhone(respProfileDto.getUser().getPhone());
+        resp.setCashier(false);
+        resp.seteMail(respProfileDto.getUser().geteMail());
+        resp.setRole(respProfileDto.getUser().getRole());
+        resp.setFirstName(respProfileDto.getUser().getFirstName());
+        resp.setLastName(respProfileDto.getUser().getLastName());
+        resp.setId(respProfileDto.getUser().getId());
+        resp.setPhone(respProfileDto.getUser().getPhone());
 
-        return new ResponseDto<>(cashierDto);
+        return new ResponseDto<>(resp);
     }
 
 }
