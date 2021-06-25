@@ -1,8 +1,6 @@
 package com.nayax.borsch.service.impl;
 
 
-import com.nayax.borsch.exceptions.NotUpdateException;
-import com.nayax.borsch.mapper.CashierMapper;
 import com.nayax.borsch.mapper.UserMapper;
 import com.nayax.borsch.mapper.impl.ProfileMapper;
 import com.nayax.borsch.model.dto.ErrorDto;
@@ -10,25 +8,16 @@ import com.nayax.borsch.model.dto.ResponseDto;
 import com.nayax.borsch.model.dto.user.request.ReqProfileAddDto;
 import com.nayax.borsch.model.dto.user.request.ReqProfileUpDto;
 import com.nayax.borsch.model.dto.user.request.ReqUserAddDto;
-import com.nayax.borsch.model.dto.user.response.RespCashierDto;
-import com.nayax.borsch.model.dto.user.response.RespLoginDto;
 import com.nayax.borsch.model.dto.user.response.RespProfileDto;
-import com.nayax.borsch.model.dto.user.response.RespUserDto;
 import com.nayax.borsch.model.dto.user.response.nested.RespLoginCashierDto;
 import com.nayax.borsch.model.dto.user.response.nested.RoleDto;
-import com.nayax.borsch.model.entity.user.CashierEntity;
 import com.nayax.borsch.model.entity.user.ProfileEntity;
 import com.nayax.borsch.model.entity.user.UserEntity;
 import com.nayax.borsch.repository.impl.ProfileRepositoryImplementation;
-import com.nayax.borsch.repository.impl.RepositoryCashierImplementation;
-import com.nayax.borsch.repository.impl.RepositoryUserImplementation;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -39,7 +28,7 @@ public class ProfileService {
     @Autowired
     ProfileRepositoryImplementation repo;
 
-    public ResponseDto<RespProfileDto> add (ReqProfileAddDto dto) {
+    public ResponseDto<RespProfileDto> add(ReqProfileAddDto dto) {
 
         ProfileEntity entity = ProfileMapper.toAddEntity(dto);
 
@@ -48,7 +37,8 @@ public class ProfileService {
         return new ResponseDto<>(respProfileDto);
 
     }
-    public ResponseDto<RespProfileDto> update (ReqProfileUpDto dto) {
+
+    public ResponseDto<RespProfileDto> update(ReqProfileUpDto dto) {
 
         ProfileEntity entity = ProfileMapper.toUpEntity(dto);
 
@@ -58,7 +48,7 @@ public class ProfileService {
 
     }
 
-    public ResponseDto<RespProfileDto> delete (Long id) {
+    public ResponseDto<RespProfileDto> delete(Long id) {
 
 
         RespProfileDto respProfileDto = ProfileMapper.toDto(repo.delete(id));
@@ -67,13 +57,13 @@ public class ProfileService {
 
     }
 
-  public ResponseDto<RespProfileDto> getById (Long id) {
+    public ResponseDto<RespProfileDto> getById(Long id) {
 
-      Optional<ProfileEntity> entity =  repo.findById(id);
-      ResponseDto<RespProfileDto> response = new ResponseDto<>();
-        if (entity.isPresent()){
+        Optional<ProfileEntity> entity = repo.findById(id);
+        ResponseDto<RespProfileDto> response = new ResponseDto<>();
+        if (entity.isPresent()) {
             response.setData(ProfileMapper.toDto(entity.get()));
-        }else {
+        } else {
             ErrorDto e = new ErrorDto();
             e.setMessage("Profile is not found by id " + id);
             response.setErrors(List.of(e));
@@ -92,22 +82,22 @@ public class ProfileService {
     }
 
 
-    public ResponseDto<RespLoginCashierDto> checkCashierLogining(String email){
+    public ResponseDto<RespLoginCashierDto> checkCashierLogining(String email) {
         RespLoginCashierDto respLoginCashierDto = new RespLoginCashierDto();
-        Optional<ProfileEntity> entity =  repo.checkCashierLoginig(email);
+        Optional<ProfileEntity> entity = repo.findById(repo.getCurrentCashierUserIdByEmail(email));
 
-        if (entity.isPresent()){
-           respLoginCashierDto.setCashier(true);
-           respLoginCashierDto.seteMail(entity.get().getUserEntity().geteMail());
-           respLoginCashierDto.setFirstName(entity.get().getUserEntity().getFirstName());
-           respLoginCashierDto.setLastName(entity.get().getUserEntity().getLastName());
-           respLoginCashierDto.setPhone(entity.get().getUserEntity().getPhone());
-           respLoginCashierDto.setId(entity.get().getUserEntity().getId());
+        if (entity.isPresent()) {
+            respLoginCashierDto.setCashier(true);
+            respLoginCashierDto.seteMail(entity.get().getUserEntity().geteMail());
+            respLoginCashierDto.setFirstName(entity.get().getUserEntity().getFirstName());
+            respLoginCashierDto.setLastName(entity.get().getUserEntity().getLastName());
+            respLoginCashierDto.setPhone(entity.get().getUserEntity().getPhone());
+            respLoginCashierDto.setId(entity.get().getUserEntity().getId());
 
             RoleDto roleDto = new RoleDto();
             roleDto.setId(entity.get().getUserEntity().getRoleId());
             roleDto.setName(entity.get().getUserEntity().getRoleName());
-           respLoginCashierDto.setRole(roleDto);
+            respLoginCashierDto.setRole(roleDto);
 
         }
 
@@ -125,7 +115,7 @@ public class ProfileService {
 
         RespProfileDto respProfileDto = ProfileMapper.toDto(repo.add(profileEntity));
 
-        cashierDto.setCashier(repo.checkCashierLoginig(dto.geteMail()).isPresent());
+        cashierDto.setCashier(repo.findById(repo.getCurrentCashierUserIdByEmail(dto.geteMail())).isPresent());
         cashierDto.setId(respProfileDto.getUser().getId());
         cashierDto.setRole(respProfileDto.getUser().getRole());
         cashierDto.seteMail(respProfileDto.getUser().geteMail());

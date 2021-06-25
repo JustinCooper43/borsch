@@ -225,35 +225,21 @@ public class ProfileRepositoryImplementation {
 
     }
 
-
-    public Optional<ProfileEntity> checkCashierLoginig(String email) {
-
-
+    public Long getCurrentCashierUserIdByEmail(String email) {
         String query = "SELECT [OrderSummary].[id] \n" +
-                " ,[OrderSummary].[CashierId] cashierId \n" +
+                " ,[User].id userId \n" +
                 " ,[User].Email \n" +
                 "  FROM [OrderSummary] \n" +
                 "  join [Cashier] on [Cashier].id = [OrderSummary].CashierId \n" +
                 "  join [User] on [User].id = [Cashier].UserId \n" +
                 "  where [User].Email like ?  and [OrderSummary].StopTime is null";
-
-
-        Long id = jdbcTemplate.queryForObject(query,new RowMapper<Long>() {
-
+        return jdbcTemplate.queryForObject(query, new RowMapper<Long>() {
             @Override
             public Long mapRow(ResultSet rs, int rowNum) throws SQLException {
-               return ((Long) rs.getObject("cashierId"));
-
+                return ((Long) rs.getObject("userId"));
             }
-        },email);
-
-        return findById(id);
-
+        }, email);
     }
-
-
-
-
 }
 
 
