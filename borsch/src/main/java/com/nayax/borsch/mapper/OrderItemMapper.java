@@ -35,4 +35,6 @@ public interface OrderItemMapper {
     RespOrderItemDto toDto(OrderEntity entity);
     OrderEntityHashNoOrderUserTime transferEntity(OrderEntity entity);
 
+    List<RespOrderItemDto> toListRespOrderDto(List<OrderEntity> listOrderEntity);
+
 }

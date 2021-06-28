@@ -6,6 +6,8 @@ import com.nayax.borsch.model.dto.ResponseDto;
 import com.nayax.borsch.model.dto.assortment.request.ReqSimplePriceItemAddDto;
 import com.nayax.borsch.model.dto.assortment.request.ReqSimplePriceItemUpDto;
 import com.nayax.borsch.model.dto.assortment.response.RespSimplePriceItemDto;
+import com.nayax.borsch.service.impl.ShavarmaService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,43 +18,27 @@ import java.util.List;
 @RequestMapping("/dish")
 public class DishEditorController {
 
-
-    private RespSimplePriceItemDto getRespDishEditMock() {
-        RespSimplePriceItemDto priceItemDto = new RespSimplePriceItemDto();
-        priceItemDto.setId(1l);
-        priceItemDto.setPrice(new BigDecimal("90.21"));
-        priceItemDto.setName("Шаурма куриная");
-        return priceItemDto;
-    }
+    @Autowired
+    ShavarmaService shavarmaService;
 
     @PostMapping
     public ResponseEntity<ResponseDto<RespSimplePriceItemDto>> addDish(@RequestBody ReqSimplePriceItemAddDto dto) {
-        RespSimplePriceItemDto priceItemDto = getRespDishEditMock();
-        ResponseDto<RespSimplePriceItemDto> responseDto = new ResponseDto<>(priceItemDto);
-        return ResponseEntity.ok(responseDto);
+        return ResponseEntity.ok(shavarmaService.addDish(dto));
     }
 
     @GetMapping
     public ResponseEntity<ResponseDto<PageDto<RespSimplePriceItemDto>>> getDish(@RequestParam Integer page, @RequestParam Integer pageSize) {
-        RespSimplePriceItemDto priceItem = getRespDishEditMock();
-        List<RespSimplePriceItemDto> priceItemList = List.of(priceItem, priceItem, priceItem, priceItem, priceItem, priceItem);
-        PageDto<RespSimplePriceItemDto> pageDto = PageDto.getPagedList(page, pageSize, priceItemList);
-        ResponseDto<PageDto<RespSimplePriceItemDto>> responseDto = new ResponseDto<>(pageDto);
-        return ResponseEntity.ok(responseDto);
+        return ResponseEntity.ok(shavarmaService.getDishByPage(page, pageSize));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ResponseDto<RespSimplePriceItemDto>> updateDish(@PathVariable(value = "id") Long id, @RequestParam ReqSimplePriceItemUpDto dto) {
         dto.setId(id);
-        RespSimplePriceItemDto priceItemDto = getRespDishEditMock();
-        ResponseDto<RespSimplePriceItemDto> responseDto = new ResponseDto<>(priceItemDto);
-        return ResponseEntity.ok(responseDto);
+        return ResponseEntity.ok(shavarmaService.updateDish(dto));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseDto<RespSimplePriceItemDto>> deleteDish(@PathVariable(value = "id") Long id) {
-        RespSimplePriceItemDto priceItemDto = getRespDishEditMock();
-        ResponseDto<RespSimplePriceItemDto> responseDto = new ResponseDto<>(priceItemDto);
-        return ResponseEntity.ok(responseDto);
+        return ResponseEntity.ok(shavarmaService.deleteDish(id));
     }
 }

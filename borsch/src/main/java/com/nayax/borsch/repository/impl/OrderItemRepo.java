@@ -28,7 +28,7 @@ public class OrderItemRepo {
     NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 
-    public List<OrderEntity> getPagedOrders(Long userId, LocalDateTime dateTime) {
+    public List<OrderEntity> getListOrders(Long userId, LocalDateTime dateTime) {
 
         String sql =
                 " SELECT [Order].UserId userId , [Order].CreationTime creatTime , [Order].id orderId, [Order].Quantity quantity, [Order].CutInHalf cut, [Order].OrderSummaryId sumId, " +
@@ -41,12 +41,8 @@ public class OrderItemRepo {
                         " JOIN Remark ON Remark.id = [Order].RemarkId  " +
                         " WHERE [Order].UserId = ? AND [Order].CreationTime = ? ";
 
-
-        Set<Long> setOrderId = new HashSet<>();
-
         List<OrderEntity> listOrders = new ArrayList<>();
-        List<OrderEntity> listItems = new ArrayList<>();
-        listItems = jdbcTemplate.query(sql, new RowMapper<OrderEntity>() {
+        listOrders = jdbcTemplate.query(sql, new RowMapper<OrderEntity>() {
             @Override
             public OrderEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
                 ShawarmaItemEntity dish = new ShawarmaItemEntity();
@@ -81,27 +77,15 @@ public class OrderItemRepo {
                 }
                 entity.setOrderSummaryId((Long) rs.getObject("sumId"));
 
-                listOrders.add(entity);
-
                 Long orderId = (Long) rs.getObject("orderId");
-                setOrderId.add(orderId);
-
                 return entity;
             }
         }, userId, dateTime);
 
-        Map<Long, List<GeneralPriceItemEntity>> map = getMapAdditions(setOrderId, dateTime);
-
-        for (OrderEntity var : listOrders) {
-            var.setAdditions(map.get(var.getOrderId()));
-        }
-
-        setCostOrderItem(listOrders);
-
         return listOrders;
     }
 
-    private Map<Long, List<GeneralPriceItemEntity>> getMapAdditions(Set<Long> setOrderId, LocalDateTime dateTime) {
+    public Map<Long, List<GeneralPriceItemEntity>> getMapAdditions(Set<Long> setOrderId, LocalDateTime dateTime) {
         Map<Long, List<GeneralPriceItemEntity>> mapAddition = new HashMap<>();
 
         MapSqlParameterSource parameter = new MapSqlParameterSource();
@@ -115,7 +99,6 @@ public class OrderItemRepo {
                 " JOIN Addition ON Addition.id = AdditionSelectedOrder.AdditionId  " +
                 " WHERE [Order].id IN (:setOrderId ) AND [Order].CreationTime = :dateTime " +
                 " ORDER BY [Order].id DESC";
-
 
         namedParameterJdbcTemplate.query(sql, parameter, new RowMapper<GeneralPriceItemEntity>() {
                     @Override
@@ -136,25 +119,7 @@ public class OrderItemRepo {
         return mapAddition;
     }
 
-    private void setCostOrderItem(List<OrderEntity> listOrders) {
 
-        for (OrderEntity orderItem : listOrders) {
-            BigDecimal dishPrice = orderItem.getDish().getPrice();
-            BigDecimal drinkPrice = orderItem.getDrink().getPrice();
-            BigDecimal additionPrice = new BigDecimal("0");
-            for (GeneralPriceItemEntity additItem : orderItem.getAdditions()) {
-                additionPrice = additionPrice.add(additItem.getPrice());
-            }
-
-            BigDecimal totalPrice = dishPrice.add(drinkPrice).add(additionPrice);
-            BigDecimal quantity = new BigDecimal(orderItem.getQuantity());
-
-            totalPrice = totalPrice.multiply(quantity);
-
-            orderItem.setCost(totalPrice);
-        }
-
-    }
 
     public List<OrderItemTotalCostInfo> getOrderInfo(LocalDateTime dateTime) {
 

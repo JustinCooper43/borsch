@@ -11,6 +11,7 @@ import com.nayax.borsch.model.dto.order.response.RespOrderItemDto;
 import com.nayax.borsch.model.dto.order.response.RespOrderSumDto;
 import com.nayax.borsch.model.dto.order.response.RespOrderSumInfoDto;
 import com.nayax.borsch.model.entity.order.OrderEntity;
+import com.nayax.borsch.service.impl.OrderItemService;
 import com.nayax.borsch.service.impl.OrderSummaryInfoService;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,8 @@ public class OrderController {
 
     @Autowired
     OrderSummaryInfoService summaryInfoService;
+    @Autowired
+    OrderItemService orderItemService;
 
     private RespOrderItemDto getRespOrderMock() {
         RespOrderItemDto orderItem = new RespOrderItemDto();
@@ -72,13 +75,8 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<ResponseDto<PageDto<RespOrderItemDto>>> getPagedOrders(
-            @RequestParam Integer page, @RequestParam Integer pageSize, @RequestParam Long userId, @RequestParam(required = false) LocalDateTime dateTime) {
-        RespOrderItemDto orderItem = getRespOrderMock();
-        List<RespOrderItemDto> itemList = List.of(orderItem, orderItem, orderItem, orderItem, orderItem, orderItem, orderItem);
-        PageDto<RespOrderItemDto> pageDto = PageDto.getPagedList(page, pageSize, itemList);
-        ResponseDto<PageDto<RespOrderItemDto>> responseDto = new ResponseDto<>(pageDto);
-        return ResponseEntity.ok(responseDto);
+    public ResponseEntity<ResponseDto<List<RespOrderItemDto>>> getPagedOrders(Long userId, @RequestParam(required = false) LocalDateTime dateTime) {
+        return ResponseEntity.ok(orderItemService.getListOrder(userId,dateTime));
     }
 
     @GetMapping("/history/{userId}")

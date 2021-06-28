@@ -3,10 +3,12 @@ package com.nayax.borsch.service.impl;
 
 import com.nayax.borsch.mapper.AssortmentMapper;
 import com.nayax.borsch.model.dto.ErrorDto;
+import com.nayax.borsch.model.dto.PageDto;
 import com.nayax.borsch.model.dto.ResponseDto;
 import com.nayax.borsch.model.dto.assortment.request.ReqSimplePriceItemAddDto;
 import com.nayax.borsch.model.dto.assortment.request.ReqSimplePriceItemUpDto;
 import com.nayax.borsch.model.dto.assortment.response.RespSimplePriceItemDto;
+import com.nayax.borsch.model.entity.PageEntity;
 import com.nayax.borsch.model.entity.assortment.ShawarmaItemEntity;
 import com.nayax.borsch.repository.impl.RepositoryShawarmaTypeImpl;
 import org.mapstruct.factory.Mappers;
@@ -28,7 +30,7 @@ public class ShavarmaService {
         return new ResponseDto<>(respDto);
     }
 
-    public ResponseDto<RespSimplePriceItemDto> updateDish(ReqSimplePriceItemUpDto dto, Long id) {
+    public ResponseDto<RespSimplePriceItemDto> updateDish(ReqSimplePriceItemUpDto dto) {
         ShawarmaItemEntity entity = repositoryShawarmaType.update(Mappers.getMapper(AssortmentMapper.class).toShawarmaItemEntity(dto));
         RespSimplePriceItemDto respDto = Mappers.getMapper(AssortmentMapper.class).toRespSimplePriceItemDto(entity);
         return new ResponseDto<>(respDto);
@@ -49,4 +51,20 @@ public class ShavarmaService {
     }
 
     //TODO get dish by page
+
+    public ResponseDto<PageDto<RespSimplePriceItemDto>> getDishByPage(int page, int pageSize) {
+
+        PageEntity<ShawarmaItemEntity> listEntity = repositoryShawarmaType.findAll(page, pageSize);
+        listEntity.setPage(page);
+        listEntity.setPageSize(pageSize);
+
+        Integer totalElements = listEntity.getTotalElements();
+        int totalPages = totalElements % pageSize == 0 ?
+                totalElements / pageSize :
+                totalElements / pageSize + 1;
+        listEntity.setTotalPages(totalPages);
+
+        PageDto<RespSimplePriceItemDto> pageDto = Mappers.getMapper(AssortmentMapper.class).toPageDto(listEntity);
+        return new ResponseDto<>(pageDto);
+    }
 }

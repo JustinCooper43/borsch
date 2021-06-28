@@ -4,6 +4,22 @@ public class ErrorDto {
     private String message;
     private Integer code;
 
+    public ErrorDto() {
+    }
+
+    public ErrorDto(String message, Integer code) {
+        this.message = message;
+        this.code = code;
+    }
+
+    public ErrorDto(String message) {
+        this.message = message;
+    }
+
+    public ErrorDto(Integer code) {
+        this.code = code;
+    }
+
     public String getMessage() {
         return message;
     }
