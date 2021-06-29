@@ -3,8 +3,10 @@ package com.nayax.borsch.service.impl;
 
 import com.nayax.borsch.mapper.OrderItemMapper;
 import com.nayax.borsch.model.dto.ErrorDto;
+import com.nayax.borsch.model.dto.PageDto;
 import com.nayax.borsch.model.dto.ResponseDto;
 import com.nayax.borsch.model.dto.order.response.RespOrderItemDto;
+import com.nayax.borsch.model.entity.PageEntity;
 import com.nayax.borsch.model.entity.assortment.GeneralPriceItemEntity;
 import com.nayax.borsch.model.entity.order.OrderEntity;
 import com.nayax.borsch.repository.impl.OrderItemRepo;
@@ -85,5 +87,21 @@ public class OrderItemService {
         OrderEntity order = orderItemRepository.deleteById(id);
         RespOrderItemDto orderDto = Mappers.getMapper(OrderItemMapper.class).toDto(order);
         return new ResponseDto<>(orderDto);
+    }
+
+    public ResponseDto<PageDto<RespOrderItemDto>>  getPagedHistory(Long userId, int page, int pageSize){
+        PageEntity <OrderEntity> listEntity = orderItemRepo.getPagedHistory(userId, page, pageSize);
+        listEntity.setPage(page);
+        listEntity.setPageSize(pageSize);
+
+        Integer totalElements = listEntity.getTotalElements();
+        int totalPages = totalElements % pageSize == 0 ?
+                totalElements / pageSize :
+                totalElements / pageSize + 1;
+        listEntity.setTotalPages(totalPages);
+
+        PageDto<RespOrderItemDto> listDto = Mappers.getMapper(OrderItemMapper.class).toPageDto(listEntity);
+
+        return new ResponseDto<>(listDto);
     }
 }

@@ -83,11 +83,8 @@ public class OrderController {
     @GetMapping("/history/{userId}")
     public ResponseEntity<ResponseDto<PageDto<RespOrderItemDto>>> getPagedHistory(
             @PathVariable(value = "userId") Long userId, @RequestParam int page, @RequestParam int pageSize) {
-        RespOrderItemDto orderItem = getRespOrderMock();
-        List<RespOrderItemDto> itemList = List.of(orderItem, orderItem, orderItem, orderItem, orderItem, orderItem, orderItem);
-        PageDto<RespOrderItemDto> pageDto = PageDto.getPagedList(page, pageSize, itemList);
-        ResponseDto<PageDto<RespOrderItemDto>> responseDto = new ResponseDto<>(pageDto);
-        return ResponseEntity.ok(responseDto);
+
+        return ResponseEntity.ok().body(orderItemService.getPagedHistory(userId, page, pageSize));
     }
 
     @GetMapping("/summary")///Vlad
