@@ -30,6 +30,9 @@ public class DeliveryService {
     DeliverySummaryRepository deliverySummaryRepository;
 
     public ResponseDto<PageDto<RespOrderDeliveryDto>> getPagedDeliveryInfo(int page, int pageSize, LocalDateTime date) {
+        if (date == null) {
+            date = LocalDateTime.now();
+        }
         OrderSumTimerEntity timerEntity = deliverySummaryRepository.getTimerBeforeDate(date);
         List<OrderEntity> orderList = deliverySummaryRepository.getByOrderSummaryId(timerEntity.getId());
         Map<GeneralPriceItemEntity, Integer> drinks = new HashMap<>();

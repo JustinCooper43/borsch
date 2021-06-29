@@ -43,8 +43,8 @@ public class PaymentService {
                 profileRepository.getCurrentCashierUserIdByEmail("%")
                         .orElse(profileRepository.latestOrderSummaryCashier()))
                 .orElse(new ProfileEntity());
-        BigDecimal payed = paymentRepository.getPayedSumForLatestOrderSummary(userId);
-        BigDecimal cost = paymentRepository.getTotalCostForLatestOrderSummary(userId);
+        BigDecimal payed = paymentRepository.getPayedSumForLatestOrderSummary(userId).orElse(new BigDecimal("0"));
+        BigDecimal cost = paymentRepository.getTotalCostForLatestOrderSummary(userId).orElse(new BigDecimal("0"));
         PaymentInfoEntity paymentInfo = new PaymentInfoEntity();
         paymentInfo.setCashier(currentOrderCashierInfo.getUserEntity());
         paymentInfo.setPaymentMethod(currentOrderCashierInfo.getCashierEntity());
