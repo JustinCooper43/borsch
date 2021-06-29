@@ -2,7 +2,10 @@ package com.nayax.borsch.controller;
 
 import com.nayax.borsch.model.dto.PageDto;
 import com.nayax.borsch.model.dto.ResponseDto;
+import com.nayax.borsch.model.dto.assortment.request.ReqSimplePriceItemUpDto;
 import com.nayax.borsch.model.dto.assortment.response.RespAssortmentItemDto;
+import com.nayax.borsch.model.dto.assortment.response.RespSimpleItemDto;
+import com.nayax.borsch.model.dto.assortment.response.RespSimplePriceItemDto;
 import com.nayax.borsch.model.dto.order.response.RespOrderSumDto;
 import com.nayax.borsch.model.dto.user.response.RespUserDto;
 import com.nayax.borsch.model.entity.assortment.AssortmentRespEntity;
@@ -12,6 +15,7 @@ import com.nayax.borsch.repository.impl.RepositoryAssortmentImpl;
 import com.nayax.borsch.repository.impl.RepositoryOrderSummaryImpl;
 import com.nayax.borsch.repository.impl.RepositoryShawarmaTypeImpl;
 import com.nayax.borsch.service.impl.OrderSummaryInfoService;
+import com.nayax.borsch.service.impl.ShavarmaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +36,9 @@ import java.util.Optional;
 public class BorschController {
     @Autowired
     private RepositoryShawarmaTypeImpl shawarmaType;
+
+    @Autowired
+    ShavarmaService shavarmaService;
 
     @Autowired
     private RepositoryAssortmentImpl assortment;
@@ -56,25 +63,25 @@ public class BorschController {
 
 
     @GetMapping("/user")
-    public ResponseEntity<ResponseDto<RespAssortmentItemDto>> getUserExample() {
-        RespUserDto respUserDto = new RespUserDto();
-        respUserDto.setId(1L);
-        respUserDto.seteMail("efil@gmail.com");
-        respUserDto.setLastName("John Dou");
-        Optional<ShawarmaItemEntity> entity = shawarmaType.findById(15L);
-        System.out.println(entity.get());
-
-        List<ShawarmaItemEntity> list = shawarmaType.findAll();
-        System.out.println("List: ");
-        list.forEach(System.out::println);
-
-        ShawarmaItemEntity shawarmaItemEntity = new ShawarmaItemEntity();
-        shawarmaItemEntity.setId(15L);
-        shawarmaItemEntity.setHalfAble(true);
-        shawarmaItemEntity.setName("армянская22");
-        shawarmaItemEntity.setPrice(new BigDecimal("0"));
-        ShawarmaItemEntity updated = shawarmaType.update(shawarmaItemEntity);
-        System.out.println(updated);
+    public ResponseEntity<ResponseDto<RespSimplePriceItemDto>> getUserExample() {
+//        RespUserDto respUserDto = new RespUserDto();
+//        respUserDto.setId(1L);
+//        respUserDto.seteMail("efil@gmail.com");
+//        respUserDto.setLastName("John Dou");
+//        Optional<ShawarmaItemEntity> entity = shawarmaType.findById(15L);
+//        System.out.println(entity.get());
+//
+//        List<ShawarmaItemEntity> list = shawarmaType.findAll();
+//        System.out.println("List: ");
+//        list.forEach(System.out::println);
+//
+//        ShawarmaItemEntity shawarmaItemEntity = new ShawarmaItemEntity();
+//        shawarmaItemEntity.setId(15L);
+//        shawarmaItemEntity.setHalfAble(true);
+//        shawarmaItemEntity.setName("армянская22");
+//        shawarmaItemEntity.setPrice(new BigDecimal("0"));
+//        ShawarmaItemEntity updated = shawarmaType.update(shawarmaItemEntity);
+//        System.out.println(updated);
 
 
 //        System.out.println("Deleted::::::::::::::");
@@ -85,25 +92,30 @@ public class BorschController {
 //        System.out.println(deletedByEntity.get());
 
 
-        System.out.println("add:");
-        ShawarmaItemEntity add = new ShawarmaItemEntity();
-        add.setName("TestedAdd00000000000");
-        add.setPrice(new BigDecimal("1"));
-        add.setHalfAble(true);
-
-        ShawarmaItemEntity added = shawarmaType.add(add);
-        System.out.println(added);
+//        System.out.println("add:");
+//        ShawarmaItemEntity add = new ShawarmaItemEntity();
+//        add.setName("TestedAdd00000000000");
+//        add.setPrice(new BigDecimal("1"));
+//        add.setHalfAble(true);
+//
+//        ShawarmaItemEntity added = shawarmaType.add(add);
+//        System.out.println(added);
 
 //
 //        List<ShawarmaItemEntity> shawarmaItemEntityList = shawarmaType.findAll(1,5);
 //        shawarmaItemEntityList.forEach(System.out::println);
 
+        ReqSimplePriceItemUpDto update = new ReqSimplePriceItemUpDto();
+        update.setId(10000000L);
+        update.setName("qwerty");
+        update.setPrice(new BigDecimal("1"));
+        ResponseDto<RespSimplePriceItemDto> responseDto = shavarmaService.updateDish(update);
 
-        RespAssortmentItemDto dto = new RespAssortmentItemDto();
-        dto.setId(entity.get().getId());
-        dto.setName(entity.get().getName());
-        dto.setPrice(entity.get().getPrice());
-        dto.setHalfAble(entity.get().isHalfAble());
-        return ResponseEntity.ok().body(new ResponseDto<>(dto));
+//        RespAssortmentItemDto dto = new RespAssortmentItemDto();
+//        dto.setId(entity.get().getId());
+//        dto.setName(entity.get().getName());
+//        dto.setPrice(entity.get().getPrice());
+//        dto.setHalfAble(entity.get().isHalfAble());
+        return ResponseEntity.ok().body(responseDto);
     }
 }

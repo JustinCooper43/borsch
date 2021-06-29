@@ -3,10 +3,12 @@ package com.nayax.borsch.validation.componentimpl;
 import com.nayax.borsch.model.dto.ErrorDto;
 import com.nayax.borsch.validation.ValidatorComponent;
 import com.nayax.borsch.validation.enums.ValidationAction;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+
 
 public class SimpleValidatorComponent implements ValidatorComponent {
 

@@ -55,10 +55,10 @@ public class DrinkAdditionValidationConfig {
                 obj -> ((ReqSimplePriceItemUpDto) obj).getName() != null && ((ReqSimplePriceItemUpDto) obj).getName().length() > 0,
                 "Name of updated item is empty"));
 
-        validatorDrinkAdd.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.ADDITIONS_UPDATE,
-                ValidationAction.DRINK_UPDATE, ValidationAction.DISH_UPDATE),
-                obj -> ((ReqSimplePriceItemUpDto) obj).getName() != null && ((ReqSimplePriceItemUpDto) obj).getName().matches("^[~@#\\$%\\^&\\*:;<>\\.,/}\\{\\+]"),
-                "Name of updated item contains special characters"));
+//        validatorDrinkAdd.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.ADDITIONS_UPDATE,
+//                ValidationAction.DRINK_UPDATE, ValidationAction.DISH_UPDATE),
+//                obj -> ((ReqSimplePriceItemUpDto) obj).getName() != null && ((ReqSimplePriceItemUpDto) obj).getName().matches("^[~@#\\$%\\^&\\*:;<>\\.,/}\\{\\+]"),
+//                "Name of updated item contains special characters"));
 
         validatorDrinkAdd.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.ADDITIONS_UPDATE,
                 ValidationAction.DRINK_UPDATE, ValidationAction.DISH_UPDATE),

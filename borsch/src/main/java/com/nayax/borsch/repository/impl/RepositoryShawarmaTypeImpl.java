@@ -4,6 +4,8 @@ import com.nayax.borsch.model.entity.PageEntity;
 import com.nayax.borsch.model.entity.assortment.AssortmentRespEntity;
 import com.nayax.borsch.model.entity.assortment.GeneralPriceItemEntity;
 import com.nayax.borsch.model.entity.assortment.ShawarmaItemEntity;
+import com.nayax.borsch.validation.componentimpl.SimpleValidatorComponent;
+import com.nayax.borsch.validation.enums.ValidationAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -48,12 +50,11 @@ public class RepositoryShawarmaTypeImpl {
         }
         Optional<ShawarmaItemEntity> result = findById(Objects.requireNonNull(keyHolder.getKey()).longValue());
         return result.orElse(new ShawarmaItemEntity());
-//        return  jdbcTemplate.queryForObject(sql,new BeanPropertyRowMapper<>(ShawarmaItemEntity.class),
-//               entity.getName(),entity.getPrice(),entity.isHalfAble() ? 1 : 0,"Y");
     }
 
 
     public ShawarmaItemEntity update(ShawarmaItemEntity entity) {
+
         String sql = "Update ShawarmaType set [Name] = ?, Cost = ?, Halfable = ? where id = ?;";
         try {
             jdbcTemplate.update(sql,
