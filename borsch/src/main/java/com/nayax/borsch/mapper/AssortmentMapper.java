@@ -33,15 +33,13 @@ public interface AssortmentMapper {
 
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "price", ignore = true)
     @Mapping(target = "active", ignore = true)
     @Mapping(target = "halfAble", ignore = true)
     ShawarmaItemEntity toShawarmaItemEntity(ReqSimplePriceItemAddDto dto);
 
     RespSimplePriceItemDto toRespSimplePriceItemDto(ShawarmaItemEntity entity);
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "price", ignore = true)
+
     @Mapping(target = "active", ignore = true)
     @Mapping(target = "halfAble", ignore = true)
     ShawarmaItemEntity toShawarmaItemEntity(ReqSimplePriceItemUpDto dto);

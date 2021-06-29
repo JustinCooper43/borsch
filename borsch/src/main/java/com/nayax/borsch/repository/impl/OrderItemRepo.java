@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -28,7 +29,7 @@ public class OrderItemRepo {
     NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 
-    public List<OrderEntity> getListOrders(Long userId, LocalDateTime dateTime) {
+    public List<OrderEntity> getListOrders(Long userId, LocalDate dateTime) {
 
         String sql =
                 " SELECT [Order].UserId userId , [Order].CreationTime creatTime , [Order].id orderId, [Order].Quantity quantity, [Order].CutInHalf cut, [Order].OrderSummaryId sumId, " +
@@ -85,7 +86,7 @@ public class OrderItemRepo {
         return listOrders;
     }
 
-    public Map<Long, List<GeneralPriceItemEntity>> getMapAdditions(Set<Long> setOrderId, LocalDateTime dateTime) {
+    public Map<Long, List<GeneralPriceItemEntity>> getMapAdditions(Set<Long> setOrderId, LocalDate dateTime) {
         Map<Long, List<GeneralPriceItemEntity>> mapAddition = new HashMap<>();
 
         MapSqlParameterSource parameter = new MapSqlParameterSource();
@@ -97,7 +98,7 @@ public class OrderItemRepo {
                 " FROM [Order]  " +
                 " JOIN AdditionSelectedOrder ON AdditionSelectedOrder.OrderId = [Order].id  " +
                 " JOIN Addition ON Addition.id = AdditionSelectedOrder.AdditionId  " +
-                " WHERE [Order].id IN (:setOrderId ) AND [Order].CreationTime = :dateTime " +
+                " WHERE [Order].id IN (:setOrderId) AND [Order].CreationTime = :dateTime " +
                 " ORDER BY [Order].id DESC";
 
         namedParameterJdbcTemplate.query(sql, parameter, new RowMapper<GeneralPriceItemEntity>() {
@@ -118,7 +119,6 @@ public class OrderItemRepo {
         );
         return mapAddition;
     }
-
 
 
     public List<OrderItemTotalCostInfo> getOrderInfo(LocalDateTime dateTime) {

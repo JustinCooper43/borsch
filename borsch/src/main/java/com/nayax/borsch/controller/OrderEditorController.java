@@ -6,6 +6,8 @@ import com.nayax.borsch.model.dto.assortment.response.RespAssortmentItemDto;
 import com.nayax.borsch.model.dto.assortment.response.RespPriceItemDto;
 import com.nayax.borsch.model.dto.assortment.response.RespSimplePriceItemDto;
 import com.nayax.borsch.model.dto.assortment.response.RespSimpleItemDto;
+import com.nayax.borsch.service.impl.OrderEditorService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,6 +19,9 @@ import java.util.List;
 
 @RestController
 public class OrderEditorController {
+
+    @Autowired
+    OrderEditorService orderEditorService;
 
     @GetMapping("/price")
     public ResponseEntity<ResponseDto<List<RespPriceItemDto>>> price() {
@@ -44,13 +49,7 @@ public class OrderEditorController {
 
     @GetMapping("/additional/dropdown")
     public ResponseEntity<ResponseDto<List<RespSimplePriceItemDto>>> additionalDropdown(@RequestParam Long dishId) {
-        RespSimplePriceItemDto priceItemDto = new RespSimplePriceItemDto();
-        priceItemDto.setId(2l);
-        priceItemDto.setName("Соус острый");
-        priceItemDto.setPrice(new BigDecimal("10.221"));
-        List<RespSimplePriceItemDto> list = List.of(priceItemDto, priceItemDto, priceItemDto, priceItemDto, priceItemDto);
-        ResponseDto<List<RespSimplePriceItemDto>> responseDto = new ResponseDto<>(list);
-        return ResponseEntity.ok(responseDto);
+        return ResponseEntity.ok(orderEditorService.additionalDropdown(dishId));
     }
 
     @GetMapping("/drink/dropdown")

@@ -135,6 +135,27 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
         return listItems;
     }
 
+
+    public List<GeneralPriceItemEntity> findAllAdditionsById(Long dishId) {
+
+        String sql = "SELECT  Addition.id addId, Addition.[Name] addName, Addition.Cost addCost, Addition.Active addAct  " +
+                "FROM Addition JOIN AdditionAllowedShawarmaType shawAdd ON Addition.id = shawAdd.AllowedAdditionId " +
+                "WHERE shawAdd.ShawarmaTypeId = ? AND Addition.Active = 'Y' ";
+
+        List<GeneralPriceItemEntity> listItems;
+        listItems = jdbcTemplate.query(sql, new RowMapper<GeneralPriceItemEntity>() {
+            @Override
+            public GeneralPriceItemEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
+                GeneralPriceItemEntity entity = new GeneralPriceItemEntity();
+                entity.setId((Long) rs.getObject("addId"));
+                entity.setName((String) rs.getObject("addName"));
+                entity.setPrice((BigDecimal) rs.getObject("addCost"));
+                return entity;
+            }
+        }, dishId);
+        return listItems;
+    }
+
     @Override
     public Optional<GeneralPriceItemEntity> delete(Long id, TablesType nameTable) {
         String table = String.valueOf(nameTable);

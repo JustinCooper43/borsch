@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
@@ -24,14 +25,16 @@ public class OrderItemService {
     @Autowired
     OrderItemRepo orderItemRepo;
 
-    public ResponseDto<List<RespOrderItemDto>> getListOrder(Long userId, LocalDateTime dateTime) {
-        List<OrderEntity> listOrders = orderItemRepo.getListOrders(userId, dateTime);
+    public ResponseDto<List<RespOrderItemDto>> getListOrder(Long userId, String dateTime) {
+
+        LocalDate date = LocalDate.parse(dateTime);
+        List<OrderEntity> listOrders = orderItemRepo.getListOrders(userId,date);
         Set<Long> setOrderId = new HashSet<>();
         for (OrderEntity entity : listOrders) {
             setOrderId.add(entity.getOrderId());
         }
 
-        Map<Long, List<GeneralPriceItemEntity>> mapUserIdAddition = orderItemRepo.getMapAdditions(setOrderId, dateTime);
+        Map<Long, List<GeneralPriceItemEntity>> mapUserIdAddition = orderItemRepo.getMapAdditions(setOrderId, date);
 
         for (OrderEntity var : listOrders) {
             var.setAdditions(mapUserIdAddition.get(var.getOrderId()));

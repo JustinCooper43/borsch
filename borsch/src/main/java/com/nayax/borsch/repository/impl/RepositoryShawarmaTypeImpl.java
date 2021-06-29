@@ -29,6 +29,7 @@ public class RepositoryShawarmaTypeImpl {
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public ShawarmaItemEntity add(ShawarmaItemEntity entity) {
+
         String sql = "Insert into ShawarmaType ([Name],Cost,Halfable,active) \n" +
                 "values(?,?,?,?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();

@@ -77,8 +77,8 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<ResponseDto<List<RespOrderItemDto>>> getPagedOrders(Long userId, @RequestParam(required = false) LocalDateTime dateTime) {
-        return ResponseEntity.ok(orderItemService.getListOrder(userId,dateTime));
+    public ResponseEntity<ResponseDto<List<RespOrderItemDto>>> getListOrders(Long userId, @RequestParam(required = false) String dateTime) {
+        return ResponseEntity.ok(orderItemService.getListOrder(userId, dateTime));
     }
 
     @GetMapping("/history/{userId}")
@@ -96,24 +96,13 @@ public class OrderController {
             @RequestParam Integer page, @RequestParam Integer pageSize, @RequestParam(required = false) String date) {
         LocalDate localDate = LocalDate.parse(date);
         //ResponseDto<PageDto<RespOrderSumDto>> b =  summaryInfoService.getSummaryOrder(localDate,page,pageSize);
-        return ResponseEntity.ok().body(summaryInfoService.getSummaryOrder(localDate,page,pageSize));
+        return ResponseEntity.ok().body(summaryInfoService.getSummaryOrder(localDate, page, pageSize));
     }
 
     @GetMapping("/summary/info")
     public ResponseEntity<ResponseDto<RespOrderSumInfoDto>> getOrderInfo(@RequestParam(required = false) LocalDateTime dateTime) {
-        RespOrderSumInfoDto info = new RespOrderSumInfoDto();
-        info.setPayAmount(new BigDecimal("5000"));
-        info.setPayCompleted(new BigDecimal("4000"));
-        info.setPayConfirmed(new BigDecimal("1000"));
-        info.setPayUnconfirmed(new BigDecimal("3000"));
-
-        orderSummaryInfoService.getOrderSumInfo(dateTime);
-
-        ResponseDto<RespOrderSumInfoDto> responseDto = new ResponseDto<>(info);
-
-        return ResponseEntity.ok(responseDto);
+        return ResponseEntity.ok(orderSummaryInfoService.getOrderSumInfo(dateTime));
     }
-
 
 
     @GetMapping("/delivery")

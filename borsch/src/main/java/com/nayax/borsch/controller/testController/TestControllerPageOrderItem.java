@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -23,11 +24,11 @@ public class TestControllerPageOrderItem {
 
     @GetMapping("/get")
     public ResponseEntity<ResponseDto<PageDto<RespOrderItemDto>>> getPagedOrders(
-            @RequestParam Integer page, @RequestParam Integer pageSize, @RequestParam Long userId, @RequestParam(required = false) LocalDateTime dateTime) {
+            @RequestParam Integer page, @RequestParam Integer pageSize, @RequestParam Long userId, @RequestParam(required = false) String dateTime) {
         RespOrderItemDto orderItem = getRespOrderMock();
 
-        LocalDateTime time = LocalDateTime.of(2020,10,10, 10,10);
-        orderItemRepo.getListOrders(userId,time);
+        LocalDate date = LocalDate.parse(dateTime);
+        orderItemRepo.getListOrders(userId, date);
 
         List<RespOrderItemDto> itemList = List.of(orderItem, orderItem, orderItem, orderItem, orderItem, orderItem, orderItem);
         PageDto<RespOrderItemDto> pageDto = PageDto.getPagedList(page, pageSize, itemList);

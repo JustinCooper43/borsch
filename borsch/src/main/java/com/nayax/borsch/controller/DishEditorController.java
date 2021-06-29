@@ -32,7 +32,7 @@ public class DishEditorController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ResponseDto<RespSimplePriceItemDto>> updateDish(@PathVariable(value = "id") Long id, @RequestParam ReqSimplePriceItemUpDto dto) {
+    public ResponseEntity<ResponseDto<RespSimplePriceItemDto>> updateDish(@PathVariable(value = "id") Long id, @RequestBody ReqSimplePriceItemUpDto dto) {
         dto.setId(id);
         return ResponseEntity.ok(shavarmaService.updateDish(dto));
     }
