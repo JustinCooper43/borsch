@@ -55,6 +55,7 @@ public class ShavarmaService {
     public ResponseDto<PageDto<RespSimplePriceItemDto>> getDishByPage(int page, int pageSize) {
 
         PageEntity<ShawarmaItemEntity> listEntity = repositoryShawarmaType.findAll(page, pageSize);
+
         listEntity.setPage(page);
         listEntity.setPageSize(pageSize);
 

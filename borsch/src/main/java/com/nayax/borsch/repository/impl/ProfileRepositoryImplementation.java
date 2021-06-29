@@ -1,6 +1,7 @@
 package com.nayax.borsch.repository.impl;
 
 import com.nayax.borsch.exceptions.NotUpdateException;
+import com.nayax.borsch.model.entity.assortment.ShawarmaItemEntity;
 import com.nayax.borsch.model.entity.user.CashierEntity;
 import com.nayax.borsch.model.entity.user.ProfileEntity;
 import com.nayax.borsch.model.entity.user.UserEntity;
@@ -278,6 +279,29 @@ public class ProfileRepositoryImplementation {
                 return ((Long) rs.getObject("UserId"));
             }
         });
+    }
+
+
+
+
+
+    public ProfileEntity updateCurrentCashierInSumOrd(Long id){
+
+
+        String sql = "UPDATE OrderSummary SET CashierId = ? where id =  (" +
+                "SELECT TOP (1) OrderSummary.id id " +
+                "FROM  OrderSummary " +
+                "ORDER BY OrderSummary.StartTime DESC " +
+                ");";
+
+
+        try {
+            jdbcTemplate.update(sql,
+                    id);
+        } catch (EmptyResultDataAccessException e) {
+           e.printStackTrace();
+        }
+        return findById(id).orElse(null);
     }
 }
 

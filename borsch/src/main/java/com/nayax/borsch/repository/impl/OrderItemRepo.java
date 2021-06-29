@@ -1,5 +1,6 @@
 package com.nayax.borsch.repository.impl;
 
+import com.nayax.borsch.model.entity.PageEntity;
 import com.nayax.borsch.model.entity.assortment.GeneralPriceItemEntity;
 import com.nayax.borsch.model.entity.assortment.ShawarmaItemEntity;
 import com.nayax.borsch.model.entity.order.OrderEntity;
@@ -220,7 +221,7 @@ public class OrderItemRepo {
         return mapAddition;
     }
 
-    public List<OrderEntity> getPagedHistory(Long userId, int page, int pageSize) {
+    public PageEntity<OrderEntity> getPagedHistory(Long userId, int page, int pageSize) {
 
         String query = "declare @page int = ? ;" +
                 " declare @pageSize int = ? ;" +
@@ -242,8 +243,8 @@ public class OrderItemRepo {
 
 
         Set<Long> ordersId = new HashSet<>();
-        List<OrderEntity> listOrders = new ArrayList<>();
         List<OrderEntity> listItems = new ArrayList<>();
+        PageEntity<OrderEntity> resultPagedList = new PageEntity<>();
 
 
         listItems = jdbcTemplate.query(query, new RowMapper<OrderEntity>() {
@@ -259,7 +260,7 @@ public class OrderItemRepo {
 
                 GeneralPriceItemEntity drink = new GeneralPriceItemEntity();
                 drink.setId((Long) rs.getObject("drink.id"));
-                drink.setActive(rs.getString("actExtra"));
+                drink.setActive(rs.getString("actExtr"));
                 drink.setName(rs.getNString("drink.name"));
                 drink.setPrice(rs.getBigDecimal("drink.price"));
 
@@ -282,22 +283,25 @@ public class OrderItemRepo {
                 }
                 entity.setOrderSummaryId((Long) rs.getObject("sumId"));
 
-                listOrders.add(entity);
-
                 Long id = (Long) rs.getObject("orderId");
                 ordersId.add(id);
 
+                resultPagedList.setTotalElements((int)rs.getShort("total"));
 
                 return entity;
             }
-        });
+        },page,pageSize,userId);
+
 
         Map<Long, List<GeneralPriceItemEntity>> map = getMapAdditions(ordersId);
 
-        for (OrderEntity orderEntity : listOrders) {
+        for (OrderEntity orderEntity : listItems) {
             orderEntity.setAdditions(map.get(orderEntity.getOrderId()));
         }
-        return listOrders;
+
+        resultPagedList.setResponseList(listItems);
+
+        return  resultPagedList;
     }
 
 }
