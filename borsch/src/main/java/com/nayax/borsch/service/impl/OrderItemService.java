@@ -8,6 +8,7 @@ import com.nayax.borsch.model.entity.assortment.GeneralPriceItemEntity;
 import com.nayax.borsch.model.entity.order.OrderEntity;
 import com.nayax.borsch.repository.impl.OrderItemRepo;
 import com.nayax.borsch.repository.impl.OrderItemRepository;
+import com.nayax.borsch.repository.impl.RepositoryOrderSummaryImpl;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,8 @@ public class OrderItemService {
 
     @Autowired
     OrderItemRepository orderItemRepository;
+    @Autowired
+    RepositoryOrderSummaryImpl orderSummaryRepository;
 
     public ResponseDto<List<RespOrderItemDto>> getListOrder(Long userId, LocalDateTime dateTime) {
         List<OrderEntity> listOrders = orderItemRepo.getListOrders(userId, dateTime);
@@ -64,6 +67,7 @@ public class OrderItemService {
         }
     }
     public ResponseDto<RespOrderItemDto> addOrder(OrderEntity entity){
+        entity.setOrderSummaryId(orderSummaryRepository.getLatestOrderSummaryId());
         OrderEntity order = orderItemRepository.add(entity);
         RespOrderItemDto orderDto = Mappers.getMapper(OrderItemMapper.class).toDto(order);
         return new ResponseDto<>(orderDto);

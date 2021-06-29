@@ -24,7 +24,7 @@ public class OrderItemRepository {
     public OrderEntity add(OrderEntity entity) {
         String insOrder = "INSERT INTO [Order] " +
                 " (UserId, CreationTime, ShawarmaTypeId, ExtraItemId, RemarkId, CutInHalf, Quantity, OrderSummaryId) " +
-                //    1        2               3            4            5           6         7
+                //    1        2               3            4            5           6         7            8
                 " VALUES (?, ?, ?, ?, ?, ?, ?, ?) ";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(new PreparedStatementCreator() {
