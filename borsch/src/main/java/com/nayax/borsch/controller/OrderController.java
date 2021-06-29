@@ -32,6 +32,8 @@ public class OrderController {
     OrderSummaryInfoService summaryInfoService;
     @Autowired
     OrderItemService orderItemService;
+    @Autowired
+    OrderSummaryInfoService orderSummaryInfoService;
 
     private RespOrderItemDto getRespOrderMock() {
         RespOrderItemDto orderItem = new RespOrderItemDto();
@@ -104,6 +106,9 @@ public class OrderController {
         info.setPayCompleted(new BigDecimal("4000"));
         info.setPayConfirmed(new BigDecimal("1000"));
         info.setPayUnconfirmed(new BigDecimal("3000"));
+
+        orderSummaryInfoService.getOrderSumInfo(dateTime);
+
         ResponseDto<RespOrderSumInfoDto> responseDto = new ResponseDto<>(info);
 
         return ResponseEntity.ok(responseDto);

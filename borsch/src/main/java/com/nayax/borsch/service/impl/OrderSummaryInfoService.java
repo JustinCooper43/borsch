@@ -14,16 +14,13 @@ import com.nayax.borsch.repository.impl.OrderItemRepo;
 import com.nayax.borsch.repository.impl.PaymentRepository;
 import com.nayax.borsch.repository.impl.RepositoryOrderSummaryImpl;
 import com.nayax.borsch.utility.PageDtoBuilder;
-import net.bytebuddy.implementation.bytecode.Addition;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

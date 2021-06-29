@@ -17,13 +17,15 @@ public class PageIdValidationConfig {
     static{
 
         validatorPageId.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.ADDITIONS_GETALL,
-                ValidationAction.DISH_GETALL,ValidationAction.DISH_GETALL), Objects::nonNull,
+                ValidationAction.DISH_GETALL,ValidationAction.DRINK_GETALL), Objects::nonNull,
                 "Parameters of page are null"));
         validatorPageId.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.ADDITIONS_GETALL,
-                ValidationAction.DISH_GETALL,ValidationAction.DISH_GETALL),obj-> obj != null
+                ValidationAction.DISH_GETALL,ValidationAction.DRINK_GETALL),obj-> obj != null
                         && (Long)obj > 0 ,
                 "Parameters of page are invalid"));
-
+        validatorPageId.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.ADDITIONS_GETALL,
+                ValidationAction.DISH_GETALL,ValidationAction.DRINK_GETALL), Objects::nonNull,
+                "Parameters of page are null"));
     }
 
     public static Validator getValidatorPageId() {
