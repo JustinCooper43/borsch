@@ -3,7 +3,7 @@ package com.nayax.borsch.model.entity.assortment;
 
 import java.util.List;
 
-public class AssortmentRespEntity {
+public class AssortmentRespEntity{
 
     private ShawarmaItemEntity dish;
     private List<GeneralPriceItemEntity> additions;

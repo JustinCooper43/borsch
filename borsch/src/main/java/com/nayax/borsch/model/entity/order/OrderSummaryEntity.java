@@ -3,6 +3,7 @@ package com.nayax.borsch.model.entity.order;
 import com.nayax.borsch.model.entity.user.UserEntity;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -12,7 +13,7 @@ public class OrderSummaryEntity {
     private Integer paymentType;
     private BigDecimal totalOrdersCost;
     private BigDecimal payedSum;
-    private LocalDateTime orderDate;
+    private LocalDate orderDate;
 
     public UserEntity getUser() {
         return user;
@@ -54,11 +55,11 @@ public class OrderSummaryEntity {
         this.payedSum = payedSum;
     }
 
-    public LocalDateTime getOrderDate() {
+    public LocalDate getOrderDate() {
         return orderDate;
     }
 
-    public void setOrderDate(LocalDateTime orderDate) {
+    public void setOrderDate(LocalDate orderDate) {
         this.orderDate = orderDate;
     }
 }

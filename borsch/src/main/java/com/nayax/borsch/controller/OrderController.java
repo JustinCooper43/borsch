@@ -12,12 +12,15 @@ import com.nayax.borsch.model.dto.order.response.RespOrderSumDto;
 import com.nayax.borsch.model.dto.order.response.RespOrderSumInfoDto;
 import com.nayax.borsch.model.entity.order.OrderEntity;
 import com.nayax.borsch.service.impl.DeliveryService;
+import com.nayax.borsch.service.impl.OrderItemService;
+import com.nayax.borsch.service.impl.OrderSummaryInfoService;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -26,6 +29,12 @@ import java.util.List;
 public class OrderController {
     @Autowired
     DeliveryService deliveryService;
+    @Autowired
+    OrderSummaryInfoService summaryInfoService;
+    @Autowired
+    OrderItemService orderItemService;
+    @Autowired
+    OrderSummaryInfoService orderSummaryInfoService;
 
     private RespOrderItemDto getRespOrderMock() {
         RespOrderItemDto orderItem = new RespOrderItemDto();
@@ -59,23 +68,16 @@ public class OrderController {
         return orderItem;
     }
 
-    @PostMapping
+    @PostMapping//Vlad
     public ResponseEntity<ResponseDto<RespOrderItemDto>> addOrder(@RequestBody ReqOrderItemAddDto dto) {
-        OrderEntity test = Mappers.getMapper(OrderItemMapper.class).toAddEntity(dto);
-        RespOrderItemDto revtest = Mappers.getMapper(OrderItemMapper.class).toDto(test);
-        RespOrderItemDto orderItem = getRespOrderMock();
-        ResponseDto<RespOrderItemDto> responseDto = new ResponseDto<>(orderItem);
-        return ResponseEntity.ok(responseDto);
+        OrderEntity order = Mappers.getMapper(OrderItemMapper.class).toAddEntity(dto);
+        ResponseDto<RespOrderItemDto> result = orderItemService.addOrder(order);
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping
-    public ResponseEntity<ResponseDto<PageDto<RespOrderItemDto>>> getPagedOrders(
-            @RequestParam Integer page, @RequestParam Integer pageSize, @RequestParam Long userId, @RequestParam(required = false) LocalDateTime dateTime) {
-        RespOrderItemDto orderItem = getRespOrderMock();
-        List<RespOrderItemDto> itemList = List.of(orderItem, orderItem, orderItem, orderItem, orderItem, orderItem, orderItem);
-        PageDto<RespOrderItemDto> pageDto = PageDto.getPagedList(page, pageSize, itemList);
-        ResponseDto<PageDto<RespOrderItemDto>> responseDto = new ResponseDto<>(pageDto);
-        return ResponseEntity.ok(responseDto);
+    public ResponseEntity<ResponseDto<List<RespOrderItemDto>>> getPagedOrders(Long userId, @RequestParam(required = false) LocalDateTime dateTime) {
+        return ResponseEntity.ok(orderItemService.getListOrder(userId,dateTime));
     }
 
     @GetMapping("/history/{userId}")
@@ -90,20 +92,10 @@ public class OrderController {
 
     @GetMapping("/summary")///Vlad
     public ResponseEntity<ResponseDto<PageDto<RespOrderSumDto>>> getOrderSummary(
-            @RequestParam Integer page, @RequestParam Integer pageSize, @RequestParam(required = false) LocalDateTime dateTime) {
-        RespOrderSumDto orderSumDto = new RespOrderSumDto();
-        RespOrderItemDto orderItem = getRespOrderMock();
-        List<RespOrderItemDto> itemList = List.of(orderItem, orderItem, orderItem, orderItem, orderItem, orderItem, orderItem);
-        orderSumDto.setOrderDate(LocalDateTime.now().minusMinutes(10));
-        orderSumDto.setOrders(itemList);
-       // orderSumDto.setUser(ProfileController.getUserMock());
-        orderSumDto.setAmount(new BigDecimal("40.3"));
-        orderSumDto.setPaidAmount(new BigDecimal("40.2"));
-        orderSumDto.setPaymentType(2);
-        List<RespOrderSumDto> listOfOrders = List.of(orderSumDto, orderSumDto, orderSumDto, orderSumDto, orderSumDto, orderSumDto, orderSumDto);
-        PageDto<RespOrderSumDto> pages = PageDto.getPagedList(page, pageSize, listOfOrders);
-        ResponseDto<PageDto<RespOrderSumDto>> responseDto = new ResponseDto<>(pages);
-        return ResponseEntity.ok(responseDto);
+            @RequestParam Integer page, @RequestParam Integer pageSize, @RequestParam(required = false) String date) {
+        LocalDate localDate = LocalDate.parse(date);
+        //ResponseDto<PageDto<RespOrderSumDto>> b =  summaryInfoService.getSummaryOrder(localDate,page,pageSize);
+        return ResponseEntity.ok().body(summaryInfoService.getSummaryOrder(localDate,page,pageSize));
     }
 
     @GetMapping("/summary/info")
@@ -113,12 +105,11 @@ public class OrderController {
         info.setPayCompleted(new BigDecimal("4000"));
         info.setPayConfirmed(new BigDecimal("1000"));
         info.setPayUnconfirmed(new BigDecimal("3000"));
-        ResponseDto<RespOrderSumInfoDto> responseDto = new ResponseDto<>(info);
 
+        orderSummaryInfoService.getOrderSumInfo(dateTime);
+        ResponseDto<RespOrderSumInfoDto> responseDto = new ResponseDto<>(info);
         return ResponseEntity.ok(responseDto);
     }
-
-
 
     @GetMapping("/delivery")
     public ResponseEntity<ResponseDto<PageDto<RespOrderDeliveryDto>>> getDelivery(
@@ -129,8 +120,6 @@ public class OrderController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseDto<RespOrderItemDto>> deleteOrder(@PathVariable(value = "id") Long id) {
-        RespOrderItemDto orderItem = getRespOrderMock();
-        ResponseDto<RespOrderItemDto> responseDto = new ResponseDto<>(orderItem);
-        return ResponseEntity.ok(responseDto);
+        return ResponseEntity.ok(orderItemService.deleteOrder(id));
     }
 }

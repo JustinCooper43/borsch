@@ -5,46 +5,38 @@ import com.nayax.borsch.model.dto.ResponseDto;
 import com.nayax.borsch.model.dto.assortment.request.ReqSimpleItemAddDto;
 import com.nayax.borsch.model.dto.assortment.request.ReqSimpleItemUpDto;
 import com.nayax.borsch.model.dto.assortment.response.RespSimpleItemDto;
+import com.nayax.borsch.repository.impl.TablesType;
+import com.nayax.borsch.service.impl.DrinkAdditionService;
+import com.nayax.borsch.service.impl.RemarksService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/remark")
 public class RemarkEditorController {
 
-    private RespSimpleItemDto getRespSimpleItemDto() {
-        RespSimpleItemDto dto = new RespSimpleItemDto();
-        dto.setId(99L);
-        dto.setName("more sauce");
-        return dto;
-    }
+    @Autowired
+    RemarksService remarksService;
 
     @GetMapping
     public ResponseEntity<ResponseDto<PageDto<RespSimpleItemDto>>> getRemark(@RequestParam int page, @RequestParam int pageSize) {
-        RespSimpleItemDto mockDto = getRespSimpleItemDto();
-        List<RespSimpleItemDto> listMock = List.of(mockDto, mockDto, mockDto, mockDto, mockDto, mockDto, mockDto, mockDto, mockDto, mockDto);
-        PageDto<RespSimpleItemDto> pageDto = PageDto.getPagedList(page, pageSize, listMock);
-        return ResponseEntity.ok(new ResponseDto<>(pageDto));
+        return ResponseEntity.ok(remarksService.getRemarkItemPage(page, pageSize, TablesType.REMARK));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ResponseDto<RespSimpleItemDto>> editRemark(@PathVariable(value = "id") Long id, @RequestBody ReqSimpleItemUpDto dto) {
         dto.setId(id);
-        RespSimpleItemDto mockDto = getRespSimpleItemDto();
-        return ResponseEntity.ok(new ResponseDto<>(mockDto));
+        return ResponseEntity.ok(remarksService.editRemarkItem(dto, TablesType.REMARK));
     }
 
     @PostMapping
     public ResponseEntity<ResponseDto<RespSimpleItemDto>> addRemark(@RequestBody ReqSimpleItemAddDto dto) {
-        RespSimpleItemDto mockDto = getRespSimpleItemDto();
-        return ResponseEntity.ok(new ResponseDto<>(mockDto));
+        return ResponseEntity.ok(remarksService.addRemarkItem(dto, TablesType.REMARK));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseDto<RespSimpleItemDto>> deleteRemark(@PathVariable(value = "id") Long id) {
-        RespSimpleItemDto mockDto = getRespSimpleItemDto();
-        return ResponseEntity.ok(new ResponseDto<>(mockDto));
+        return ResponseEntity.ok(remarksService.delRemarkItemById(id, TablesType.REMARK));
     }
 }

@@ -32,14 +32,8 @@ public class OrderEditorController {
 
     @GetMapping("/dish/dropdown")
     public ResponseEntity<ResponseDto<List<RespAssortmentItemDto>>> dishDropdown() {
-        RespAssortmentItemDto respAssortmentItemDto = new RespAssortmentItemDto();
-        respAssortmentItemDto.setId(2l);
-        respAssortmentItemDto.setName("Шаурма с курицей");
-        respAssortmentItemDto.setHalfAble(true);
-        respAssortmentItemDto.setPrice(new BigDecimal("60.22"));
-        List<RespAssortmentItemDto> list = List.of(respAssortmentItemDto, respAssortmentItemDto, respAssortmentItemDto, respAssortmentItemDto, respAssortmentItemDto);
-        ResponseDto<List<RespAssortmentItemDto>> responseDto = new ResponseDto<>(list);
-        return ResponseEntity.ok(responseDto);
+
+        return ResponseEntity.ok(null);
     }
 
     @GetMapping("/additional/dropdown")

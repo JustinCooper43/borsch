@@ -10,7 +10,9 @@ import com.nayax.borsch.model.dto.assortment.response.RespAssortmentDto;
 import com.nayax.borsch.model.dto.assortment.response.RespSimpleItemDto;
 import com.nayax.borsch.model.entity.assortment.AssortmentRespEntity;
 import com.nayax.borsch.model.entity.assortment.GeneralPriceItemEntity;
+import com.nayax.borsch.service.impl.AssortmentService;
 import org.mapstruct.factory.Mappers;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,45 +24,29 @@ import java.util.List;
 @RequestMapping("/assortment")
 public class AssortmentController {
 
-    private List<RespSimpleItemDto> getMockList() {
-        RespSimpleItemDto item = new RespSimpleItemDto();
-        item.setId(13L);
-        item.setName("SimpleItem");
-        return List.of(item, item, item, item, item, item, item, item, item, item);
-    }
+    @Autowired
+    private AssortmentService assortmentService;
 
     @GetMapping
     public ResponseEntity<ResponseDto<PageDto<RespAssortmentDto>>> getAssortment(@RequestParam int page, @RequestParam int pageSize) {
-        RespAssortmentDto assortment = new RespAssortmentDto();
-        assortment.setHalfAble(true);
-        assortment.setAdditions(getMockList());
-        assortment.setRemarks(getMockList());
-        assortment.setDish(getMockList().get(0));
-        PageDto<RespAssortmentDto> pageDto = PageDto.getPagedList(page, pageSize,
-                List.of(assortment, assortment, assortment, assortment, assortment, assortment, assortment, assortment));
-        ResponseDto<PageDto<RespAssortmentDto>> responseDto = new ResponseDto<>(pageDto);
-        return ResponseEntity.ok(responseDto);
+
+        ResponseDto<PageDto<RespAssortmentDto>> list = assortmentService.getAllAssortment(page,pageSize);
+        return ResponseEntity.ok(list);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ResponseDto<RespAssortmentDto>> updateById(@PathVariable(value = "id") Long id, @RequestBody ReqAssortmentUpDto dto) {
-        dto.setDish(id);
-        RespAssortmentDto rDto = new RespAssortmentDto();
-        rDto.setAdditions(getMockList());
-        rDto.setRemarks(getMockList());
-        rDto.setDish(getMockList().get(0));
-        rDto.setHalfAble(true);
-        ResponseDto<RespAssortmentDto> respDto = new ResponseDto<>(rDto);
-        return ResponseEntity.ok(respDto);
+        ResponseDto<RespAssortmentDto> resp = assortmentService.updateAssortment(id,dto);
+        return ResponseEntity.ok(resp);
     }
 
-    @PutMapping
-    public ResponseEntity<ResponseDto<RespAssortmentDto>> addAssortment(@RequestBody ReqAssortmentUpDto dto) {
-        RespAssortmentDto respAssortmentDto = new RespAssortmentDto();
-        respAssortmentDto.setAdditions(getMockList());
-        respAssortmentDto.setRemarks(getMockList());
-        respAssortmentDto.setDish(getMockList().get(0));
-        respAssortmentDto.setHalfAble(true);
+//    @PutMapping
+//    public ResponseEntity<ResponseDto<RespAssortmentDto>> addAssortment(@RequestBody ReqAssortmentUpDto dto) {
+//        RespAssortmentDto respAssortmentDto = new RespAssortmentDto();
+//        respAssortmentDto.setAdditions(getMockList());
+//        respAssortmentDto.setRemarks(getMockList());
+//        respAssortmentDto.setDish(getMockList().get(0));
+//        respAssortmentDto.setHalfAble(true);
         /////
 //
 //        GeneralPriceItemEntity general = new GeneralPriceItemEntity();
@@ -85,6 +71,6 @@ public class AssortmentController {
 //
 //
 //        RespAssortmentDto testRespDto = Mappers.getMapper(AssortmentMapper.class).assortmentEntityToDto(entity);
-        return ResponseEntity.ok(new ResponseDto<>(respAssortmentDto));
-    }
+        //return ResponseEntity.ok(new ResponseDto<>(respAssortmentDto));
+//    }
 }

@@ -145,8 +145,8 @@ public class OrderItemRepository {
     public OrderEntity deleteById(Long id) {
         OrderEntity toDelete = findById(id).orElse(null);
         if (toDelete != null) {
-            String sql = " DELETE FROM [Order] WHERE [Order].id = ? " +
-                    " DELETE FROM AdditionSelectedOrder WHERE OrderId = ? ";
+            String sql = "DELETE FROM AdditionSelectedOrder WHERE OrderId = ? " +
+                    "DELETE FROM [Order] WHERE [Order].id = ?  ";
             jdbcTemplate.update(sql, id, id);
         }
         return toDelete;
