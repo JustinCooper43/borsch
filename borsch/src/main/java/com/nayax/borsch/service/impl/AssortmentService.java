@@ -68,7 +68,7 @@ public class AssortmentService {
         assortmentRepository.update(id,Mappers.getMapper(AssortmentMapper.class).toAssortmentUpdateEntity(reqAssortmentUpDto));
         AssortmentRespEntity respEntity = new AssortmentRespEntity();
         respEntity.setDish(shawarmaType.findById(id).get());
-        Set<Long> ids = new HashSet();
+        Set<Long> ids = new HashSet<>();
         ids.add(id);
         Map<ShawarmaItemEntity,List<GeneralPriceItemEntity>> rem = assortmentRepository.findAllRemarks(ids);
         ShawarmaItemEntity shawarmaItemEntity = new ShawarmaItemEntity();

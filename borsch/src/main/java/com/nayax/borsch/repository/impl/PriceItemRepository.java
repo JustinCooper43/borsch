@@ -21,22 +21,20 @@ public class PriceItemRepository {
 
     public List<PriceItemType> getAll() {
 
-        String sql = " select  [Name], Cost , 0 typ  " +
-                " from ShawarmaType where ShawarmaType.Active LIKE 'Y' union " +
-                " select  [Name], Cost , 1 typ  " +
-                " from Addition  where Addition.Active LIKE 'Y'  union " +
-                " select  [Name], Cost , 2 typ  " +
-                " from   ExtraItem where ExtraItem.Active LIKE 'Y' order by typ ";
+        String sql = "   select  id,[Name], Cost , 0 typ\n" +
+                "   from ShawarmaType where ShawarmaType.Active LIKE 'Y' union \n" +
+                "   select  id,[Name], Cost , 1 typ \n" +
+                "   from Addition  where Addition.Active LIKE 'Y'  union \n" +
+                "   select  id,[Name], Cost , 2 typ \n" +
+                "   from   ExtraItem where ExtraItem.Active LIKE 'Y' order by typ ";
 
-        return jdbcTemplate.query(sql, new RowMapper<PriceItemType>() {
-            @Override
-            public PriceItemType mapRow(ResultSet rs, int rowNum) throws SQLException {
-                PriceItemType entity = new PriceItemType();
-                entity.setName((String) rs.getObject("Name"));
-                entity.setPrice((BigDecimal) rs.getObject("Cost"));
-                entity.setType((Integer) rs.getObject("typ"));
-                return entity;
-            }
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+            PriceItemType entity = new PriceItemType();
+            entity.setId((Long) rs.getObject("id"));
+            entity.setName((String) rs.getObject("Name"));
+            entity.setPrice((BigDecimal) rs.getObject("Cost"));
+            entity.setType((Integer) rs.getObject("typ"));
+            return entity;
         });
     }
 
