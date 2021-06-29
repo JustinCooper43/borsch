@@ -7,6 +7,7 @@ import com.nayax.borsch.model.dto.order.response.RespOrderItemDto;
 import com.nayax.borsch.model.entity.assortment.GeneralPriceItemEntity;
 import com.nayax.borsch.model.entity.order.OrderEntity;
 import com.nayax.borsch.repository.impl.OrderItemRepo;
+import com.nayax.borsch.repository.impl.OrderItemRepository;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,9 @@ public class OrderItemService {
 
     @Autowired
     OrderItemRepo orderItemRepo;
+
+    @Autowired
+    OrderItemRepository orderItemRepository;
 
     public ResponseDto<List<RespOrderItemDto>> getListOrder(Long userId, LocalDateTime dateTime) {
         List<OrderEntity> listOrders = orderItemRepo.getListOrders(userId, dateTime);
@@ -58,5 +62,16 @@ public class OrderItemService {
             totalPrice = totalPrice.multiply(quantity);
             orderItem.setCost(totalPrice);
         }
+    }
+    public ResponseDto<RespOrderItemDto> addOrder(OrderEntity entity){
+        OrderEntity order = orderItemRepository.add(entity);
+        RespOrderItemDto orderDto = Mappers.getMapper(OrderItemMapper.class).toDto(order);
+        return new ResponseDto<>(orderDto);
+    }
+
+    public ResponseDto<RespOrderItemDto> deleteOrder(Long id){
+        OrderEntity order = orderItemRepository.deleteById(id);
+        RespOrderItemDto orderDto = Mappers.getMapper(OrderItemMapper.class).toDto(order);
+        return new ResponseDto<>(orderDto);
     }
 }

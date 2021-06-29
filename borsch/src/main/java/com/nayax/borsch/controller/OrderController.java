@@ -67,13 +67,11 @@ public class OrderController {
         return orderItem;
     }
 
-    @PostMapping
+    @PostMapping//Vlad
     public ResponseEntity<ResponseDto<RespOrderItemDto>> addOrder(@RequestBody ReqOrderItemAddDto dto) {
-        OrderEntity test = Mappers.getMapper(OrderItemMapper.class).toAddEntity(dto);
-        RespOrderItemDto revtest = Mappers.getMapper(OrderItemMapper.class).toDto(test);
-        RespOrderItemDto orderItem = getRespOrderMock();
-        ResponseDto<RespOrderItemDto> responseDto = new ResponseDto<>(orderItem);
-        return ResponseEntity.ok(responseDto);
+        OrderEntity order = Mappers.getMapper(OrderItemMapper.class).toAddEntity(dto);
+        ResponseDto<RespOrderItemDto> result = orderItemService.addOrder(order);
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping
@@ -114,8 +112,6 @@ public class OrderController {
         return ResponseEntity.ok(responseDto);
     }
 
-
-
     @GetMapping("/delivery")
     public ResponseEntity<ResponseDto<List<RespOrderDeliveryDto>>> getDelivery(@RequestParam(required = false) LocalDateTime dateTime) {
         RespOrderDeliveryDto deliveryInfo = new RespOrderDeliveryDto();
@@ -130,8 +126,6 @@ public class OrderController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseDto<RespOrderItemDto>> deleteOrder(@PathVariable(value = "id") Long id) {
-        RespOrderItemDto orderItem = getRespOrderMock();
-        ResponseDto<RespOrderItemDto> responseDto = new ResponseDto<>(orderItem);
-        return ResponseEntity.ok(responseDto);
+        return ResponseEntity.ok(orderItemService.deleteOrder(id));
     }
 }
