@@ -4,21 +4,20 @@ package com.nayax.borsch.controller;
 import com.nayax.borsch.model.dto.ResponseDto;
 import com.nayax.borsch.model.dto.order.request.ReqPayConfirmDto;
 import com.nayax.borsch.model.dto.order.response.RespPaymentInfoDto;
-import com.nayax.borsch.model.dto.user.response.RespCashierDto;
-import com.nayax.borsch.model.dto.user.response.RespUserDto;
-import com.nayax.borsch.model.dto.user.response.nested.CreditCardDto;
-import com.nayax.borsch.model.dto.user.response.nested.RoleDto;
+import com.nayax.borsch.service.impl.PaymentService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/payment")
 public class PaymentController {
-
+    @Autowired
+    PaymentService paymentService;
 
     @GetMapping("/{id}")
     public ResponseEntity<ResponseDto<RespPaymentInfoDto>> get(@PathVariable(value = "id") Long id) {
-        ResponseDto<RespPaymentInfoDto> responseDto = new ResponseDto<>(generatorPayDto());
+        ResponseDto<RespPaymentInfoDto> responseDto = paymentService.getPaymentStatusByUserId(id);
         return ResponseEntity.ok(responseDto);
     }
 
@@ -32,40 +31,7 @@ public class PaymentController {
 
     @PostMapping("/confirm")
     public ResponseEntity<ResponseDto<Boolean>> confirm(@RequestBody ReqPayConfirmDto reqDto) {
-        ResponseDto<Boolean> result = new ResponseDto<>(Boolean.TRUE);
+        ResponseDto<Boolean> result = paymentService.confirmPayment(reqDto);
         return ResponseEntity.ok(result);
-    }
-
-    public static RespPaymentInfoDto generatorPayDto() {
-        RespPaymentInfoDto result = new RespPaymentInfoDto();
-        RespUserDto user = new RespUserDto();
-        RespCashierDto cashier = new RespCashierDto();
-        RoleDto roleDto = new RoleDto();
-        CreditCardDto creditCardDto = new CreditCardDto();
-
-        roleDto.setId(2L);
-        roleDto.setName("Cashier");
-
-        user.setId(2L);
-        user.setFirstName("RespPaymentInfo name");
-        user.setLastName("RespPaymentInfo lastName");
-        user.seteMail("email@gmail.com");
-        user.setRole(roleDto);
-        user.setPhone("9379992");
-
-
-        creditCardDto.setQr("data:image/png;base64,XDg5UE5HCgpcMDBcMDBcMDAKSUhEUlwwMFwwMFwwMFxDOFwwMFwwMFwwMFxDOFwwMFwwMFwwMFw5N1w5NjxcRERcMDBcMDBcMDBQTFRFXEZGXEZGXEZGXDAwXDAwXDAwVVxDMlxEM35cMDBcMDBcMDAJcEhZc1wwMFwwMFxDNFwwMFwwMFxDNFw5NStcMDBcMDBcMDBcQTVJREFUWFw4NVxFRFw5NVFcODAwQ1xCOVxGRlxBNWsyClxDQ1xFOHxcOEIkXDkyXEMxXEUzXEE3XEFCfDxcOTRcOTFcODdcQTlcQjhcQTRcQjIyXEREekhcQjJcQkFcRUMKT3x955CZXDgwXDkzXENBXEM5X3ZcOTRFXEVDClxBRFxGNlxFMSEsXEQyXEYxXEVDIFxDOSo1ZjFcOThJIlvaplxEMGRcRjNcQURuXyBcOTRcRjhhSTNAJmFcRkZcQkZcQTFJClxFNFxGN2IkLFxEMk5cREXsvok4XEUyXEVDXEJGUlw5OSBcOThcRjhcOUNKN1xBOXxcQkVcQzE4XDgxXEQ0TlxCNlxGN1FcQzlcQzZzWylcOTJYWylWCkNcQzlcOEVcQTJcQjA5KjNcQzdCUlwwMFwwMFwwMFwwMElFTkRcQUVCYFw4Mg");
-        creditCardDto.setBankName("alfaBank");
-        creditCardDto.setNotes("Note about bank");
-        creditCardDto.setCreditCard("1234 5678 9011 1234");
-
-        cashier.setCash(true);
-        cashier.setCard(creditCardDto);
-
-        result.setCashier(user);
-        result.setPaymentMethod(cashier);
-        result.setCompleted(true);
-        result.setConfirmed(true);
-        return result;
     }
 }

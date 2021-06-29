@@ -24,7 +24,7 @@ public class OrderItemRepository {
     public OrderEntity add(OrderEntity entity) {
         String insOrder = "INSERT INTO [Order] " +
                 " (UserId, CreationTime, ShawarmaTypeId, ExtraItemId, RemarkId, CutInHalf, Quantity, OrderSummaryId) " +
-                //    1        2               3            4            5           6         7
+                //    1        2               3            4            5           6         7            8
                 " VALUES (?, ?, ?, ?, ?, ?, ?, ?) ";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(new PreparedStatementCreator() {
@@ -145,8 +145,8 @@ public class OrderItemRepository {
     public OrderEntity deleteById(Long id) {
         OrderEntity toDelete = findById(id).orElse(null);
         if (toDelete != null) {
-            String sql = " DELETE FROM [Order] WHERE [Order].id = ? " +
-                    " DELETE FROM AdditionSelectedOrder WHERE OrderId = ? ";
+            String sql = "DELETE FROM AdditionSelectedOrder WHERE OrderId = ? " +
+                    "DELETE FROM [Order] WHERE [Order].id = ?  ";
             jdbcTemplate.update(sql, id, id);
         }
         return toDelete;

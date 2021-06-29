@@ -1,9 +1,15 @@
 package com.nayax.borsch.mapper;
 
+import com.nayax.borsch.model.dto.PageDto;
+import com.nayax.borsch.model.dto.assortment.response.RespSimplePriceItemDto;
 import com.nayax.borsch.model.dto.order.request.ReqOrderItemAddDto;
+import com.nayax.borsch.model.dto.order.request.ReqOrderStartDto;
 import com.nayax.borsch.model.dto.order.response.RespOrderItemDto;
+import com.nayax.borsch.model.entity.PageEntity;
 import com.nayax.borsch.model.entity.assortment.GeneralPriceItemEntity;
+import com.nayax.borsch.model.entity.assortment.ShawarmaItemEntity;
 import com.nayax.borsch.model.entity.order.OrderEntity;
+import com.nayax.borsch.model.entity.order.OrderStartEntity;
 import com.nayax.borsch.utility.OrderEntityHashNoOrderUserTime;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -36,5 +42,10 @@ public interface OrderItemMapper {
     OrderEntityHashNoOrderUserTime transferEntity(OrderEntity entity);
 
     List<RespOrderItemDto> toListRespOrderDto(List<OrderEntity> listOrderEntity);
+
+    @Mapping(target = "startTime", ignore = true)
+    OrderStartEntity toOrderStart(ReqOrderStartDto dto);
+
+    PageDto<RespOrderItemDto> toPageDto(PageEntity<OrderEntity> entityPage);
 
 }

@@ -11,6 +11,7 @@ import com.nayax.borsch.model.dto.order.response.RespOrderItemDto;
 import com.nayax.borsch.model.dto.order.response.RespOrderSumDto;
 import com.nayax.borsch.model.dto.order.response.RespOrderSumInfoDto;
 import com.nayax.borsch.model.entity.order.OrderEntity;
+import com.nayax.borsch.service.impl.DeliveryService;
 import com.nayax.borsch.service.impl.OrderItemService;
 import com.nayax.borsch.service.impl.OrderSummaryInfoService;
 import org.mapstruct.factory.Mappers;
@@ -19,7 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,7 +27,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/order")
 public class OrderController {
-
+    @Autowired
+    DeliveryService deliveryService;
     @Autowired
     OrderSummaryInfoService summaryInfoService;
     @Autowired
@@ -69,11 +70,9 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<ResponseDto<RespOrderItemDto>> addOrder(@RequestBody ReqOrderItemAddDto dto) {
-        OrderEntity test = Mappers.getMapper(OrderItemMapper.class).toAddEntity(dto);
-        RespOrderItemDto revtest = Mappers.getMapper(OrderItemMapper.class).toDto(test);
-        RespOrderItemDto orderItem = getRespOrderMock();
-        ResponseDto<RespOrderItemDto> responseDto = new ResponseDto<>(orderItem);
-        return ResponseEntity.ok(responseDto);
+        OrderEntity order = Mappers.getMapper(OrderItemMapper.class).toAddEntity(dto);
+        ResponseDto<RespOrderItemDto> result = orderItemService.addOrder(order);
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping
@@ -84,11 +83,8 @@ public class OrderController {
     @GetMapping("/history/{userId}")
     public ResponseEntity<ResponseDto<PageDto<RespOrderItemDto>>> getPagedHistory(
             @PathVariable(value = "userId") Long userId, @RequestParam int page, @RequestParam int pageSize) {
-        RespOrderItemDto orderItem = getRespOrderMock();
-        List<RespOrderItemDto> itemList = List.of(orderItem, orderItem, orderItem, orderItem, orderItem, orderItem, orderItem);
-        PageDto<RespOrderItemDto> pageDto = PageDto.getPagedList(page, pageSize, itemList);
-        ResponseDto<PageDto<RespOrderItemDto>> responseDto = new ResponseDto<>(pageDto);
-        return ResponseEntity.ok(responseDto);
+
+        return ResponseEntity.ok().body(orderItemService.getPagedHistory(userId, page, pageSize));
     }
 
     @GetMapping("/summary")///Vlad
@@ -105,22 +101,16 @@ public class OrderController {
     }
 
 
+
     @GetMapping("/delivery")
-    public ResponseEntity<ResponseDto<List<RespOrderDeliveryDto>>> getDelivery(@RequestParam(required = false) LocalDateTime dateTime) {
-        RespOrderDeliveryDto deliveryInfo = new RespOrderDeliveryDto();
-        deliveryInfo.setOrder(getRespOrderMock());
-        deliveryInfo.setOrderDate(dateTime);
-        deliveryInfo.setQuantity(3);
-        List<RespOrderDeliveryDto> pages = List.of(deliveryInfo, deliveryInfo, deliveryInfo, deliveryInfo,
-                deliveryInfo, deliveryInfo, deliveryInfo, deliveryInfo, deliveryInfo);
-        ResponseDto<List<RespOrderDeliveryDto>> responseDto = new ResponseDto<>(pages);
-        return ResponseEntity.ok(responseDto);
+    public ResponseEntity<ResponseDto<PageDto<RespOrderDeliveryDto>>> getDelivery(
+            @RequestParam Integer page, @RequestParam Integer pageSize, @RequestParam(required = false) LocalDateTime dateTime) {
+        ResponseDto<PageDto<RespOrderDeliveryDto>> response = deliveryService.getPagedDeliveryInfo(page, pageSize, dateTime);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseDto<RespOrderItemDto>> deleteOrder(@PathVariable(value = "id") Long id) {
-        RespOrderItemDto orderItem = getRespOrderMock();
-        ResponseDto<RespOrderItemDto> responseDto = new ResponseDto<>(orderItem);
-        return ResponseEntity.ok(responseDto);
+        return ResponseEntity.ok(orderItemService.deleteOrder(id));
     }
 }

@@ -27,15 +27,15 @@ public class PaymentService {
     @Autowired
     OrderItemRepository orderRepository;
 
-    public boolean confirmPayment(ReqPayConfirmDto dto) {
+    public ResponseDto<Boolean> confirmPayment(ReqPayConfirmDto dto) {
         PaymentConfirmation entity = Mappers.getMapper(OrderProcessingMapper.class).toConfirmationEntity(dto);
         Optional<List<Long>> orderToConfirm = orderRepository.getOrderIdByUser(entity);
         if (orderToConfirm.isPresent()) {
             entity.setOrderId(orderToConfirm.get().get(0));
             entity.setCashierId(orderToConfirm.get().get(1));
-            return paymentRepository.confirmPayment(entity);
+            return new ResponseDto<>(paymentRepository.confirmPayment(entity));
         }
-        return false;
+        return new ResponseDto<>(false);
     }
 
     public ResponseDto<RespPaymentInfoDto> getPaymentStatusByUserId(Long userId) {

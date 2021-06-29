@@ -4,6 +4,7 @@ import com.nayax.borsch.model.entity.assortment.AssortmentRespEntity;
 import com.nayax.borsch.model.entity.assortment.GeneralPriceItemEntity;
 import com.nayax.borsch.model.entity.assortment.ShawarmaItemEntity;
 import com.nayax.borsch.model.entity.order.OrderEntity;
+import com.nayax.borsch.model.entity.order.OrderStartEntity;
 import com.nayax.borsch.model.entity.order.OrderSummaryEntity;
 import com.nayax.borsch.model.entity.user.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +16,9 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.sql.Types;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -121,17 +122,60 @@ public class RepositoryOrderSummaryImpl {
                         "join AdditionSelectedOrder ad on ad.AdditionId = a.id\n" +
                         "where ad.OrderId in (:ids)";
         Map<Long, List<GeneralPriceItemEntity>> addition = new HashMap<>();
-            SqlParameterSource parameters = new MapSqlParameterSource("ids", ids);
-            namedParameterJdbcTemplate.query(sqlAddition, parameters, (RowMapper<AssortmentRespEntity>) (rs, rowNum) -> {
+        SqlParameterSource parameters = new MapSqlParameterSource("ids", ids);
+        namedParameterJdbcTemplate.query(sqlAddition, parameters, (RowMapper<AssortmentRespEntity>) (rs, rowNum) -> {
 
-                addition.putIfAbsent((Long) rs.getObject("adOrder"), new ArrayList<>());
-                GeneralPriceItemEntity entity = new GeneralPriceItemEntity();
-                entity.setId((Long) rs.getObject("adId"));
-                entity.setName((String) rs.getObject("adName"));
-                entity.setPrice((BigDecimal) rs.getObject("adCost"));
-                addition.get((Long) rs.getObject("adOrder")).add(entity);
-                return null;
-            });
+            addition.putIfAbsent((Long) rs.getObject("adOrder"), new ArrayList<>());
+            GeneralPriceItemEntity entity = new GeneralPriceItemEntity();
+            entity.setId((Long) rs.getObject("adId"));
+            entity.setName((String) rs.getObject("adName"));
+            entity.setPrice((BigDecimal) rs.getObject("adCost"));
+            addition.get((Long) rs.getObject("adOrder")).add(entity);
+            return null;
+        });
         return addition;
+    }
+
+    public Optional<Long> getLatestOrderSummaryId() {
+        String sql = " SELECT TOP (1) OrderSummary.id id " +
+                " FROM  OrderSummary " +
+                " WHERE StopTime IS NULL " +
+                " ORDER BY OrderSummary.StartTime DESC ; ";
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, new RowMapper<Long>() {
+            @Override
+            public Long mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return (Long) rs.getObject("id");
+            }
+        }));
+    }
+
+    public boolean startNewSummaryOrder(OrderStartEntity entity) {
+        String sql = " INSERT INTO OrderSummary (CashierId, StartTime, EndTime) " +
+                " SELECT [Cashier].id, ?, ? " +
+                " FROM [Cashier] " +
+                " WHERE [Cashier].UserId = ? ; ";
+        return 1 == jdbcTemplate.update(sql, entity.getUserId(), entity.getStartTime(), entity.getEndTime());
+    }
+
+    public LocalDateTime getSummaryOrderStatus(Long orderSumId) {
+        String sql = " SELECT EndTime " +
+                " FROM [OrderSummary] " +
+                " WHERE StopTime IS NULL AND id = ? ; ";
+        return jdbcTemplate.queryForObject(sql, new RowMapper<>() {
+            @Override
+            public LocalDateTime mapRow(ResultSet rs, int rowNum) throws SQLException {
+                Timestamp endTime = rs.getTimestamp("EndTime");
+                if (endTime != null) {
+                    return endTime.toLocalDateTime();
+                }
+                return null;
+            }
+        }, orderSumId);
+    }
+
+    public boolean stopSummaryOrder(LocalDateTime stopTime) {
+        String sql = " UPDATE OrderSummary SET StopTime = ? " +
+                " WHERE StopTime IS NULL ";
+        return 1 == jdbcTemplate.update(sql, stopTime);
     }
 }

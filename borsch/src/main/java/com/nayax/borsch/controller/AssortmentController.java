@@ -27,13 +27,6 @@ public class AssortmentController {
     @Autowired
     private AssortmentService assortmentService;
 
-    private List<RespSimpleItemDto> getMockList() {
-        RespSimpleItemDto item = new RespSimpleItemDto();
-        item.setId(13L);
-        item.setName("SimpleItem");
-        return List.of(item, item, item, item, item, item, item, item, item, item);
-    }
-
     @GetMapping
     public ResponseEntity<ResponseDto<PageDto<RespAssortmentDto>>> getAssortment(@RequestParam int page, @RequestParam int pageSize) {
 

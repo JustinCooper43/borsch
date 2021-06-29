@@ -14,6 +14,7 @@ import com.nayax.borsch.model.dto.user.response.nested.RoleDto;
 import com.nayax.borsch.model.entity.user.ProfileEntity;
 import com.nayax.borsch.model.entity.user.UserEntity;
 import com.nayax.borsch.repository.impl.ProfileRepositoryImplementation;
+import com.nayax.borsch.repository.impl.RepositoryOrderSummaryImpl;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,8 @@ public class ProfileService {
 
     @Autowired
     ProfileRepositoryImplementation repo;
+
+
 
     public ResponseDto<RespProfileDto> add(ReqProfileAddDto dto) {
         ProfileEntity entity = ProfileMapper.toAddEntity(dto);
@@ -166,4 +169,22 @@ public class ProfileService {
         resp.setPhone(respProfileDto.getUser().getPhone());
         return new ResponseDto<>(resp);
     }
+
+
+    public ResponseDto<RespProfileDto> updateCurrentCashierInSumOrd(Long id) {
+
+        RespProfileDto respProfileDto = ProfileMapper.toDto(repo.updateCurrentCashierInSumOrd(id));
+
+        return new ResponseDto<>(respProfileDto);
+    }
+
+
+    public ResponseDto<RespProfileDto> getCurrentCashier() {
+
+        RespProfileDto respProfileDto = ProfileMapper.toDto(repo.findById(repo.latestOrderSummaryCashier()).get());
+
+        return new ResponseDto<>(respProfileDto);
+    }
+
+
 }
