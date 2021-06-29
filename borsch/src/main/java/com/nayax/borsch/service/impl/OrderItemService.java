@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -32,77 +31,76 @@ public class OrderItemService {
     @Autowired
     RepositoryOrderSummaryImpl orderSummaryRepository;
 
-    public ResponseDto<List<RespOrderItemDto>> getListOrder(Long userId, LocalDateTime dateTime) {
-        List<OrderEntity> listOrders = orderItemRepo.getListOrders(userId, dateTime);
-        public ResponseDto<List<RespOrderItemDto>> getListOrder (Long userId, String dateTime){
 
-            LocalDate date = LocalDate.parse(dateTime);
-            List<OrderEntity> listOrders = orderItemRepo.getListOrders(userId, date);
-            Set<Long> setOrderId = new HashSet<>();
-            for (OrderEntity entity : listOrders) {
-                setOrderId.add(entity.getOrderId());
-            }
+    public ResponseDto<List<RespOrderItemDto>> getListOrder(Long userId, String dateTime) {
 
-            Map<Long, List<GeneralPriceItemEntity>> mapUserIdAddition = orderItemRepo.getMapAdditions(setOrderId, date);
-
-            for (OrderEntity var : listOrders) {
-                var.setAdditions(mapUserIdAddition.get(var.getOrderId()));
-            }
-
-            setCostOrderItem(listOrders);
-
-            List<RespOrderItemDto> listDto = Mappers.getMapper(OrderItemMapper.class).toListRespOrderDto(listOrders);
-            return new ResponseDto<>(listDto);
+        LocalDate date = LocalDate.parse(dateTime);
+        List<OrderEntity> listOrders = orderItemRepo.getListOrders(userId, date);
+        Set<Long> setOrderId = new HashSet<>();
+        for (OrderEntity entity : listOrders) {
+            setOrderId.add(entity.getOrderId());
         }
 
-        private void setCostOrderItem (List < OrderEntity > listOrders) {
+        Map<Long, List<GeneralPriceItemEntity>> mapUserIdAddition = orderItemRepo.getMapAdditions(setOrderId, date);
 
-            for (OrderEntity orderItem : listOrders) {
-                BigDecimal dishPrice = orderItem.getDish().getPrice();
-                BigDecimal drinkPrice = orderItem.getDrink().getPrice();
-                BigDecimal additionPrice = new BigDecimal("0");
-                for (GeneralPriceItemEntity additItem : orderItem.getAdditions()) {
-                    additionPrice = additionPrice.add(additItem.getPrice());
-                }
-                BigDecimal totalPrice = dishPrice.add(drinkPrice).add(additionPrice);
-                BigDecimal quantity = new BigDecimal(orderItem.getQuantity());
+        for (OrderEntity var : listOrders) {
+            var.setAdditions(mapUserIdAddition.get(var.getOrderId()));
+        }
 
-                totalPrice = totalPrice.multiply(quantity);
-                orderItem.setCost(totalPrice);
+        setCostOrderItem(listOrders);
+
+        List<RespOrderItemDto> listDto = Mappers.getMapper(OrderItemMapper.class).toListRespOrderDto(listOrders);
+        return new ResponseDto<>(listDto);
+    }
+
+    private void setCostOrderItem(List<OrderEntity> listOrders) {
+
+        for (OrderEntity orderItem : listOrders) {
+            BigDecimal dishPrice = orderItem.getDish().getPrice();
+            BigDecimal drinkPrice = orderItem.getDrink().getPrice();
+            BigDecimal additionPrice = new BigDecimal("0");
+            for (GeneralPriceItemEntity additItem : orderItem.getAdditions()) {
+                additionPrice = additionPrice.add(additItem.getPrice());
             }
-        }
+            BigDecimal totalPrice = dishPrice.add(drinkPrice).add(additionPrice);
+            BigDecimal quantity = new BigDecimal(orderItem.getQuantity());
 
-        public ResponseDto<RespOrderItemDto> addOrder (OrderEntity entity){
-            Optional<Long> latestOrderSummaryId = orderSummaryRepository.getLatestOrderSummaryId();
-            if (latestOrderSummaryId.isPresent()) {
-                entity.setOrderSummaryId(latestOrderSummaryId.get());
-            } else {
-                return new ResponseDto<>(List.of(new ErrorDto("No currently opened order", 422)));
-            }
-            OrderEntity order = orderItemRepository.add(entity);
-            RespOrderItemDto orderDto = Mappers.getMapper(OrderItemMapper.class).toDto(order);
-            return new ResponseDto<>(orderDto);
-        }
-
-        public ResponseDto<RespOrderItemDto> deleteOrder (Long id){
-            OrderEntity order = orderItemRepository.deleteById(id);
-            RespOrderItemDto orderDto = Mappers.getMapper(OrderItemMapper.class).toDto(order);
-            return new ResponseDto<>(orderDto);
-        }
-
-        public ResponseDto<PageDto<RespOrderItemDto>> getPagedHistory (Long userId,int page, int pageSize){
-            PageEntity<OrderEntity> listEntity = orderItemRepo.getPagedHistory(userId, page, pageSize);
-            listEntity.setPage(page);
-            listEntity.setPageSize(pageSize);
-
-            Integer totalElements = listEntity.getTotalElements();
-            int totalPages = totalElements % pageSize == 0 ?
-                    totalElements / pageSize :
-                    totalElements / pageSize + 1;
-            listEntity.setTotalPages(totalPages);
-
-            PageDto<RespOrderItemDto> listDto = Mappers.getMapper(OrderItemMapper.class).toPageDto(listEntity);
-
-            return new ResponseDto<>(listDto);
+            totalPrice = totalPrice.multiply(quantity);
+            orderItem.setCost(totalPrice);
         }
     }
+
+    public ResponseDto<RespOrderItemDto> addOrder(OrderEntity entity) {
+        Optional<Long> latestOrderSummaryId = orderSummaryRepository.getLatestOrderSummaryId();
+        if (latestOrderSummaryId.isPresent()) {
+            entity.setOrderSummaryId(latestOrderSummaryId.get());
+        } else {
+            return new ResponseDto<>(List.of(new ErrorDto("No currently opened order", 422)));
+        }
+        OrderEntity order = orderItemRepository.add(entity);
+        RespOrderItemDto orderDto = Mappers.getMapper(OrderItemMapper.class).toDto(order);
+        return new ResponseDto<>(orderDto);
+    }
+
+    public ResponseDto<RespOrderItemDto> deleteOrder(Long id) {
+        OrderEntity order = orderItemRepository.deleteById(id);
+        RespOrderItemDto orderDto = Mappers.getMapper(OrderItemMapper.class).toDto(order);
+        return new ResponseDto<>(orderDto);
+    }
+
+    public ResponseDto<PageDto<RespOrderItemDto>> getPagedHistory(Long userId, int page, int pageSize) {
+        PageEntity<OrderEntity> listEntity = orderItemRepo.getPagedHistory(userId, page, pageSize);
+        listEntity.setPage(page);
+        listEntity.setPageSize(pageSize);
+
+        Integer totalElements = listEntity.getTotalElements();
+        int totalPages = totalElements % pageSize == 0 ?
+                totalElements / pageSize :
+                totalElements / pageSize + 1;
+        listEntity.setTotalPages(totalPages);
+
+        PageDto<RespOrderItemDto> listDto = Mappers.getMapper(OrderItemMapper.class).toPageDto(listEntity);
+
+        return new ResponseDto<>(listDto);
+    }
+}
