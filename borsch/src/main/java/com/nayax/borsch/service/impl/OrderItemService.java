@@ -2,6 +2,7 @@ package com.nayax.borsch.service.impl;
 
 
 import com.nayax.borsch.mapper.OrderItemMapper;
+import com.nayax.borsch.model.dto.ErrorDto;
 import com.nayax.borsch.model.dto.ResponseDto;
 import com.nayax.borsch.model.dto.order.response.RespOrderItemDto;
 import com.nayax.borsch.model.entity.assortment.GeneralPriceItemEntity;
@@ -18,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -66,14 +68,20 @@ public class OrderItemService {
             orderItem.setCost(totalPrice);
         }
     }
-    public ResponseDto<RespOrderItemDto> addOrder(OrderEntity entity){
-        entity.setOrderSummaryId(orderSummaryRepository.getLatestOrderSummaryId());
+
+    public ResponseDto<RespOrderItemDto> addOrder(OrderEntity entity) {
+        Optional<Long> latestOrderSummaryId = orderSummaryRepository.getLatestOrderSummaryId();
+        if (latestOrderSummaryId.isPresent()) {
+            entity.setOrderSummaryId(latestOrderSummaryId.get());
+        } else {
+            return new ResponseDto<>(List.of(new ErrorDto("No currently opened order", 422)));
+        }
         OrderEntity order = orderItemRepository.add(entity);
         RespOrderItemDto orderDto = Mappers.getMapper(OrderItemMapper.class).toDto(order);
         return new ResponseDto<>(orderDto);
     }
 
-    public ResponseDto<RespOrderItemDto> deleteOrder(Long id){
+    public ResponseDto<RespOrderItemDto> deleteOrder(Long id) {
         OrderEntity order = orderItemRepository.deleteById(id);
         RespOrderItemDto orderDto = Mappers.getMapper(OrderItemMapper.class).toDto(order);
         return new ResponseDto<>(orderDto);

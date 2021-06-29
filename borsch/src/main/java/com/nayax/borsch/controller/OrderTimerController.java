@@ -1,24 +1,26 @@
 package com.nayax.borsch.controller;
 
 import com.nayax.borsch.model.dto.ResponseDto;
-import com.nayax.borsch.model.dto.order.response.RespOrderSumDto;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 
 @RestController
-@RequestMapping("/timer")
+@RequestMapping("/order")
 public class OrderTimerController {
     @PostMapping("/start")
-    public ResponseEntity<ResponseDto<RespOrderSumDto>> startOrder(Long userId, LocalDateTime finish){
+    public ResponseEntity<ResponseDto<Boolean>> startOrder(Long userId, @RequestParam(required = false) LocalDateTime finish) {
         return null;
     }
 
     @PostMapping("/stop")
-    public ResponseEntity<ResponseDto<Boolean>> stop(Long sumOrderId) {
+    public ResponseEntity<ResponseDto<Boolean>> stopOrder(@RequestParam Long sumOrderId) {
         return ResponseEntity.ok(new ResponseDto<>(false));
+    }
+
+    @GetMapping("/status")
+    public ResponseEntity<ResponseDto<RespOrderStatusDto>> getOrderStatus (){
+        return null;
     }
 }
