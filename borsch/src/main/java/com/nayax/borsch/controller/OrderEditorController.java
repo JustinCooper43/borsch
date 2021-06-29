@@ -1,11 +1,18 @@
 package com.nayax.borsch.controller;
 
 
+import com.nayax.borsch.mapper.AssortmentMapper;
 import com.nayax.borsch.model.dto.ResponseDto;
 import com.nayax.borsch.model.dto.assortment.response.RespAssortmentItemDto;
 import com.nayax.borsch.model.dto.assortment.response.RespPriceItemDto;
 import com.nayax.borsch.model.dto.assortment.response.RespSimplePriceItemDto;
 import com.nayax.borsch.model.dto.assortment.response.RespSimpleItemDto;
+import com.nayax.borsch.model.entity.assortment.ShawarmaItemEntity;
+import com.nayax.borsch.repository.impl.RepositoryShawarmaTypeImpl;
+import com.nayax.borsch.repository.impl.TablesType;
+import com.nayax.borsch.service.impl.OrderEditorService;
+import org.mapstruct.factory.Mappers;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,59 +20,40 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestController
 public class OrderEditorController {
 
+    @Autowired
+    OrderEditorService orderEditorService;
+
+
     @GetMapping("/price")
     public ResponseEntity<ResponseDto<List<RespPriceItemDto>>> price() {
-        RespPriceItemDto respPriceItemDto = new RespPriceItemDto();
-        respPriceItemDto.setId(2l);
-        respPriceItemDto.setPrice(new BigDecimal("2321.213"));
-        respPriceItemDto.setType(0);
-        respPriceItemDto.setName("Шаурма с курицей");
-        ResponseDto<List<RespPriceItemDto>> responseDto = new ResponseDto<>(
-                List.of(respPriceItemDto, respPriceItemDto, respPriceItemDto, respPriceItemDto, respPriceItemDto, respPriceItemDto));
-        return ResponseEntity.ok(responseDto);
+
+        return ResponseEntity.ok(new ResponseDto<>(orderEditorService.price()));
     }
 
     @GetMapping("/dish/dropdown")
     public ResponseEntity<ResponseDto<List<RespAssortmentItemDto>>> dishDropdown() {
-
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok(new ResponseDto<>(orderEditorService.dish()));
     }
 
     @GetMapping("/additional/dropdown")
     public ResponseEntity<ResponseDto<List<RespSimplePriceItemDto>>> additionalDropdown(@RequestParam Long dishId) {
-        RespSimplePriceItemDto priceItemDto = new RespSimplePriceItemDto();
-        priceItemDto.setId(2l);
-        priceItemDto.setName("Соус острый");
-        priceItemDto.setPrice(new BigDecimal("10.221"));
-        List<RespSimplePriceItemDto> list = List.of(priceItemDto, priceItemDto, priceItemDto, priceItemDto, priceItemDto);
-        ResponseDto<List<RespSimplePriceItemDto>> responseDto = new ResponseDto<>(list);
-        return ResponseEntity.ok(responseDto);
+
+        return ResponseEntity.ok(null);
     }
 
     @GetMapping("/drink/dropdown")
     public ResponseEntity<ResponseDto<List<RespSimplePriceItemDto>>> drinkDropdown() {
-        RespSimplePriceItemDto priceItemDto = new RespSimplePriceItemDto();
-        priceItemDto.setId(3l);
-        priceItemDto.setName("Coca-cola");
-        priceItemDto.setPrice(new BigDecimal("20.221"));
-        List<RespSimplePriceItemDto> list = List.of(priceItemDto, priceItemDto, priceItemDto, priceItemDto, priceItemDto);
-        ResponseDto<List<RespSimplePriceItemDto>> responseDto = new ResponseDto<>(list);
-        return ResponseEntity.ok(responseDto);
+        return ResponseEntity.ok(new ResponseDto<>(orderEditorService.drinks()));
     }
 
-    //TODO discuss a dishId param, as remarks are bound to certain dishes at assortment editor page
     @GetMapping("/remark/dropdown")
     public ResponseEntity<ResponseDto<List<RespSimpleItemDto>>> remarkDropdown() {
-        RespSimpleItemDto itemDto = new RespSimpleItemDto();
-        itemDto.setId(12l);
-        itemDto.setName("Побольше соуса");
-        List<RespSimpleItemDto> list = List.of(itemDto, itemDto, itemDto, itemDto, itemDto);
-        ResponseDto<List<RespSimpleItemDto>> responseDto = new ResponseDto<>(list);
-        return ResponseEntity.ok(responseDto);
+        return ResponseEntity.ok(new ResponseDto<>(orderEditorService.remarks()));
     }
 }
