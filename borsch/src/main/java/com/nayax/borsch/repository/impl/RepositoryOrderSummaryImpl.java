@@ -4,6 +4,7 @@ import com.nayax.borsch.model.entity.assortment.AssortmentRespEntity;
 import com.nayax.borsch.model.entity.assortment.GeneralPriceItemEntity;
 import com.nayax.borsch.model.entity.assortment.ShawarmaItemEntity;
 import com.nayax.borsch.model.entity.order.OrderEntity;
+import com.nayax.borsch.model.entity.order.OrderStartEntity;
 import com.nayax.borsch.model.entity.order.OrderSummaryEntity;
 import com.nayax.borsch.model.entity.user.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -148,7 +149,7 @@ public class RepositoryOrderSummaryImpl {
         }));
     }
 
-    public boolean startNewSummaryOrder(entity) {
+    public boolean startNewSummaryOrder(OrderStartEntity entity) {
         String sql = " INSERT INTO OrderSummary (CashierId, StartTime, EndTime) " +
                 " SELECT [Cashier].id, ?, ? " +
                 " FROM [Cashier] " +
