@@ -16,6 +16,8 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -138,5 +140,17 @@ public class RepositoryOrderSummaryImpl {
             return null;
         });
         return addition;
+    }
+
+    public Long getLatestOrderSummaryId() {
+        String sql = " SELECT TOP (1) OrderSummary.id id " +
+                " FROM  OrderSummary " +
+                " ORDER BY OrderSummary.StartTime DESC ; ";
+        return jdbcTemplate.queryForObject(sql, new RowMapper<Long>() {
+            @Override
+            public Long mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return (Long) rs.getObject("id");
+            }
+        });
     }
 }
