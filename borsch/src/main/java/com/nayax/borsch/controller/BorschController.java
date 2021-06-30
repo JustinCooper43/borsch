@@ -2,6 +2,7 @@ package com.nayax.borsch.controller;
 
 import com.nayax.borsch.model.dto.PageDto;
 import com.nayax.borsch.model.dto.ResponseDto;
+import com.nayax.borsch.model.dto.assortment.request.ReqSimplePriceItemAddDto;
 import com.nayax.borsch.model.dto.assortment.request.ReqSimplePriceItemUpDto;
 import com.nayax.borsch.model.dto.assortment.response.RespAssortmentItemDto;
 import com.nayax.borsch.model.dto.assortment.response.RespSimpleItemDto;
@@ -105,11 +106,20 @@ public class BorschController {
 //        List<ShawarmaItemEntity> shawarmaItemEntityList = shawarmaType.findAll(1,5);
 //        shawarmaItemEntityList.forEach(System.out::println);
 
-        ReqSimplePriceItemUpDto update = new ReqSimplePriceItemUpDto();
-        update.setId(10000000L);
-        update.setName("qwerty");
-        update.setPrice(new BigDecimal("1"));
-        ResponseDto<RespSimplePriceItemDto> responseDto = shavarmaService.updateDish(update);
+//        ReqSimplePriceItemUpDto update = new ReqSimplePriceItemUpDto();
+//        update.setId(10000000L);
+//        update.setName("qwerty");
+//        update.setPrice(new BigDecimal("1"));
+//        ResponseDto<RespSimplePriceItemDto> responseDto = shavarmaService.updateDish(update);
+
+//        ReqSimplePriceItemAddDto add = new ReqSimplePriceItemAddDto();
+//        add.setPrice(new BigDecimal("-100"));
+//        add.setName(null);
+//        ResponseDto<RespSimplePriceItemDto> responseDto = shavarmaService.addDish(add);
+
+        ResponseDto<RespSimplePriceItemDto> responseDto = shavarmaService.deleteDish(99999L);
+        //ResponseDto<RespSimplePriceItemDto> responseDto2 = shavarmaService.deleteDish(null);
+
 
 //        RespAssortmentItemDto dto = new RespAssortmentItemDto();
 //        dto.setId(entity.get().getId());

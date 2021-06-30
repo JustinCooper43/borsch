@@ -136,10 +136,12 @@ public class RepositoryShawarmaTypeImpl {
     public Optional<ShawarmaItemEntity> delete(Long id) {
         String sql = "Update ShawarmaType set active = 'N' where id = ?";
         Optional<ShawarmaItemEntity> deleted = findById(id);
-        try {
-            jdbcTemplate.update(sql, id);
-        } catch (EmptyResultDataAccessException e) {
-            System.err.printf("Shawarma type %s can not be deleted!!\n", id);
+        if (deleted.isPresent()) {
+            try {
+                jdbcTemplate.update(sql, id);
+            } catch (EmptyResultDataAccessException e) {
+                System.err.printf("Shawarma type %s can not be deleted!!\n", id);
+            }
         }
         return deleted;
     }

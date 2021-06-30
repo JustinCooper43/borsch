@@ -1,7 +1,8 @@
 package com.nayax.borsch.model.dto.enums;
 
 public enum OrderSummaryStatus {
-    OPEN("open"),NOT_OPEN("notOpen");
+    OPEN("open"),
+    NOT_OPEN("notOpen");
 
     String status;
 

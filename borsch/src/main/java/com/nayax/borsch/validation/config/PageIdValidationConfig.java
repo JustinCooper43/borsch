@@ -20,14 +20,11 @@ public class PageIdValidationConfig {
 
         validatorPageId.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.ADDITIONS_GETALL,
                 ValidationAction.DISH_GETALL,ValidationAction.DRINK_GETALL), Objects::nonNull,
-                "Parameters of page are null"));
+                "Parameters of page are null","Paging"));
         validatorPageId.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.ADDITIONS_GETALL,
                 ValidationAction.DISH_GETALL,ValidationAction.DRINK_GETALL),obj-> obj != null
                         && (Integer)obj > 0 ,
-                "Parameters of page are invalid"));
-        validatorPageId.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.ADDITIONS_GETALL,
-                ValidationAction.DISH_GETALL,ValidationAction.DRINK_GETALL), Objects::nonNull,
-                "Parameters of page are null"));
+                "Parameters of page are invalid","Paging"));
     }
 
     public static Validator getValidatorPageId() {

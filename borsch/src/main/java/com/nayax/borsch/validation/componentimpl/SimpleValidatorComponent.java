@@ -15,15 +15,17 @@ public class SimpleValidatorComponent implements ValidatorComponent {
     private final ValidationAction action;
     private final Predicate<Object> validationPredicate;
     private final String cause;
+    private final String field;
 
-    public SimpleValidatorComponent(ValidationAction action, Predicate<Object> validationPredicate, String cause) {
+    public SimpleValidatorComponent(ValidationAction action, Predicate<Object> validationPredicate, String cause, String field) {
         this.action = action;
         this.validationPredicate = validationPredicate;
         this.cause = cause;
+        this.field = field;
     }
 
-    public static List<? extends SimpleValidatorComponent> getComponents(List<ValidationAction> actions, Predicate<Object> validationPredicate, String cause) {
-        return actions.stream().map(a -> new SimpleValidatorComponent(a, validationPredicate, cause)).collect(Collectors.toList());
+    public static List<? extends SimpleValidatorComponent> getComponents(List<ValidationAction> actions, Predicate<Object> validationPredicate, String cause,String field) {
+        return actions.stream().map(a -> new SimpleValidatorComponent(a, validationPredicate, cause,field)).collect(Collectors.toList());
     }
 
     @Override

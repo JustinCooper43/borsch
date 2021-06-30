@@ -29,6 +29,10 @@ public class ShavarmaService {
     RepositoryShawarmaTypeImpl repositoryShawarmaType;
 
     public ResponseDto<RespSimplePriceItemDto> addDish(ReqSimplePriceItemAddDto dto) {
+        List<ErrorDto> errors = DishValidationConfig.getValidator().validate(dto, ValidationAction.DISH_ADD);
+        if(errors.size() > 0) {
+            return new ResponseDto<>(errors);
+        }
         ShawarmaItemEntity entity = repositoryShawarmaType.add(Mappers.getMapper(AssortmentMapper.class).toShawarmaItemEntity(dto));
         RespSimplePriceItemDto respDto = Mappers.getMapper(AssortmentMapper.class).toRespSimplePriceItemDto(entity);
         return new ResponseDto<>(respDto);
@@ -36,9 +40,8 @@ public class ShavarmaService {
 
     public ResponseDto<RespSimplePriceItemDto> updateDish(ReqSimplePriceItemUpDto dto) {
         ShawarmaItemEntity entity = Mappers.getMapper(AssortmentMapper.class).toShawarmaItemEntity(dto);
-        List<ErrorDto> errors = DishValidationConfig.getValidator().validate(dto, ValidationAction.DISH_UPDATE);
+        List<ErrorDto> errors = DishValidationConfig.getValidator().validate(dto.getId(), ValidationAction.DISH_UPDATE);
         if(errors.size() > 0) {
-
             return new ResponseDto<>(errors);
         }
         ShawarmaItemEntity res = repositoryShawarmaType.update(entity);
@@ -47,10 +50,9 @@ public class ShavarmaService {
     }
 
     public ResponseDto<RespSimplePriceItemDto> deleteDish(Long id) {
-
         Optional<ShawarmaItemEntity> entity = repositoryShawarmaType.delete(id);
         ResponseDto<RespSimplePriceItemDto> response = new ResponseDto<>();
-        if (entity.isPresent()) {
+        if (entity.get().getId() != null) {
             response.setData(Mappers.getMapper(AssortmentMapper.class).toRespSimplePriceItemDto(entity.get()));
         } else {
             ErrorDto e = new ErrorDto();
