@@ -21,24 +21,6 @@ public class LoginController {
     @Autowired
     ProfileService service;
 
-    private RespLoginDto getLoginMock() {
-        RespLoginDto loginDto = new RespLoginDto();
-        RespLoginCashierDto user = new RespLoginCashierDto();
-        user.setId(14L);
-        user.setFirstName("Fname");
-        user.setLastName("Lname");
-        user.seteMail("adress@server.com");
-        user.setCashier(false);
-        RoleDto role = new RoleDto();
-        role.setId(2L);
-        role.setName("Cashier");
-        user.setRole(role);
-        user.setPhone("+380123456789");
-        loginDto.setUser(user);
-        loginDto.setTime(LocalDateTime.now());
-        return loginDto;
-    }
-
     @PostMapping("/login")
     public ResponseEntity<ResponseDto<RespLoginDto>> login(@RequestBody String email) {
         RespLoginDto respLoginDto =  new RespLoginDto();

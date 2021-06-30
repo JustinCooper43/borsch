@@ -5,7 +5,7 @@ import java.util.List;
 public class ResponseDto<T> {
     private T data;
     private List<ErrorDto> errors;
-    private String status;
+    private String status = "200";
 
     public ResponseDto() {
     }
