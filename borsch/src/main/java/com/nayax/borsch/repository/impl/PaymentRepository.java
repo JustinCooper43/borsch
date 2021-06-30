@@ -12,7 +12,9 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class PaymentRepository {
@@ -25,22 +27,23 @@ public class PaymentRepository {
         return jdbcTemplate.update(sql, entity.getPaid(), entity.getCashierId(), entity.getOrderId()) == 1;
     }
 
-    public BigDecimal getPayedSumForLatestOrderSummary(Long userId) {
+    public Optional<BigDecimal> getPayedSumForLatestOrderSummary(Long userId) {
         String sql = " SELECT TOP (1) SUM (Payment.[sum]) totalPayed " +
                 " FROM [Order] JOIN Payment on Payment.OrderId = [Order].id " +
                 " JOIN OrderSummary on [Order].OrderSummaryId = OrderSummary.id " +
                 " WHERE [Order].UserId = ? AND Payment.Completion = 1 AND Payment.Confirmation = 1 " +
                 " GROUP BY OrderSummary.StartTime " +
                 " ORDER BY OrderSummary.StartTime DESC ; ";
-        return jdbcTemplate.queryForObject(sql, new RowMapper<BigDecimal>() {
+        List<BigDecimal> results = jdbcTemplate.query(sql, new RowMapper<>() {
             @Override
             public BigDecimal mapRow(ResultSet rs, int rowNum) throws SQLException {
                 return rs.getBigDecimal("totalPayed");
             }
         }, userId);
+        return results.isEmpty() ? Optional.empty() : Optional.of(results.get(0));
     }
 
-    public BigDecimal getTotalCostForLatestOrderSummary(Long userId) {
+    public Optional<BigDecimal> getTotalCostForLatestOrderSummary(Long userId) {
         String sql = " SELECT TOP (1) SUM([ShawarmaType].Cost*[Order].Quantity) " +
                 " + SUM([ExtraItem].Cost*[Order].Quantity) " +
                 " + SUM([Addition].Cost*[Order].Quantity) totalCost " +
@@ -53,12 +56,13 @@ public class PaymentRepository {
                 " WHERE [Order].UserId = ? " +
                 " GROUP BY OrderSummary.StartTime " +
                 " ORDER BY OrderSummary.StartTime DESC ; ";
-        return jdbcTemplate.queryForObject(sql, new RowMapper<BigDecimal>() {
+        List<BigDecimal> results = jdbcTemplate.query(sql, new RowMapper<>() {
             @Override
             public BigDecimal mapRow(ResultSet rs, int rowNum) throws SQLException {
                 return rs.getBigDecimal("totalCost");
             }
         }, userId);
+        return results.isEmpty() ? Optional.empty() : Optional.of(results.get(0));
     }
 
     public Map<Long, BigDecimal> getSumPaymentByUser(LocalDate date) {

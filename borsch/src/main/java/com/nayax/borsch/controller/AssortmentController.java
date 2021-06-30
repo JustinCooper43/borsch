@@ -36,7 +36,8 @@ public class AssortmentController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ResponseDto<RespAssortmentDto>> updateById(@PathVariable(value = "id") Long id, @RequestBody ReqAssortmentUpDto dto) {
-        ResponseDto<RespAssortmentDto> resp = assortmentService.updateAssortment(id,dto);
+        dto.setDish(id);
+        ResponseDto<RespAssortmentDto> resp = assortmentService.updateAssortment(dto);
         return ResponseEntity.ok(resp);
     }
 

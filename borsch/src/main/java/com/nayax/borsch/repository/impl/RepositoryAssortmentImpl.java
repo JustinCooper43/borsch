@@ -110,7 +110,7 @@ public class RepositoryAssortmentImpl {
 
 
 
-    public AssortmentRespEntity update(Long id, AssortmentUpEntity entity){
+    public AssortmentRespEntity update(AssortmentUpEntity entity){
 
         String sqlUpdate = "update RemarkAllowedShawarmaType set Active = 'N' where ShawarmaTypeId = ? ;" +
                            "update AdditionAllowedShawarmaType set Active = 'N' where ShawarmaTypeId = ? ;" +
@@ -118,11 +118,11 @@ public class RepositoryAssortmentImpl {
 
         String sqlInsert1 = "Insert into RemarkAllowedShawarmaType (ShawarmaTypeId,RemarkId,Active) values(?,?,?)";
         String sqlInsert2 = "Insert into AdditionAllowedShawarmaType (ShawarmaTypeId,AllowedAdditionId,Active) values(?,?,?)";
-        jdbcTemplate.update(sqlUpdate,id,id,entity.isHalfAble() ? 1 : 0, id);
+        jdbcTemplate.update(sqlUpdate, entity.getDish(), entity.getDish(), entity.isHalfAble() ? 1 : 0, entity.getDish());
         jdbcTemplate.batchUpdate(sqlInsert1, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
-                ps.setLong(1,id);
+                ps.setLong(1,entity.getDish());
                 ps.setLong(2,entity.getRemarksId().get(i));
                 ps.setString(3,"Y");
             }
@@ -134,7 +134,7 @@ public class RepositoryAssortmentImpl {
         jdbcTemplate.batchUpdate(sqlInsert2, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
-                ps.setLong(1,id);
+                ps.setLong(1,entity.getDish());
                 ps.setLong(2,entity.getAdditionsId().get(i));
                 ps.setString(3,"Y");
             }

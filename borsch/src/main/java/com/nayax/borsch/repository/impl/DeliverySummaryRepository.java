@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -88,7 +88,7 @@ public class DeliverySummaryRepository {
         return new ArrayList<>();
     }
 
-    public OrderSumTimerEntity getTimerBeforeDate(LocalDateTime date) {
+    public OrderSumTimerEntity getTimerBeforeDate(LocalDate date) {
         String sql = " SELECT TOP (1) OrderSummary.id, StartTime, StopTime, EndTime, CashierId, " +
                 " Cashier.CashPaymentAllowed, Cashier.CCNumber, Cashier.CCBank, " +
                 " Cashier.CCNote, Cashier.CCQRCode " +

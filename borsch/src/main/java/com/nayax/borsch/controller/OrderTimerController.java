@@ -15,7 +15,7 @@ public class OrderTimerController {
     TimerService timerService;
 
     @PostMapping("/start")
-    public ResponseEntity<ResponseDto<Boolean>> startOrder(@RequestParam ReqOrderStartDto dto) {
+    public ResponseEntity<ResponseDto<Boolean>> startOrder(@RequestBody ReqOrderStartDto dto) {
         return ResponseEntity.ok(timerService.startOrder(dto));
     }
 

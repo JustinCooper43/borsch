@@ -1,11 +1,11 @@
 package com.nayax.borsch.model.entity.order;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public class OrderDeliveryEntity {
     private OrderEntity order;
     private Integer quantity;
-    private LocalDateTime orderDate;
+    private LocalDate orderDate;
 
     public OrderEntity getOrder() {
         return order;
@@ -23,11 +23,11 @@ public class OrderDeliveryEntity {
         this.quantity = quantity;
     }
 
-    public LocalDateTime getOrderDate() {
+    public LocalDate getOrderDate() {
         return orderDate;
     }
 
-    public void setOrderDate(LocalDateTime orderDate) {
+    public void setOrderDate(LocalDate orderDate) {
         this.orderDate = orderDate;
     }
 }

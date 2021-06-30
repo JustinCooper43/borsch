@@ -20,35 +20,35 @@ public class RemarkValidationConfig {
 
         validatorRemark.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.REMARK_ADD),
                 obj -> ((ReqSimpleItemAddDto) obj).getName() != null,
-                "Item's name is null"));
+                "Item's name is null","name"));
 
         validatorRemark.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.REMARK_ADD),
                 obj -> ((ReqSimpleItemAddDto) obj).getName() != null && ((ReqSimpleItemAddDto) obj).getName().length() > 0,
-                "Item's name is empty"));
+                "Item's name is empty","name"));
 
         validatorRemark.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.REMARK_ADD),
                 obj -> ((ReqSimpleItemAddDto) obj).getName() != null && ((ReqSimpleItemAddDto) obj).getName().matches("^[~@#\\$%\\^&\\*:;<>\\.,/}\\{\\+]"),
-                "Item's name contains special characters"));
+                "Item's name contains special characters","name"));
 
         validatorRemark.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.REMARK_UPDATE),
                 obj -> ((ReqSimpleItemUpDto) obj).getName() != null,
-                "Name of updated item is null"));
+                "Name of updated item is null","name"));
 
         validatorRemark.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.REMARK_UPDATE),
                 obj -> ((ReqSimpleItemUpDto) obj).getName() != null && ((ReqSimpleItemUpDto) obj).getName().length() > 0,
-                "Name of updated item is empty"));
+                "Name of updated item is empty","name"));
 
         validatorRemark.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.REMARK_UPDATE),
                 obj -> ((ReqSimpleItemUpDto) obj).getName() != null && ((ReqSimpleItemUpDto) obj).getName().matches("^[~@#\\$%\\^&\\*:;<>\\.,/}\\{\\+]"),
-                "Name of updated item contains special characters"));
+                "Name of updated item contains special characters","name"));
 
         validatorRemark.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.REMARK_UPDATE),
                 obj -> ((ReqSimpleItemUpDto) obj).getId() != null,
-                "Id of updated item is null"));
+                "Id of updated item is null", "id"));
 
         validatorRemark.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.REMARK_UPDATE),
                 obj -> ((ReqSimpleItemUpDto) obj).getId() != null && ((ReqSimpleItemUpDto) obj).getId() > 1,
-                "Id of updated item is invalid"));
+                "Id of updated item is invalid", "id"));
 
         validatorRemark.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.REMARK_UPDATE),
                 obj  -> ((ReqSimpleItemUpDto) obj).getId() != null && ((ReqSimpleItemUpDto) obj).getId() > 1,
