@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @SpringBootTest
@@ -24,7 +24,7 @@ public class DeliverySummaryRepoTest {
 
     @Test
     public void dummyTimerTest() {
-        OrderSumTimerEntity response = deliverySummaryRepository.getTimerBeforeDate(LocalDateTime.now());
+        OrderSumTimerEntity response = deliverySummaryRepository.getTimerBeforeDate(LocalDate.now());
         Assertions.assertNotNull(response);
         Assertions.assertNotNull(response.getCashier());
     }

@@ -16,15 +16,14 @@ public class PageIdValidationConfig {
 
     private static final Validator validatorPageId = new ValidatorImpl();
 
-    static{
+    static {
 
         validatorPageId.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.ADDITIONS_GETALL,
-                ValidationAction.DISH_GETALL,ValidationAction.DRINK_GETALL), Objects::nonNull,
-                "Parameters of page are null","Paging"));
+                ValidationAction.DISH_GETALL, ValidationAction.DRINK_GETALL), Objects::nonNull,
+                "Parameters of page are null", "paging"));
         validatorPageId.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.ADDITIONS_GETALL,
-                ValidationAction.DISH_GETALL,ValidationAction.DRINK_GETALL),obj-> obj != null
-                        && (Integer)obj > 0 ,
-                "Parameters of page are invalid","Paging"));
+                ValidationAction.DISH_GETALL, ValidationAction.DRINK_GETALL), obj -> obj != null
+                && (Integer) obj > 0, "Parameters of page are invalid", "paging"));
     }
 
     public static Validator getValidatorPageId() {

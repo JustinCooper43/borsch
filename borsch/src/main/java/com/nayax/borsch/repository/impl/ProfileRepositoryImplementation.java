@@ -1,7 +1,6 @@
 package com.nayax.borsch.repository.impl;
 
 import com.nayax.borsch.exceptions.NotUpdateException;
-import com.nayax.borsch.model.entity.assortment.ShawarmaItemEntity;
 import com.nayax.borsch.model.entity.user.CashierEntity;
 import com.nayax.borsch.model.entity.user.ProfileEntity;
 import com.nayax.borsch.model.entity.user.UserEntity;
@@ -108,7 +107,7 @@ public class ProfileRepositoryImplementation {
 
         String sql = "SELECT u.id  userId, u.Active activeUser, u.RoleId roleId, \n" +
                 " u.Email userEmail, u.FirstName fName, u.LastName lName, u.PhoneNumber phNumber, r.[Name] roleName, \n" +
-                " c.UserId cashierId, c.CashPaymentAllowed CashPay, c.CCNumber Card, c.CCBank Bank, c.CCNote Note, c.CCQRCode QrCode\n" +
+                " c.id cashierId, c.CashPaymentAllowed CashPay, c.CCNumber Card, c.CCBank Bank, c.CCNote Note, c.CCQRCode QrCode\n" +
                 " FROM [User] u\n" +
                 " LEFT JOIN Cashier c ON u.id = c.UserId \n" +
                 " LEFT JOIN  [Role] r on u.RoleId = r.id \n" +
@@ -158,7 +157,6 @@ public class ProfileRepositoryImplementation {
 
 
     public List<ProfileEntity> findAll() {
-
         String query = "SELECT u.id  userId, u.Active activeUser, u.RoleId roleId, \n" +
                 " u.Email userEmail, u.FirstName fName, u.LastName lName, u.PhoneNumber phNumber, r.[Name] roleName, \n" +
                 " c.UserId cashierId, c.CashPaymentAllowed CashPay, c.CCNumber Card, c.CCBank Bank, c.CCNote Note, c.CCQRCode QrCode\n" +
@@ -166,15 +164,12 @@ public class ProfileRepositoryImplementation {
                 " LEFT JOIN Cashier c ON u.id = c.UserId \n" +
                 " LEFT JOIN  [Role] r on u.RoleId = r.id \n" +
                 " WHERE u.Active = 'Y';";
-
-
         List<ProfileEntity> entityList;
 
         entityList = jdbcTemplate.query(query, new RowMapper<ProfileEntity>() {
 
             @Override
             public ProfileEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
-
 
                 ProfileEntity profile = new ProfileEntity();
                 CashierEntity cashier = new CashierEntity();
@@ -199,31 +194,21 @@ public class ProfileRepositoryImplementation {
                 profile.setUserEntity(user);
                 profile.setCashierEntity(cashier);
 
-
                 return profile;
             }
         });
-
         return entityList;
-
     }
 
 
     public ProfileEntity delete(Long id) {
-
-
         Optional<ProfileEntity> entity = findById(id);
-
         if (entity.isPresent()) {
-
             String query = "Update [User] SET Active = 'N' where id = ?";
             jdbcTemplate.update(query, id);
             return entity.get();
-
         }
-
         throw new NotUpdateException();
-
     }
 
     public Optional<Long> getCurrentCashierUserIdByEmail(String email) {
@@ -281,11 +266,7 @@ public class ProfileRepositoryImplementation {
         });
     }
 
-
-
-
-
-    public ProfileEntity updateCurrentCashierInSumOrd(Long id){
+    public ProfileEntity updateCurrentCashierInSumOrd(Long id) {
 
 
         String sql = "UPDATE OrderSummary SET CashierId = ? where id =  (" +
@@ -299,7 +280,7 @@ public class ProfileRepositoryImplementation {
             jdbcTemplate.update(sql,
                     id);
         } catch (EmptyResultDataAccessException e) {
-           e.printStackTrace();
+
         }
         return findById(id).orElse(null);
     }

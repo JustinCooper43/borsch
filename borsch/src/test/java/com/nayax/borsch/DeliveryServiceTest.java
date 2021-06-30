@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @SpringBootTest
 public class DeliveryServiceTest {
@@ -18,11 +18,11 @@ public class DeliveryServiceTest {
 
     @Test
     public void dummyDeliverySummaryTest() {
-        ResponseDto<PageDto<RespOrderDeliveryDto>> response = deliveryService.getPagedDeliveryInfo(1, 5, LocalDateTime.now());
+        ResponseDto<PageDto<RespOrderDeliveryDto>> response = deliveryService.getPagedDeliveryInfo(1, 5, LocalDate.now());
 
         Assertions.assertNotNull(response);
         Assertions.assertNotNull(response.getData());
         Assertions.assertNotNull(response.getData().getResponseList());
-        Assertions.assertNotNull(response.getData().getResponseList().get(0));
+        Assertions.assertNotEquals(0, response.getData().getResponseList().size());
     }
 }

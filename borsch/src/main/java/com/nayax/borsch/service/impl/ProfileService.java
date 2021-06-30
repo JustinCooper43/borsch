@@ -15,6 +15,8 @@ import com.nayax.borsch.model.entity.user.ProfileEntity;
 import com.nayax.borsch.model.entity.user.UserEntity;
 import com.nayax.borsch.repository.impl.ProfileRepositoryImplementation;
 import com.nayax.borsch.repository.impl.RepositoryOrderSummaryImpl;
+import com.nayax.borsch.validation.enums.ValidationAction;
+import com.nayax.borsch.validation.testvalid.config.ConfigRepo;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,8 +32,6 @@ public class ProfileService {
 
     @Autowired
     ProfileRepositoryImplementation repo;
-
-
 
     public ResponseDto<RespProfileDto> add(ReqProfileAddDto dto) {
         ProfileEntity entity = ProfileMapper.toAddEntity(dto);

@@ -4,9 +4,9 @@ import com.nayax.borsch.model.entity.PageEntity;
 import com.nayax.borsch.model.entity.assortment.GeneralPriceItemEntity;
 import com.nayax.borsch.repository.CrudItemGenericRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.*;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -52,7 +52,7 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
     @Override
     public GeneralPriceItemEntity update(GeneralPriceItemEntity entity, TablesType nameTable) {
 
-        String table = String.valueOf(nameTable);
+        String table = getNameTable(nameTable);
 
         String sql = " declare @table nvarchar(20) = ? " +
                 " declare @name nvarchar(12) =  ? " +
@@ -85,7 +85,7 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
 
     @Override
     public Optional<GeneralPriceItemEntity> findById(Long id, TablesType nameTable) {
-        String table = String.valueOf(nameTable);
+        String table = getNameTable(nameTable);
         String sql = " declare @table nvarchar(20) = ? " +
                 " declare @id bigint = ? " +
                 " declare @SqlStr nvarchar(max)  " +
@@ -115,7 +115,7 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
 
     @Override
     public List<GeneralPriceItemEntity> findAll(TablesType nameTable) {
-        String table = String.valueOf(nameTable);
+        String table = getNameTable(nameTable);
         String sql = " declare @table nvarchar(20) = ? " +
                 " declare @SqlStr nvarchar(max) " +
                 " set @SqlStr = ' SELECT id, [Name] , Cost  FROM ' + @table + ' WHERE Active LIKE ''Y'' ' " +
@@ -158,7 +158,7 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
 
     @Override
     public Optional<GeneralPriceItemEntity> delete(Long id, TablesType nameTable) {
-        String table = String.valueOf(nameTable);
+        String table = getNameTable(nameTable);
 
         String sql = " declare @table nvarchar(20) = ? " +
                 " declare @id bigint = ? " +
@@ -177,7 +177,7 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
     @Override
     public PageEntity<GeneralPriceItemEntity> findAllPage(int page, int pageSize, TablesType nameTable) {
 
-        String table = String.valueOf(nameTable);
+        String table = getNameTable(nameTable);
 
         String sql = " declare @page int = ?  " +
                 " declare @pageSize int = ?  " +
@@ -191,7 +191,7 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
                 " from @TableResult " +
                 " order by id " +
                 " offset @pageSize*(@page-1) rows fetch next @pageSize rows only ) sub  " +
-                " right join (SELECT count(*) FROM @TableResult) c (total) on 1=1 " ;
+                " right join (SELECT count(*) FROM @TableResult) c (total) on 1=1 ";
 
         List<GeneralPriceItemEntity> listItems;
         PageEntity<GeneralPriceItemEntity> listItemsPage = new PageEntity<>();
@@ -203,7 +203,7 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
                 entity.setId((Long) rs.getObject("id"));
                 entity.setName((String) rs.getObject("Name"));
                 entity.setPrice((BigDecimal) rs.getObject("Cost"));
-                listItemsPage.setTotalElements((int)rs.getShort("total"));
+                listItemsPage.setTotalElements((int) rs.getShort("total"));
                 return entity;
             }
         }, page, pageSize, table);
