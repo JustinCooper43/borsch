@@ -3,6 +3,9 @@ package com.nayax.borsch.configuration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.spi.DocumentationType;
@@ -52,5 +55,10 @@ public class SwaggerConfig {
                         .title(title)
                         .description(format(description, version))
                         .build());
+    }
+
+    @Bean
+    public MyCorsFilter corsFilter() {
+        return new MyCorsFilter();
     }
 }
