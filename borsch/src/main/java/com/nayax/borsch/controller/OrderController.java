@@ -104,8 +104,9 @@ public class OrderController {
 
     @GetMapping("/delivery")
     public ResponseEntity<ResponseDto<PageDto<RespOrderDeliveryDto>>> getDelivery(
-            @RequestParam Integer page, @RequestParam Integer pageSize, @RequestParam(required = false) LocalDate dateTime) {
-        ResponseDto<PageDto<RespOrderDeliveryDto>> response = deliveryService.getPagedDeliveryInfo(page, pageSize, dateTime);
+            @RequestParam Integer page, @RequestParam Integer pageSize, @RequestParam(required = false) String dateStr) {
+        LocalDate date = LocalDate.parse(dateStr);
+        ResponseDto<PageDto<RespOrderDeliveryDto>> response = deliveryService.getPagedDeliveryInfo(page, pageSize, date);
         return ResponseEntity.ok(response);
     }
 

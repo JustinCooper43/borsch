@@ -10,9 +10,11 @@ import com.nayax.borsch.model.dto.user.request.ReqProfileUpDto;
 import com.nayax.borsch.model.dto.user.request.ReqUserAddDto;
 import com.nayax.borsch.model.dto.user.response.RespProfileDto;
 import com.nayax.borsch.model.dto.user.response.nested.RespLoginCashierDto;
+import com.nayax.borsch.model.entity.user.CashierEntity;
 import com.nayax.borsch.model.entity.user.ProfileEntity;
 import com.nayax.borsch.model.entity.user.UserEntity;
 import com.nayax.borsch.repository.impl.ProfileRepositoryImplementation;
+import com.nayax.borsch.repository.impl.RepositoryCashierImplementation;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,29 +28,38 @@ import java.util.stream.Collectors;
 public class ProfileService {
 
     @Autowired
-    ProfileRepositoryImplementation repo;
-
+    ProfileRepositoryImplementation profileRepository;
+    @Autowired
+    RepositoryCashierImplementation cashierRepository;
 
     public ResponseDto<RespProfileDto> add(ReqProfileAddDto dto) {
         ProfileEntity entity = ProfileMapper.toAddEntity(dto);
         entity.getUserEntity().setActive("Y");
-        RespProfileDto respProfileDto = ProfileMapper.toDto(repo.add(entity));
+        RespProfileDto respProfileDto = ProfileMapper.toDto(profileRepository.add(entity));
         return new ResponseDto<>(respProfileDto);
     }
 
     public ResponseDto<RespProfileDto> update(ReqProfileUpDto dto) {
         ProfileEntity entity = ProfileMapper.toUpEntity(dto);
-        RespProfileDto respProfileDto = ProfileMapper.toDto(repo.update(entity));
+        Optional<CashierEntity> cashier = cashierRepository.findById(entity.getUserEntity().getId());
+        entity.getCashierEntity().setUserId(entity.getUserEntity().getId());
+        if (cashier.isPresent()) {
+            entity.getCashierEntity().setId(cashier.get().getId());
+            cashierRepository.update(entity.getCashierEntity());
+        } else if (entity.getCashierEntity().isCashPaymentAllowed() || entity.getCashierEntity().getCardNumber() != null) {
+            cashierRepository.add(entity.getCashierEntity());
+        }
+        RespProfileDto respProfileDto = ProfileMapper.toDto(profileRepository.update(entity));
         return new ResponseDto<>(respProfileDto);
     }
 
     public ResponseDto<RespProfileDto> delete(Long id) {
-        RespProfileDto respProfileDto = ProfileMapper.toDto(repo.delete(id));
+        RespProfileDto respProfileDto = ProfileMapper.toDto(profileRepository.delete(id));
         return new ResponseDto<>(respProfileDto);
     }
 
     public ResponseDto<RespProfileDto> getById(Long id) {
-        Optional<ProfileEntity> entity = repo.findById(id);
+        Optional<ProfileEntity> entity = profileRepository.findById(id);
         ResponseDto<RespProfileDto> response = new ResponseDto<>();
         if (entity.isPresent()) {
             response.setData(ProfileMapper.toDto(entity.get()));
@@ -61,7 +72,7 @@ public class ProfileService {
     }
 
     public ResponseDto<List<RespProfileDto>> getAll() {
-        List<ProfileEntity> entityList = repo.findAll();
+        List<ProfileEntity> entityList = profileRepository.findAll();
         List<RespProfileDto> respProfileDtos = entityList.stream().map(ProfileMapper::toDto).collect(Collectors.toList());
         return new ResponseDto<>(respProfileDtos);
     }
@@ -70,7 +81,7 @@ public class ProfileService {
         Long currentCashierId;
         ProfileEntity user = null;
         List<ErrorDto> listErrors = new ArrayList<>();
-        Optional<Long> currentCashier = repo.getCurrentCashierUserIdByEmail(email);
+        Optional<Long> currentCashier = profileRepository.getCurrentCashierUserIdByEmail(email);
         if (currentCashier.isPresent()) {
             currentCashierId = currentCashier.get();
         } else {
@@ -79,7 +90,7 @@ public class ProfileService {
             e.setMessage("Cashier Id by email %s not found " + email);
             listErrors.add(e);
         }
-        Optional<ProfileEntity> currentUser = repo.findByEmail(email);
+        Optional<ProfileEntity> currentUser = profileRepository.findByEmail(email);
         if (currentUser.isPresent()) {
             user = currentUser.get();
         } else {
@@ -90,8 +101,8 @@ public class ProfileService {
         ResponseDto<RespLoginCashierDto> response = new ResponseDto<>();
         if (user != null) {
             RespLoginCashierDto dto = Mappers.getMapper(UserMapper.class).toLoginDto(user);
-            if (user.getCashierEntity().getCashierId() != null
-                    && user.getCashierEntity().getCashierId().equals(currentCashierId)) {
+            if (user.getCashierEntity().getUserId() != null
+                    && user.getCashierEntity().getUserId().equals(currentCashierId)) {
                 dto.setCashier(true);
             }
             response.setData(dto);
@@ -107,7 +118,7 @@ public class ProfileService {
         UserEntity userEntity = Mappers.getMapper(UserMapper.class).toAddEntity(dto);
         userEntity.setActive("Y");
         profileEntity.setUserEntity(userEntity);
-        RespProfileDto respProfileDto = ProfileMapper.toDto(repo.add(profileEntity));
+        RespProfileDto respProfileDto = ProfileMapper.toDto(profileRepository.add(profileEntity));
         resp.setCashier(false);
         resp.seteMail(respProfileDto.getUser().geteMail());
         resp.setRole(respProfileDto.getUser().getRole());
@@ -119,12 +130,12 @@ public class ProfileService {
     }
 
     public ResponseDto<RespProfileDto> updateCurrentCashierInSumOrd(Long id) {
-        RespProfileDto respProfileDto = ProfileMapper.toDto(repo.updateCurrentCashierInSumOrd(id));
+        RespProfileDto respProfileDto = ProfileMapper.toDto(profileRepository.updateCurrentCashierInSumOrd(id));
         return new ResponseDto<>(respProfileDto);
     }
 
     public ResponseDto<RespProfileDto> getCurrentCashier() {
-        RespProfileDto respProfileDto = ProfileMapper.toDto(repo.findById(repo.latestOrderSummaryCashier()).get());
+        RespProfileDto respProfileDto = ProfileMapper.toDto(profileRepository.findById(profileRepository.latestOrderSummaryCashier()).get());
         return new ResponseDto<>(respProfileDto);
     }
 }
