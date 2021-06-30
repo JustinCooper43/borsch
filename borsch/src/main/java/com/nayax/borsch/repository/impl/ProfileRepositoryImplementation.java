@@ -103,15 +103,15 @@ public class ProfileRepositoryImplementation {
     }
 
 
-    public Optional<ProfileEntity> findById(Long id) {
+    public Optional<ProfileEntity> findById(Long userId) {
 
-        String sql = "SELECT u.id  userId, u.Active activeUser, u.RoleId roleId, \n" +
-                " u.Email userEmail, u.FirstName fName, u.LastName lName, u.PhoneNumber phNumber, r.[Name] roleName, \n" +
-                " c.id cashierId, c.CashPaymentAllowed CashPay, c.CCNumber Card, c.CCBank Bank, c.CCNote Note, c.CCQRCode QrCode\n" +
-                " FROM [User] u\n" +
-                " LEFT JOIN Cashier c ON u.id = c.UserId \n" +
-                " LEFT JOIN  [Role] r on u.RoleId = r.id \n" +
-                " WHERE u.id = ? AND u.Active = 'Y';";
+        String sql = " SELECT u.id  userId, u.Active activeUser, u.RoleId roleId, " +
+                " u.Email userEmail, u.FirstName fName, u.LastName lName, u.PhoneNumber phNumber, r.[Name] roleName, " +
+                " c.id cashierId, c.CashPaymentAllowed CashPay, c.CCNumber Card, c.CCBank Bank, c.CCNote Note, c.CCQRCode QrCode " +
+                " FROM [User] u " +
+                " LEFT JOIN Cashier c ON u.id = c.UserId " +
+                " LEFT JOIN  [Role] r on u.RoleId = r.id " +
+                " WHERE u.id = ? AND u.Active = 'Y'; ";
 
         Optional<ProfileEntity> result = Optional.empty();
 
@@ -146,11 +146,11 @@ public class ProfileRepositoryImplementation {
 
                     return profile;
                 }
-            }, id);
+            }, userId);
             result = Optional.ofNullable(profileEntity);
         } catch (EmptyResultDataAccessException e) {
 
-            System.err.printf("Profile %s not found\n", id == null ? null : id.toString());
+            System.err.printf("Profile %s not found\n", userId == null ? null : userId.toString());
         }
         return result;
     }
@@ -159,7 +159,7 @@ public class ProfileRepositoryImplementation {
     public List<ProfileEntity> findAll() {
         String query = "SELECT u.id  userId, u.Active activeUser, u.RoleId roleId, \n" +
                 " u.Email userEmail, u.FirstName fName, u.LastName lName, u.PhoneNumber phNumber, r.[Name] roleName, \n" +
-                " c.UserId cashierId, c.CashPaymentAllowed CashPay, c.CCNumber Card, c.CCBank Bank, c.CCNote Note, c.CCQRCode QrCode\n" +
+                " c.id cashierId, c.CashPaymentAllowed CashPay, c.CCNumber Card, c.CCBank Bank, c.CCNote Note, c.CCQRCode QrCode\n" +
                 " FROM [User] u\n" +
                 " LEFT JOIN Cashier c ON u.id = c.UserId \n" +
                 " LEFT JOIN  [Role] r on u.RoleId = r.id \n" +
@@ -234,6 +234,41 @@ public class ProfileRepositoryImplementation {
         return result;
     }
 
+    public Optional<ProfileEntity> findByEmail(String email) {
+        String sql = " SELECT u.id  userId, u.Active activeUser, u.RoleId roleId, " +
+                " u.Email userEmail, u.FirstName fName, u.LastName lName, " +
+                " u.PhoneNumber phNumber, r.[Name] roleName, c.id cashierId " +
+                " FROM [User] u " +
+                " LEFT JOIN Cashier c ON u.id = c.UserId " +
+                " LEFT JOIN  [Role] r on u.RoleId = r.id " +
+                " WHERE u.Email LIKE ? AND u.Active = 'Y' ; ";
+        try {
+            List<ProfileEntity> profileEntity = jdbcTemplate.query(sql, new RowMapper<ProfileEntity>() {
+                @Override
+                public ProfileEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
+                    ProfileEntity profile = new ProfileEntity();
+                    CashierEntity cashier = new CashierEntity();
+                    UserEntity user = new UserEntity();
+                    user.setId((Long) rs.getObject("userId"));
+                    user.setActive(rs.getString("activeUser"));
+                    user.setRoleId((Long) rs.getObject("roleId"));
+                    user.seteMail(rs.getNString("userEmail"));
+                    user.setFirstName(rs.getNString("fName"));
+                    user.setLastName(rs.getNString("lName"));
+                    user.setPhone(rs.getNString("phNumber"));
+                    user.setRoleName(rs.getNString("roleName"));
+                    cashier.setCashierId((Long) rs.getObject("cashierId"));
+                    profile.setUserEntity(user);
+                    profile.setCashierEntity(cashier);
+                    return profile;
+                }
+            }, email);
+            return profileEntity.size() == 1 ? Optional.ofNullable(profileEntity.get(0)) : Optional.empty();
+        } catch (EmptyResultDataAccessException e) {
+            System.err.println("Profile for email " + email + " not found");
+        }
+        return Optional.empty();
+    }
 
     public Optional<Long> getCurrentUserIdByEmail(String email) {
         String query = "SELECT id FROM [User] where email like ?";
