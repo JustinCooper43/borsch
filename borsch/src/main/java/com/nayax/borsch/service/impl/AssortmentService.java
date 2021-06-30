@@ -1,7 +1,7 @@
 package com.nayax.borsch.service.impl;
 
 import com.nayax.borsch.mapper.AssortmentMapper;
-import com.nayax.borsch.mapper.SimpleItemsMapper;
+import com.nayax.borsch.model.dto.ErrorDto;
 import com.nayax.borsch.model.dto.PageDto;
 import com.nayax.borsch.model.dto.ResponseDto;
 import com.nayax.borsch.model.dto.assortment.request.ReqAssortmentUpDto;
@@ -13,6 +13,9 @@ import com.nayax.borsch.repository.impl.RepositoryAssortmentImpl;
 import com.nayax.borsch.repository.impl.RepositoryOrderSummaryImpl;
 import com.nayax.borsch.repository.impl.RepositoryShawarmaTypeImpl;
 import com.nayax.borsch.utility.PageDtoBuilder;
+import com.nayax.borsch.validation.config.AssortmentValidationConfig;
+import com.nayax.borsch.validation.enums.ValidationAction;
+import com.nayax.borsch.validation.testvalid.config.ConfigRepo;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,9 +34,6 @@ public class AssortmentService {
 
     @Autowired
     RepositoryShawarmaTypeImpl shawarmaType;
-
-    @Autowired
-    RepositoryOrderSummaryImpl repositoryOrderSummary;
 
     public ResponseDto<PageDto<RespAssortmentDto>> getAllAssortment(int page,int pageSize){
 
@@ -64,20 +64,27 @@ public class AssortmentService {
     }
 
 
-    public ResponseDto<RespAssortmentDto> updateAssortment(ReqAssortmentUpDto reqAssortmentUpDto){
-        assortmentRepository.update(Mappers.getMapper(AssortmentMapper.class).toAssortmentUpdateEntity(reqAssortmentUpDto));
+    public ResponseDto<RespAssortmentDto> updateAssortment(ReqAssortmentUpDto dto){
+        List<ErrorDto> errors = AssortmentValidationConfig.getValidator().validate(dto.getDish(), ValidationAction.ASSORTMEN_UPDATE);
+        for (Long l: dto.getRemarks()) {
+            errors.addAll(ConfigRepo.getValidatorRemark().validate(l,ValidationAction.REMARK_UPDATE));
+        }
+        for (Long l : dto.getAdditions()){
+            errors.addAll(ConfigRepo.getValidatorRemark().validate(l,ValidationAction.ADDITIONS_UPDATE));
+        }
+        assortmentRepository.update(Mappers.getMapper(AssortmentMapper.class).toAssortmentUpdateEntity(dto));
         AssortmentRespEntity respEntity = new AssortmentRespEntity();
-        respEntity.setDish(shawarmaType.findById(reqAssortmentUpDto.getDish()).get());
+        respEntity.setDish(shawarmaType.findById(dto.getDish()).get());
         Set<Long> ids = new HashSet<>();
-        ids.add(reqAssortmentUpDto.getDish());
+        ids.add(respEntity.getDish().getId());
         Map<ShawarmaItemEntity,List<GeneralPriceItemEntity>> rem = assortmentRepository.findAllRemarks(ids);
         ShawarmaItemEntity shawarmaItemEntity = new ShawarmaItemEntity();
-        shawarmaItemEntity.setId(reqAssortmentUpDto.getDish());
+        shawarmaItemEntity.setId(dto.getDish());
         respEntity.setRemarks(rem.get(shawarmaItemEntity));
         Map<ShawarmaItemEntity,List<GeneralPriceItemEntity>> add = shawarmaType.getAdditionsByShawarwa(ids);
         respEntity.setAdditions(add.get(shawarmaItemEntity));
         respEntity.setHalfAble(respEntity.getDish().isHalfAble());
-        RespAssortmentDto dto = Mappers.getMapper(AssortmentMapper.class).assortmentEntityToDto(respEntity);
-        return new ResponseDto<>(dto);
+        RespAssortmentDto result = Mappers.getMapper(AssortmentMapper.class).assortmentEntityToDto(respEntity);
+        return new ResponseDto<>(result);
     }
 }

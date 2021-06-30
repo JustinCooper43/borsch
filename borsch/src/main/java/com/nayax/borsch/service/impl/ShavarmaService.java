@@ -11,6 +11,10 @@ import com.nayax.borsch.model.dto.assortment.response.RespSimplePriceItemDto;
 import com.nayax.borsch.model.entity.PageEntity;
 import com.nayax.borsch.model.entity.assortment.ShawarmaItemEntity;
 import com.nayax.borsch.repository.impl.RepositoryShawarmaTypeImpl;
+import com.nayax.borsch.validation.componentimpl.SimpleValidatorComponent;
+import com.nayax.borsch.validation.config.DishValidationConfig;
+import com.nayax.borsch.validation.config.DrinkAdditionValidationConfig;
+import com.nayax.borsch.validation.enums.ValidationAction;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,22 +29,30 @@ public class ShavarmaService {
     RepositoryShawarmaTypeImpl repositoryShawarmaType;
 
     public ResponseDto<RespSimplePriceItemDto> addDish(ReqSimplePriceItemAddDto dto) {
+        List<ErrorDto> errors = DishValidationConfig.getValidator().validate(dto, ValidationAction.DISH_ADD);
+        if(errors.size() > 0) {
+            return new ResponseDto<>(errors);
+        }
         ShawarmaItemEntity entity = repositoryShawarmaType.add(Mappers.getMapper(AssortmentMapper.class).toShawarmaItemEntity(dto));
         RespSimplePriceItemDto respDto = Mappers.getMapper(AssortmentMapper.class).toRespSimplePriceItemDto(entity);
         return new ResponseDto<>(respDto);
     }
 
     public ResponseDto<RespSimplePriceItemDto> updateDish(ReqSimplePriceItemUpDto dto) {
-        ShawarmaItemEntity entity = repositoryShawarmaType.update(Mappers.getMapper(AssortmentMapper.class).toShawarmaItemEntity(dto));
-        RespSimplePriceItemDto respDto = Mappers.getMapper(AssortmentMapper.class).toRespSimplePriceItemDto(entity);
+        ShawarmaItemEntity entity = Mappers.getMapper(AssortmentMapper.class).toShawarmaItemEntity(dto);
+        List<ErrorDto> errors = DishValidationConfig.getValidator().validate(dto.getId(), ValidationAction.DISH_UPDATE);
+        if(errors.size() > 0) {
+            return new ResponseDto<>(errors);
+        }
+        ShawarmaItemEntity res = repositoryShawarmaType.update(entity);
+        RespSimplePriceItemDto respDto = Mappers.getMapper(AssortmentMapper.class).toRespSimplePriceItemDto(res);
         return new ResponseDto<>(respDto);
     }
 
     public ResponseDto<RespSimplePriceItemDto> deleteDish(Long id) {
-
         Optional<ShawarmaItemEntity> entity = repositoryShawarmaType.delete(id);
         ResponseDto<RespSimplePriceItemDto> response = new ResponseDto<>();
-        if (entity.isPresent()) {
+        if (entity.get().getId() != null) {
             response.setData(Mappers.getMapper(AssortmentMapper.class).toRespSimplePriceItemDto(entity.get()));
         } else {
             ErrorDto e = new ErrorDto();
@@ -49,8 +61,6 @@ public class ShavarmaService {
         }
         return response;
     }
-
-    //TODO get dish by page
 
     public ResponseDto<PageDto<RespSimplePriceItemDto>> getDishByPage(int page, int pageSize) {
 

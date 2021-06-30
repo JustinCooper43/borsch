@@ -95,24 +95,21 @@ public class OrderSummaryInfoService {
     }
 
 
-    public ResponseDto<PageDto<RespOrderSumDto>> getSummaryOrder(LocalDate date, int page, int pageSize){
+    public ResponseDto<PageDto<RespOrderSumDto>> getSummaryOrder(LocalDate date, int page, int pageSize) {
         List<OrderSummaryEntity> orderSum = orderSummary.findAll(date);
         Map<Long, BigDecimal> pay = paymentRepository.getSumPaymentByUser(date);
 
-
-        for (OrderSummaryEntity order: orderSum) {
+        for (OrderSummaryEntity order : orderSum) {
             BigDecimal sum = new BigDecimal("0");
             for (OrderEntity entity : order.getOrders()) {
-               sum = sum.add(entity.getDish().getPrice()).add(entity.getDrink().getPrice());
-                for (GeneralPriceItemEntity general : entity.getAdditions()){
+                sum = sum.add(entity.getDish().getPrice()).add(entity.getDrink().getPrice());
+                for (GeneralPriceItemEntity general : entity.getAdditions()) {
                     sum = sum.add(general.getPrice());
                 }
             }
             order.setPayedSum(pay.get(order.getUser().getId()));
             order.setTotalOrdersCost(sum);
         }
-
-        
         int totalElements = orderSum.size();
         int pageFrom = (page - 1) * pageSize;
         int pageTo = Math.min(pageFrom + pageSize, totalElements);
@@ -134,7 +131,4 @@ public class OrderSummaryInfoService {
                 .build();
         return new ResponseDto<>(responsePage);
     }
-
-
-
 }

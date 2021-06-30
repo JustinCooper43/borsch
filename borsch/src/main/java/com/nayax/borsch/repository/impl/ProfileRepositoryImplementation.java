@@ -309,11 +309,12 @@ public class ProfileRepositoryImplementation {
                 "ORDER BY OrderSummary.StartTime DESC " +
                 ");";
 
+
         try {
             jdbcTemplate.update(sql,
                     id);
         } catch (EmptyResultDataAccessException e) {
-            e.printStackTrace();
+
         }
         return findById(id).orElse(null);
     }

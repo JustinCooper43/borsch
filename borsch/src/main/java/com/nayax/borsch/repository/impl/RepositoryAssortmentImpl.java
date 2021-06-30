@@ -118,7 +118,7 @@ public class RepositoryAssortmentImpl {
 
         String sqlInsert1 = "Insert into RemarkAllowedShawarmaType (ShawarmaTypeId,RemarkId,Active) values(?,?,?)";
         String sqlInsert2 = "Insert into AdditionAllowedShawarmaType (ShawarmaTypeId,AllowedAdditionId,Active) values(?,?,?)";
-        jdbcTemplate.update(sqlUpdate, entity.getDish(), entity.getDish(), entity.isHalfAble() ? 1 : 0, entity.getDish());
+        jdbcTemplate.update(sqlUpdate,entity.getDish(),entity.getDish(),entity.isHalfAble() ? 1 : 0, entity.getDish());
         jdbcTemplate.batchUpdate(sqlInsert1, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
@@ -143,8 +143,6 @@ public class RepositoryAssortmentImpl {
                 return entity.getAdditionsId().size();
             }
         });
-//        AssortmentRespEntity respEntity = new AssortmentRespEntity();
-//        respEntity.
         return null;
     }
 }

@@ -2,6 +2,7 @@ package com.nayax.borsch.validation.config;
 
 import com.nayax.borsch.model.dto.assortment.request.ReqSimpleItemAddDto;
 import com.nayax.borsch.model.dto.assortment.request.ReqSimpleItemUpDto;
+import com.nayax.borsch.repository.impl.AdditionsRepository;
 import com.nayax.borsch.validation.Validator;
 import com.nayax.borsch.validation.componentimpl.SimpleValidatorComponent;
 import com.nayax.borsch.validation.enums.ValidationAction;
@@ -12,6 +13,8 @@ import java.util.List;
 public class RemarkValidationConfig {
 
     private static final Validator validatorRemark = new ValidatorImpl();
+    private static final AdditionsRepository additionsRepository= new AdditionsRepository();
+
 
     static{
 
