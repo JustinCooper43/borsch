@@ -75,7 +75,6 @@ public class ProfileRepositoryImplementation {
         String sql = "Declare @mainId bigint = ?; " +
                 "UPDATE [User] " +
                 "SET Active  = ?, " +
-                "RoleId  = ?, " +
                 "Email  = ?, " +
                 "FirstName  = ?, " +
                 "LastName = ?, " +
@@ -93,7 +92,7 @@ public class ProfileRepositoryImplementation {
 
 
         jdbcTemplate.update(sql, entity.getUserEntity().getId(), entity.getUserEntity().getActive(),
-                entity.getUserEntity().getRoleId(), entity.getUserEntity().geteMail(), entity.getUserEntity().getFirstName(),
+                entity.getUserEntity().geteMail(), entity.getUserEntity().getFirstName(),
                 entity.getUserEntity().getLastName(), entity.getUserEntity().getPhone(), entity.getCashierEntity().isCashPaymentAllowed(),
                 entity.getCashierEntity().getCardNumber(), entity.getCashierEntity().getCardBank(), entity.getCashierEntity().getCardNote(),
                 entity.getCashierEntity().getCardQrCode());
