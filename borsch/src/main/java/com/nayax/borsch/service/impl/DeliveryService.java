@@ -17,6 +17,7 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,9 +30,9 @@ public class DeliveryService {
     @Autowired
     DeliverySummaryRepository deliverySummaryRepository;
 
-    public ResponseDto<PageDto<RespOrderDeliveryDto>> getPagedDeliveryInfo(int page, int pageSize, LocalDateTime date) {
+    public ResponseDto<PageDto<RespOrderDeliveryDto>> getPagedDeliveryInfo(int page, int pageSize, LocalDate date) {
         if (date == null) {
-            date = LocalDateTime.now();
+            date = LocalDate.now();
         }
         OrderSumTimerEntity timerEntity = deliverySummaryRepository.getTimerBeforeDate(date);
         List<OrderEntity> orderList = deliverySummaryRepository.getByOrderSummaryId(timerEntity.getId());
@@ -52,7 +53,7 @@ public class DeliveryService {
             OrderDeliveryEntity composed = new OrderDeliveryEntity();
             composed.setOrder(e);
             composed.setQuantity(orders.get(e));
-            composed.setOrderDate(e.getCreationTime());
+            composed.setOrderDate(e.getCreationTime().toLocalDate());
             responseEntity.add(composed);
         }
         for (GeneralPriceItemEntity e : drinks.keySet()) {

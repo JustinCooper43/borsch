@@ -64,15 +64,15 @@ public class AssortmentService {
     }
 
 
-    public ResponseDto<RespAssortmentDto> updateAssortment(Long id, ReqAssortmentUpDto reqAssortmentUpDto){
-        assortmentRepository.update(id,Mappers.getMapper(AssortmentMapper.class).toAssortmentUpdateEntity(reqAssortmentUpDto));
+    public ResponseDto<RespAssortmentDto> updateAssortment(ReqAssortmentUpDto reqAssortmentUpDto){
+        assortmentRepository.update(Mappers.getMapper(AssortmentMapper.class).toAssortmentUpdateEntity(reqAssortmentUpDto));
         AssortmentRespEntity respEntity = new AssortmentRespEntity();
-        respEntity.setDish(shawarmaType.findById(id).get());
+        respEntity.setDish(shawarmaType.findById(reqAssortmentUpDto.getDish()).get());
         Set<Long> ids = new HashSet<>();
-        ids.add(id);
+        ids.add(reqAssortmentUpDto.getDish());
         Map<ShawarmaItemEntity,List<GeneralPriceItemEntity>> rem = assortmentRepository.findAllRemarks(ids);
         ShawarmaItemEntity shawarmaItemEntity = new ShawarmaItemEntity();
-        shawarmaItemEntity.setId(id);
+        shawarmaItemEntity.setId(reqAssortmentUpDto.getDish());
         respEntity.setRemarks(rem.get(shawarmaItemEntity));
         Map<ShawarmaItemEntity,List<GeneralPriceItemEntity>> add = shawarmaType.getAdditionsByShawarwa(ids);
         respEntity.setAdditions(add.get(shawarmaItemEntity));
