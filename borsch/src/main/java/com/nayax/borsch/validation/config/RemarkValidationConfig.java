@@ -50,10 +50,6 @@ public class RemarkValidationConfig {
                 obj -> ((ReqSimpleItemUpDto) obj).getId() != null && ((ReqSimpleItemUpDto) obj).getId() > 1,
                 "Id of updated item is invalid", "id"));
 
-        validatorRemark.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.REMARK_UPDATE),
-                obj  -> ((ReqSimpleItemUpDto) obj).getId() != null && ((ReqSimpleItemUpDto) obj).getId() > 1,
-                "Id of updated item is invalid"));
-
     }
 
     public static Validator getValidatorRemark() {

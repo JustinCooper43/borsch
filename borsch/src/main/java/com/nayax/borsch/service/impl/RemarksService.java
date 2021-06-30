@@ -38,7 +38,7 @@ public class RemarksService {
     public ResponseDto<RespSimpleItemDto> editRemarkItem(ReqSimpleItemUpDto dto, TablesType tableType) {
 
         List<ErrorDto> errors = ConfigRepo.getValidatorRemark().validate(dto, ValidationAction.REMARK_UPDATE);
-        if(errors.size() > 0) {
+        if (errors.size() > 0) {
             return new ResponseDto<>(errors);
         }
 
@@ -46,6 +46,7 @@ public class RemarksService {
         RespSimpleItemDto respDto = Mappers.getMapper(SimpleItemsMapper.class).toItemDto(entity);
         return new ResponseDto<>(respDto);
     }
+
     public ResponseDto<PageDto<RespSimpleItemDto>> getRemarkItemPage(int page, int pageSize, TablesType tableType) {
 
         PageEntity<GeneralPriceItemEntity> listEntity = additionsRepository.findAllPage(page, pageSize, tableType);
@@ -61,32 +62,28 @@ public class RemarksService {
         return new ResponseDto<>(listRespDto);
     }
 
-    public ResponseDto<RespSimpleItemDto> getRemarkItemById(Long id,TablesType nameTable){
-        Optional<GeneralPriceItemEntity> entity =  additionsRepository.findById(id, nameTable);
-        ResponseDto<RespSimpleItemDto> response = new ResponseDto<>();
-        if (entity.isPresent()) {
-            response.setData(Mappers.getMapper(SimpleItemsMapper.class).toItemDto(entity.get()));
-        } else {
-            ErrorDto e = new ErrorDto();
-            e.setMessage("Item is not found by id " + id);
-            response.setErrors(List.of(e));
-        }
-        return response;
+    public ResponseDto<RespSimpleItemDto> getRemarkItemById(Long id, TablesType nameTable) {
+
+//        Optional<GeneralPriceItemEntity> entity =  additionsRepository.findById(id, nameTable);
+//        ResponseDto<RespSimpleItemDto> response = new ResponseDto<>();
+//        if (entity.isPresent()) {
+//            response.setData(Mappers.getMapper(SimpleItemsMapper.class).toItemDto(entity.get()));
+//        } else {
+//            ErrorDto e = new ErrorDto();
+//            e.setMessage("Item is not found by id " + id);
+//            response.setErrors(List.of(e));
+//        }
+        return null;
     }
 
-    public ResponseDto<RespSimpleItemDto> delRemarkItemById(Long id, TablesType nameTable){
+    public ResponseDto<RespSimpleItemDto> delRemarkItemById(Long id, TablesType nameTable) {
 
-        Optional<GeneralPriceItemEntity> entity =  additionsRepository.delete(id, nameTable);
-        ResponseDto<RespSimpleItemDto> response = new ResponseDto<>();
-        if (entity.isPresent()) {
-            response.setData(Mappers.getMapper(SimpleItemsMapper.class).toItemDto(entity.get()));
-        } else {
-            ErrorDto e = new ErrorDto();
-            e.setMessage("Item is not found by id " + id);
-            response.setErrors(List.of(e));
+        List<ErrorDto> errors = ConfigRepo.getValidatorRemark().validate(id, ValidationAction.REMARK_DEL);
+        if (errors.size() > 0) {
+            return new ResponseDto<>(errors);
         }
-        return response;
-
+        Optional<GeneralPriceItemEntity> entity = additionsRepository.delete(id, nameTable);
+        return new ResponseDto<>(Mappers.getMapper(SimpleItemsMapper.class).toItemDto(entity.get()));
     }
 
 }

@@ -12,6 +12,8 @@ import com.nayax.borsch.model.entity.PageEntity;
 import com.nayax.borsch.model.entity.assortment.GeneralPriceItemEntity;
 import com.nayax.borsch.repository.impl.AdditionsRepository;
 import com.nayax.borsch.repository.impl.TablesType;
+import com.nayax.borsch.validation.enums.ValidationAction;
+import com.nayax.borsch.validation.testvalid.config.ConfigRepo;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +35,15 @@ public class DrinkAdditionService {
     }
 
     public ResponseDto<RespSimplePriceItemDto> editGeneralItem(ReqSimplePriceItemUpDto dto, TablesType tableType) {
+        List<ErrorDto> errorsAddition = ConfigRepo.getValidatorRemark().validate(dto, ValidationAction.ADDITIONS_UPDATE);
+        if (errorsAddition.size() > 0) {
+            return new ResponseDto<>(errorsAddition);
+        }
+        List<ErrorDto> errorsDrink = ConfigRepo.getValidatorRemark().validate(dto, ValidationAction.DRINK_UPDATE);
+        if (errorsDrink.size() > 0) {
+            return new ResponseDto<>(errorsDrink);
+        }
+
         GeneralPriceItemEntity entity = additionsRepository.update(Mappers.getMapper(SimpleItemsMapper.class).toGeneralPriceItemEntity(dto), tableType);
         RespSimplePriceItemDto respDto = Mappers.getMapper(SimpleItemsMapper.class).toPriceItemDto(entity);
         return new ResponseDto<>(respDto);
@@ -53,31 +64,32 @@ public class DrinkAdditionService {
         return new ResponseDto<>(listRespDto);
     }
 
-    public ResponseDto<RespSimplePriceItemDto> getGeneralItemById(Long id,TablesType nameTable){
-        Optional<GeneralPriceItemEntity> entity =  additionsRepository.findById(id, nameTable);
-        ResponseDto<RespSimplePriceItemDto> response = new ResponseDto<>();
-        if (entity.isPresent()) {
-            response.setData(Mappers.getMapper(SimpleItemsMapper.class).toPriceItemDto(entity.get()));
-        } else {
-            ErrorDto e = new ErrorDto();
-            e.setMessage("Item is not found by id " + id);
-            response.setErrors(List.of(e));
-        }
-        return response;
-    }
+//    public ResponseDto<RespSimplePriceItemDto> getGeneralItemById(Long id, TablesType nameTable) {
+//        Optional<GeneralPriceItemEntity> entity = additionsRepository.findById(id, nameTable);
+//        ResponseDto<RespSimplePriceItemDto> response = new ResponseDto<>();
+//        if (entity.isPresent()) {
+//            response.setData(Mappers.getMapper(SimpleItemsMapper.class).toPriceItemDto(entity.get()));
+//        } else {
+//            ErrorDto e = new ErrorDto();
+//            e.setMessage("Item is not found by id " + id);
+//            response.setErrors(List.of(e));
+//        }
+//        return response;
+//    }
 
-    public ResponseDto<RespSimplePriceItemDto> delGeneralItemById(Long id, TablesType nameTable){
+    public ResponseDto<RespSimplePriceItemDto> delGeneralItemById(Long id, TablesType nameTable) {
 
-        Optional<GeneralPriceItemEntity> entity =  additionsRepository.delete(id, nameTable);
-        ResponseDto<RespSimplePriceItemDto> response = new ResponseDto<>();
-        if (entity.isPresent()) {
-            response.setData(Mappers.getMapper(SimpleItemsMapper.class).toPriceItemDto(entity.get()));
-        } else {
-            ErrorDto e = new ErrorDto();
-            e.setMessage("Item is not found by id " + id);
-            response.setErrors(List.of(e));
+        List<ErrorDto> errorsAddition = ConfigRepo.getValidatorRemark().validate(id, ValidationAction.ADDITIONS_DEL);
+        if (errorsAddition.size() > 0) {
+            return new ResponseDto<>(errorsAddition);
         }
-        return response;
+        List<ErrorDto> errorsDrink = ConfigRepo.getValidatorRemark().validate(id, ValidationAction.DRINK_DEL);
+        if (errorsDrink.size() > 0) {
+            return new ResponseDto<>(errorsDrink);
+        }
+
+        Optional<GeneralPriceItemEntity> entity = additionsRepository.delete(id, nameTable);
+        return new ResponseDto<>(Mappers.getMapper(SimpleItemsMapper.class).toPriceItemDto(entity.get()));
     }
 
 }
