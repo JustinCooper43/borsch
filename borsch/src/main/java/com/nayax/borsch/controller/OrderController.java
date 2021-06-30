@@ -76,8 +76,8 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<ResponseDto<List<RespOrderItemDto>>> getListOrders(Long userId, @RequestParam(required = false) String dateTime) {
-        return ResponseEntity.ok(orderItemService.getListOrder(userId, dateTime));
+    public ResponseEntity<ResponseDto<List<RespOrderItemDto>>> getListOrders(Long userId, @RequestParam(required = false) String date) {
+        return ResponseEntity.ok(orderItemService.getListOrder(userId, date));
     }
 
     @GetMapping("/history/{userId}")

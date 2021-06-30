@@ -223,19 +223,22 @@ public class OrderItemRepo {
 
     public PageEntity<OrderEntity> getPagedHistory(Long userId, int page, int pageSize) {
 
-        String query = "declare @page int = ? ;" +
-                " declare @pageSize int = ? ;" +
-                " with tmpl as(" +
-                " SELECT [Order].UserId userId , [Order].CreationTime creatTime , [Order].id orderId, [Order].Quantity quantity, [Order].CutInHalf cut, [Order].OrderSummaryId sumId,   \n" +
-                " [Order].ShawarmaTypeId [dish.id], ShawarmaType.[Name] [dish.name], ShawarmaType.Cost [dish.price], ShawarmaType.Active actShaw , ShawarmaType.Halfable shawHalv, \n" +
-                " ExtraItem.id [drink.id], ExtraItem.[Name] [drink.name], ExtraItem.Cost [drink.price], ExtraItem.Active actExtr," +
-                " [Order].RemarkId [remark.id], Remark.[Name] [remark.name],  Remark.Active actRem " +
+        String query = " declare @page int = ? ; " +
+                " declare @pageSize int = ? ; " +
+                " with tmpl as( " +
+                " SELECT [Order].UserId userId , [Order].CreationTime creatTime " +
+                ", [Order].id orderId, [Order].Quantity quantity " +
+                ", [Order].CutInHalf cut, [Order].OrderSummaryId sumId " +
+                ", [Order].ShawarmaTypeId [dish.id], ShawarmaType.[Name] [dish.name] " +
+                ", ShawarmaType.Cost [dish.price], ShawarmaType.Active actShaw , ShawarmaType.Halfable shawHalv, " +
+                " ExtraItem.id [drink.id], ExtraItem.[Name] [drink.name], ExtraItem.Cost [drink.price], ExtraItem.Active actExtr, " +
+                " [Order].RemarkId [remark.id], Remark.[Name] [remark.name],  Remark.Active actRem  " +
                 " FROM [Order] " +
-                " JOIN ShawarmaType ON ShawarmaType.id = [Order].ShawarmaTypeId  " +
+                " JOIN ShawarmaType ON ShawarmaType.id = [Order].ShawarmaTypeId " +
                 " JOIN ExtraItem ON ExtraItem.id = [Order].ExtraItemId " +
                 " JOIN Remark ON Remark.id = [Order].RemarkId " +
-                " WHERE [Order].UserId = ?" +
-                " )" +
+                " WHERE [Order].UserId = ? " +
+                " ) " +
                 " SELECT * FROM (select * from tmpl " +
                 " order by creatTime DESC " +
                 " offset @pageSize*(@page-1) rows fetch next @pageSize rows only ) sub " +

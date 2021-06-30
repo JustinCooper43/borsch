@@ -32,15 +32,15 @@ public class OrderItemService {
     RepositoryOrderSummaryImpl orderSummaryRepository;
 
 
-    public ResponseDto<List<RespOrderItemDto>> getListOrder(Long userId, String dateTime) {
+    public ResponseDto<List<RespOrderItemDto>> getListOrder(Long userId, String dateString) {
 
-        LocalDate date = LocalDate.parse(dateTime);
+        LocalDate date = LocalDate.parse(dateString);
         List<OrderEntity> listOrders = orderItemRepo.getListOrders(userId, date);
         Set<Long> setOrderId = new HashSet<>();
         for (OrderEntity entity : listOrders) {
             setOrderId.add(entity.getOrderId());
         }
-
+//TODO check if the orderId is set
         Map<Long, List<GeneralPriceItemEntity>> mapUserIdAddition = orderItemRepo.getMapAdditions(setOrderId, date);
 
         for (OrderEntity var : listOrders) {

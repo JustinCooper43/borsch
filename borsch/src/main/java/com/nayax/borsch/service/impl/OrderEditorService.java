@@ -23,21 +23,18 @@ import java.util.stream.Collectors;
 
 @Service
 public class OrderEditorService {
-
-
     @Autowired
     AdditionsRepository additionsRepository;
+    @Autowired
+    RepositoryShawarmaTypeImpl shawarmaType;
+    @Autowired
+    PriceItemRepository priceItemRepository;
 
     public ResponseDto<List<RespSimplePriceItemDto>> additionalDropdown(Long dishId) {
         List<GeneralPriceItemEntity> listEntity = additionsRepository.findAllAdditionsById(dishId);
         List<RespSimplePriceItemDto> listRespDto = Mappers.getMapper(SimpleItemsMapper.class).toListPagePriceItemDto(listEntity);
         return new ResponseDto<>(listRespDto);
     }
-
-    RepositoryShawarmaTypeImpl shawarmaType;
-
-    @Autowired
-    PriceItemRepository priceItemRepository;
 
     public List<RespAssortmentItemDto> dish() {
         List<ShawarmaItemEntity> shawarmaTypeAll = shawarmaType.findAll();
@@ -46,7 +43,6 @@ public class OrderEditorService {
                 .collect(Collectors.toList());
         return dto;
     }
-
 
     public List<RespPriceItemDto> price() {
         List<PriceItemType> priceItemTypes = priceItemRepository.getAll();
