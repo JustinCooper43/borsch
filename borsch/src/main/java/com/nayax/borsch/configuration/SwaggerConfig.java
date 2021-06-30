@@ -3,9 +3,6 @@ package com.nayax.borsch.configuration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.spi.DocumentationType;
@@ -25,11 +22,12 @@ public class SwaggerConfig {
     private String description;
     private String version;
     private String basePackage;
-    public SwaggerConfig(  @Value("${swagger.config.appName}") String appName,
-                           @Value("${swagger.config.title}") String title,
-                           @Value("${swagger.config.description}") String description,
-                           @Value("${swagger.config.basePackage}") String basePackage,
-                           @Value("${swagger.config.version}") String version){
+
+    public SwaggerConfig(@Value("${swagger.config.appName}") String appName,
+                         @Value("${swagger.config.title}") String title,
+                         @Value("${swagger.config.description}") String description,
+                         @Value("${swagger.config.basePackage}") String basePackage,
+                         @Value("${swagger.config.version}") String version) {
 
         this.appName = appName;
         this.title = title;

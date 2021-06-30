@@ -4,6 +4,8 @@ import com.nayax.borsch.model.entity.PageEntity;
 import com.nayax.borsch.model.entity.assortment.AssortmentRespEntity;
 import com.nayax.borsch.model.entity.assortment.GeneralPriceItemEntity;
 import com.nayax.borsch.model.entity.assortment.ShawarmaItemEntity;
+import com.nayax.borsch.validation.componentimpl.SimpleValidatorComponent;
+import com.nayax.borsch.validation.enums.ValidationAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -48,12 +50,11 @@ public class RepositoryShawarmaTypeImpl {
         }
         Optional<ShawarmaItemEntity> result = findById(Objects.requireNonNull(keyHolder.getKey()).longValue());
         return result.orElse(new ShawarmaItemEntity());
-//        return  jdbcTemplate.queryForObject(sql,new BeanPropertyRowMapper<>(ShawarmaItemEntity.class),
-//               entity.getName(),entity.getPrice(),entity.isHalfAble() ? 1 : 0,"Y");
     }
 
 
     public ShawarmaItemEntity update(ShawarmaItemEntity entity) {
+
         String sql = "Update ShawarmaType set [Name] = ?, Cost = ?, Halfable = ? where id = ?;";
         try {
             jdbcTemplate.update(sql,
@@ -135,10 +136,12 @@ public class RepositoryShawarmaTypeImpl {
     public Optional<ShawarmaItemEntity> delete(Long id) {
         String sql = "Update ShawarmaType set active = 'N' where id = ?";
         Optional<ShawarmaItemEntity> deleted = findById(id);
-        try {
-            jdbcTemplate.update(sql, id);
-        } catch (EmptyResultDataAccessException e) {
-            System.err.printf("Shawarma type %s can not be deleted!!\n", id);
+        if (deleted.isPresent()) {
+            try {
+                jdbcTemplate.update(sql, id);
+            } catch (EmptyResultDataAccessException e) {
+                System.err.printf("Shawarma type %s can not be deleted!!\n", id);
+            }
         }
         return deleted;
     }

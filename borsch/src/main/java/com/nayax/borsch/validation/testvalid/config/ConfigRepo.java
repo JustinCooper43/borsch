@@ -2,8 +2,6 @@ package com.nayax.borsch.validation.testvalid.config;
 
 import com.nayax.borsch.model.dto.assortment.request.ReqSimpleItemUpDto;
 import com.nayax.borsch.model.dto.assortment.request.ReqSimplePriceItemUpDto;
-import com.nayax.borsch.model.entity.assortment.GeneralPriceItemEntity;
-import com.nayax.borsch.repository.impl.AdditionsRepository;
 import com.nayax.borsch.repository.impl.TablesType;
 import com.nayax.borsch.validation.Validator;
 import com.nayax.borsch.validation.componentimpl.SimpleValidatorComponent;
@@ -43,12 +41,13 @@ public class ConfigRepo {
         validatorRemark.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.DRINK_DEL),
                 obj -> (validationUtilRepository.checkId(((Long) obj), TablesType.EXTRAITEM)),
                 "Id of updated item doesn't exist", "id"));
-
+        validatorRemark.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.DRINK_DEL),
+                obj -> (validationUtilRepository.checkId(((Long) obj), TablesType.SHAWARMA)),
+                "Id of updated item doesn't exist", "id"));
 
         validatorRemark.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.USER_ADD_EMAIL),
                 obj -> !(validationUtilRepository.checkEmail((String) obj)),
                 "Email's item is exist", "email"));
-
     }
 
     public static Validator getValidatorRemark() {
