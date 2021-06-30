@@ -14,6 +14,8 @@ import com.nayax.borsch.model.entity.PageEntity;
 import com.nayax.borsch.model.entity.assortment.GeneralPriceItemEntity;
 import com.nayax.borsch.repository.impl.AdditionsRepository;
 import com.nayax.borsch.repository.impl.TablesType;
+import com.nayax.borsch.validation.enums.ValidationAction;
+import com.nayax.borsch.validation.testvalid.config.ConfigRepo;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,8 @@ public class RemarksService {
     @Autowired
     AdditionsRepository additionsRepository;
 
+
+
     public ResponseDto<RespSimpleItemDto> addRemarkItem(ReqSimpleItemAddDto dto, TablesType tableType) {
         GeneralPriceItemEntity entity = additionsRepository.add(Mappers.getMapper(SimpleItemsMapper.class).toGeneralPriceItemEntity(dto), tableType);
         RespSimpleItemDto respDto = Mappers.getMapper(SimpleItemsMapper.class).toItemDto(entity);
@@ -34,6 +38,12 @@ public class RemarksService {
     }
 
     public ResponseDto<RespSimpleItemDto> editRemarkItem(ReqSimpleItemUpDto dto, TablesType tableType) {
+
+        List<ErrorDto> errors = ConfigRepo.getValidatorRemark().validate(dto, ValidationAction.REMARK_UPDATE);
+        if(errors.size() > 0) {
+            return new ResponseDto<>(errors);
+        }
+
         GeneralPriceItemEntity entity = additionsRepository.update(Mappers.getMapper(SimpleItemsMapper.class).toGeneralPriceItemEntity(dto), tableType);
         RespSimpleItemDto respDto = Mappers.getMapper(SimpleItemsMapper.class).toItemDto(entity);
         return new ResponseDto<>(respDto);

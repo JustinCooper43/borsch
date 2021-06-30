@@ -4,9 +4,9 @@ import com.nayax.borsch.model.entity.PageEntity;
 import com.nayax.borsch.model.entity.assortment.GeneralPriceItemEntity;
 import com.nayax.borsch.repository.CrudItemGenericRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.*;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -191,7 +191,7 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
                 " from @TableResult " +
                 " order by id " +
                 " offset @pageSize*(@page-1) rows fetch next @pageSize rows only ) sub  " +
-                " right join (SELECT count(*) FROM @TableResult) c (total) on 1=1 " ;
+                " right join (SELECT count(*) FROM @TableResult) c (total) on 1=1 ";
 
         List<GeneralPriceItemEntity> listItems;
         PageEntity<GeneralPriceItemEntity> listItemsPage = new PageEntity<>();
@@ -203,7 +203,7 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
                 entity.setId((Long) rs.getObject("id"));
                 entity.setName((String) rs.getObject("Name"));
                 entity.setPrice((BigDecimal) rs.getObject("Cost"));
-                listItemsPage.setTotalElements((int)rs.getShort("total"));
+                listItemsPage.setTotalElements((int) rs.getShort("total"));
                 return entity;
             }
         }, page, pageSize, table);
@@ -222,4 +222,23 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
         return result;
     }
 
+    public Boolean checkId(Long id, TablesType nameTable) {
+        String table = String.valueOf(nameTable);
+//        String sql = " declare @table nvarchar(20) = ? " +
+//                " declare @id bigint = ? " +
+//                " declare @SqlStr nvarchar(max)  " +
+//                " SET  @SqlStr = ' SELECT id ' + @table + ' WHERE id = ' + convert(nvarchar,@id) " +
+//                " EXEC sp_executesql @SqlStr ";
+
+        String sql = "SELECT id FROM Remark WHERE id =  ? ";
+    //        List<Long> listId = jdbcTemplate.query(sql, new RowMapper<>() {
+    //            @Override
+    //            public Long mapRow(ResultSet rs, int rowNum) throws SQLException {
+    //                return (Long) rs.getObject("id");
+    //            }
+    //        }, id);
+        List<Long> listId = jdbcTemplate.query(sql, new SingleColumnRowMapper<>(Long.class), id);
+
+        return listId.size() > 0 ;
+    }
 }
