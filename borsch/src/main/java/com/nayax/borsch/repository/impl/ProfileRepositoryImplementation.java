@@ -1,7 +1,6 @@
 package com.nayax.borsch.repository.impl;
 
 import com.nayax.borsch.exceptions.NotUpdateException;
-import com.nayax.borsch.model.entity.assortment.ShawarmaItemEntity;
 import com.nayax.borsch.model.entity.user.CashierEntity;
 import com.nayax.borsch.model.entity.user.ProfileEntity;
 import com.nayax.borsch.model.entity.user.UserEntity;
@@ -299,7 +298,7 @@ public class ProfileRepositoryImplementation {
             jdbcTemplate.update(sql,
                     id);
         } catch (EmptyResultDataAccessException e) {
-           e.printStackTrace();
+
         }
         return findById(id).orElse(null);
     }

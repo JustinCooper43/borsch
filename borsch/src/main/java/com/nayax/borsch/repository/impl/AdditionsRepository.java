@@ -52,7 +52,7 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
     @Override
     public GeneralPriceItemEntity update(GeneralPriceItemEntity entity, TablesType nameTable) {
 
-        String table = String.valueOf(nameTable);
+        String table = getNameTable(nameTable);
 
         String sql = " declare @table nvarchar(20) = ? " +
                 " declare @name nvarchar(12) =  ? " +
@@ -85,7 +85,7 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
 
     @Override
     public Optional<GeneralPriceItemEntity> findById(Long id, TablesType nameTable) {
-        String table = String.valueOf(nameTable);
+        String table = getNameTable(nameTable);
         String sql = " declare @table nvarchar(20) = ? " +
                 " declare @id bigint = ? " +
                 " declare @SqlStr nvarchar(max)  " +
@@ -115,7 +115,7 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
 
     @Override
     public List<GeneralPriceItemEntity> findAll(TablesType nameTable) {
-        String table = String.valueOf(nameTable);
+        String table = getNameTable(nameTable);
         String sql = " declare @table nvarchar(20) = ? " +
                 " declare @SqlStr nvarchar(max) " +
                 " set @SqlStr = ' SELECT id, [Name] , Cost  FROM ' + @table + ' WHERE Active LIKE ''Y'' ' " +
@@ -158,7 +158,7 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
 
     @Override
     public Optional<GeneralPriceItemEntity> delete(Long id, TablesType nameTable) {
-        String table = String.valueOf(nameTable);
+        String table = getNameTable(nameTable);
 
         String sql = " declare @table nvarchar(20) = ? " +
                 " declare @id bigint = ? " +
@@ -177,7 +177,7 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
     @Override
     public PageEntity<GeneralPriceItemEntity> findAllPage(int page, int pageSize, TablesType nameTable) {
 
-        String table = String.valueOf(nameTable);
+        String table = getNameTable(nameTable);
 
         String sql = " declare @page int = ?  " +
                 " declare @pageSize int = ?  " +
@@ -222,23 +222,4 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
         return result;
     }
 
-    public Boolean checkId(Long id, TablesType nameTable) {
-        String table = String.valueOf(nameTable);
-//        String sql = " declare @table nvarchar(20) = ? " +
-//                " declare @id bigint = ? " +
-//                " declare @SqlStr nvarchar(max)  " +
-//                " SET  @SqlStr = ' SELECT id ' + @table + ' WHERE id = ' + convert(nvarchar,@id) " +
-//                " EXEC sp_executesql @SqlStr ";
-
-        String sql = "SELECT id FROM Remark WHERE id =  ? ";
-    //        List<Long> listId = jdbcTemplate.query(sql, new RowMapper<>() {
-    //            @Override
-    //            public Long mapRow(ResultSet rs, int rowNum) throws SQLException {
-    //                return (Long) rs.getObject("id");
-    //            }
-    //        }, id);
-        List<Long> listId = jdbcTemplate.query(sql, new SingleColumnRowMapper<>(Long.class), id);
-
-        return listId.size() > 0 ;
-    }
 }
