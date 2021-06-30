@@ -31,17 +31,19 @@ public class OrderItemRepo {
 
 
     public List<OrderEntity> getListOrders(Long userId, LocalDate dateTime) {
-
+        LocalDateTime localDateTime = dateTime.atStartOfDay();
         String sql =
-                " SELECT [Order].UserId userId , [Order].CreationTime creatTime , [Order].id orderId, [Order].Quantity quantity, [Order].CutInHalf cut, [Order].OrderSummaryId sumId, " +
-                        " [Order].ShawarmaTypeId [dish.id], ShawarmaType.[Name] [dish.name], ShawarmaType.Cost [dish.price], ShawarmaType.Active actShaw , ShawarmaType.Halfable shawHalv, " +
-                        " ExtraItem.id [drink.id], ExtraItem.[Name] [drink.name], ExtraItem.Cost [drink.price], ExtraItem.Active actExtr ,  " +
-                        " [Order].RemarkId [remark.id], Remark.[Name] [remark.name],  Remark.Active actRem  " +
-                        " FROM [Order] " +
-                        " JOIN ShawarmaType ON ShawarmaType.id = [Order].ShawarmaTypeId  " +
-                        " JOIN ExtraItem ON ExtraItem.id = [Order].ExtraItemId  " +
-                        " JOIN Remark ON Remark.id = [Order].RemarkId  " +
-                        " WHERE [Order].UserId = ? AND [Order].CreationTime = ? ";
+                " declare @datee datetime = ?;" +
+                        " SELECT [Order].UserId userId , [Order].CreationTime creatTime , [Order].id orderId, [Order].Quantity quantity, [Order].CutInHalf cut,\n" +
+                        "  [Order].OrderSummaryId sumId,\n" +
+                        "  [Order].ShawarmaTypeId [dish.id], ShawarmaType.[Name] [dish.name], ShawarmaType.Cost [dish.price], ShawarmaType.Active actShaw , ShawarmaType.Halfable shawHalv, \n" +
+                        "  ExtraItem.id [drink.id], ExtraItem.[Name] [drink.name], ExtraItem.Cost [drink.price], ExtraItem.Active actExtr , \n" +
+                        "  [Order].RemarkId [remark.id], Remark.[Name] [remark.name],  Remark.Active actRem  \n" +
+                        "  FROM [Order] \n" +
+                        "  JOIN ShawarmaType ON ShawarmaType.id = [Order].ShawarmaTypeId  \n" +
+                        "  JOIN ExtraItem ON ExtraItem.id = [Order].ExtraItemId \n" +
+                        "  JOIN Remark ON Remark.id = [Order].RemarkId  \n" +
+                        "  WHERE [Order].UserId = ? AND [Order].CreationTime  between @datee and  DATEADD(day,1,@datee)";
 
         List<OrderEntity> listOrders = new ArrayList<>();
         listOrders = jdbcTemplate.query(sql, new RowMapper<OrderEntity>() {
@@ -82,24 +84,26 @@ public class OrderItemRepo {
                 Long orderId = (Long) rs.getObject("orderId");
                 return entity;
             }
-        }, userId, dateTime);
+        }, localDateTime,userId);
 
         return listOrders;
     }
 
     public Map<Long, List<GeneralPriceItemEntity>> getMapAdditions(Set<Long> setOrderId, LocalDate dateTime) {
+        LocalDateTime localDateTime = dateTime.atStartOfDay();
         Map<Long, List<GeneralPriceItemEntity>> mapAddition = new HashMap<>();
 
         MapSqlParameterSource parameter = new MapSqlParameterSource();
         parameter.addValue("setOrderId", setOrderId);
-        parameter.addValue("dateTime", dateTime);
+        parameter.addValue("dateTime", localDateTime);
 
-        String sql = " SELECT [Order].id orderId, Addition.id [addition.id], Addition.[Name] [addition.name], " +
+        String sql = "declare @datee datetime = :dateTime;" +
+                " SELECT [Order].id orderId, Addition.id [addition.id], Addition.[Name] [addition.name], " +
                 " Addition.Cost [addition.price],  Addition.Active actAdd " +
                 " FROM [Order]  " +
                 " JOIN AdditionSelectedOrder ON AdditionSelectedOrder.OrderId = [Order].id  " +
                 " JOIN Addition ON Addition.id = AdditionSelectedOrder.AdditionId  " +
-                " WHERE [Order].id IN (:setOrderId) AND [Order].CreationTime = :dateTime " +
+                " WHERE [Order].id IN (:setOrderId) AND [Order].CreationTime  between @datee and  DATEADD(day,1,@datee) " +
                 " ORDER BY [Order].id DESC";
 
         namedParameterJdbcTemplate.query(sql, parameter, new RowMapper<GeneralPriceItemEntity>() {

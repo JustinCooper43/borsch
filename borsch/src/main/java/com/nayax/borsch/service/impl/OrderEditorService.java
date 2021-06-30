@@ -34,6 +34,7 @@ public class OrderEditorService {
         return new ResponseDto<>(listRespDto);
     }
 
+    @Autowired
     RepositoryShawarmaTypeImpl shawarmaType;
 
     @Autowired
