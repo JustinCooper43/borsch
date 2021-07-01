@@ -17,10 +17,10 @@ public class ValidationUtilRepository {
 
     public Boolean checkId(Long id, TablesType nameTable) {
         String table = getNameTable(nameTable);
-        String sql = " declare @table nvarchar(30) = ? " +
-                " declare @id bigint = ? " +
-                " SET  @SqlStr = ' SELECT id ' + @table + ' WHERE id = ' + convert(nvarchar,@id) " +
-                " EXEC sp_executesql @SqlStr ";
+        String sql =
+                " declare @table nvarchar(50) = ?;\n" +
+                "  declare @id bigint = ?; \n" +
+                "  declare @SqlStr nvarchar(max) SET @SqlStr = ' SELECT id From ' + @table + ' WHERE id = ' + convert(nvarchar,@id)  EXEC sp_executesql @SqlStr ";
 
         List<Long> listId = jdbcTemplate.query(sql, new SingleColumnRowMapper<>(Long.class), table, id);
 

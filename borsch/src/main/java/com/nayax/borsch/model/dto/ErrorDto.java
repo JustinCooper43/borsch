@@ -3,6 +3,7 @@ package com.nayax.borsch.model.dto;
 public class ErrorDto {
     private String message;
     private Integer code;
+    private String field;
 
     public ErrorDto() {
     }
@@ -14,6 +15,11 @@ public class ErrorDto {
 
     public ErrorDto(String message) {
         this.message = message;
+    }
+
+    public ErrorDto(String message,String field) {
+        this.message = message;
+        this.field = field;
     }
 
     public ErrorDto(Integer code) {
@@ -34,5 +40,12 @@ public class ErrorDto {
 
     public void setCode(Integer code) {
         this.code = code;
+    }
+    public String getField() {
+        return field;
+    }
+
+    public void setField(String field) {
+        this.field = field;
     }
 }

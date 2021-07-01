@@ -15,14 +15,10 @@ public class AssortmentValidationConfig {
 
     private static final Validator assortmentValidator = new ValidatorImpl();
 
-    @Autowired
-    RepositoryAssortmentImpl assortment;
-
 
     {
         assortmentValidator.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.ASSORTMEN_UPDATE),
                 obj -> ((ReqAssortmentUpDto) obj).getDish() != null, "Dish Id is null", "Dish"));
-
     }
 
     public static Validator getValidator() {

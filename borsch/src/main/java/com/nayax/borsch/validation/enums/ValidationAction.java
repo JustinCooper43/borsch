@@ -16,5 +16,7 @@ public enum ValidationAction {
 
     PROFILE_ADD, PROFILE_UPDATE, PROFILE_DELETE, PROFILE_GETALL, PROFILE_GET;
 
+////////////////////
+    PAGING;
 
 }

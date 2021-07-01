@@ -30,7 +30,7 @@ public class SimpleValidatorComponent implements ValidatorComponent {
 
     @Override
     public ErrorDto validate(Object obj) {
-        return validationPredicate.test(obj) ? null : new ErrorDto(cause);
+        return validationPredicate.test(obj) ? null : new ErrorDto(cause,field);
     }
 
     @Override

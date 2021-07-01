@@ -34,10 +34,10 @@ public class ConfigRepo {
 
         validatorRemark.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.REMARK_DEL),
                 obj -> (validationUtilRepository.checkId(((Long) obj), TablesType.REMARK)),
-                "Id of updated item doesn't exist", "id"));
+                "Id of updated Remark doesn't exist", "id"));
         validatorRemark.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.ADDITIONS_DEL),
                 obj -> (validationUtilRepository.checkId(((Long) obj), TablesType.ADDITION)),
-                "Id of updated item doesn't exist", "id"));
+                "Id of updated Addition doesn't exist", "id"));
         validatorRemark.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.DRINK_DEL),
                 obj -> (validationUtilRepository.checkId(((Long) obj), TablesType.EXTRAITEM)),
                 "Id of updated item doesn't exist", "id"));
@@ -51,6 +51,7 @@ public class ConfigRepo {
         validatorRemark.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.USER_ADD_EMAIL),
                 obj -> !(validationUtilRepository.checkEmail((String) obj)),
                 "Email's item is exist", "email"));
+
     }
 
     public static Validator getValidatorRemark() {
