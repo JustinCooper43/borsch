@@ -2,6 +2,7 @@ package com.nayax.borsch.service.impl;
 
 
 import com.nayax.borsch.mapper.OrderProcessingMapper;
+import com.nayax.borsch.model.dto.ErrorDto;
 import com.nayax.borsch.model.dto.PageDto;
 import com.nayax.borsch.model.dto.ResponseDto;
 import com.nayax.borsch.model.dto.order.response.RespOrderSumDto;
@@ -14,6 +15,8 @@ import com.nayax.borsch.repository.impl.OrderItemRepo;
 import com.nayax.borsch.repository.impl.PaymentRepository;
 import com.nayax.borsch.repository.impl.RepositoryOrderSummaryImpl;
 import com.nayax.borsch.utility.PageDtoBuilder;
+import com.nayax.borsch.validation.config.PageIdValidationConfig;
+import com.nayax.borsch.validation.enums.ValidationAction;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -96,7 +99,18 @@ public class OrderSummaryInfoService {
 
 
     public ResponseDto<PageDto<RespOrderSumDto>> getSummaryOrder(LocalDate date, int page, int pageSize) {
+        List<ErrorDto> errorsPage = PageIdValidationConfig.getValidatorPageId().validate(page, ValidationAction.PAGING);
+        errorsPage.addAll(PageIdValidationConfig.getValidatorPageId().validate(pageSize, ValidationAction.PAGING));
+        if (errorsPage.size() > 0) {
+            return new ResponseDto<>(errorsPage);
+        }
+
         List<OrderSummaryEntity> orderSum = orderSummary.findAll(date);
+        int totalPages = PageDtoBuilder.getTotalPages(pageSize, orderSum.size());
+        if (totalPages < page) {
+            errorsPage.add(new ErrorDto("Incorrect number page", "page"));
+            return new ResponseDto<>(errorsPage);
+        }
         Map<Long, BigDecimal> pay = paymentRepository.getSumPaymentByUser(date);
 
         for (OrderSummaryEntity order : orderSum) {
@@ -110,13 +124,6 @@ public class OrderSummaryInfoService {
             order.setPayedSum(pay.get(order.getUser().getId()));
             order.setTotalOrdersCost(sum);
         }
-        int totalElements = orderSum.size();
-        int pageFrom = (page - 1) * pageSize;
-        int pageTo = Math.min(pageFrom + pageSize, totalElements);
-        int totalPages = totalElements % pageSize == 0 ?
-                totalElements / pageSize :
-                totalElements / pageSize + 1;
-        orderSum = orderSum.subList(pageFrom, pageTo);
 
         List<RespOrderSumDto> listDto = orderSum.stream()
                 .map(Mappers.getMapper(OrderProcessingMapper.class)::toOrderSummary)
@@ -124,8 +131,6 @@ public class OrderSummaryInfoService {
 
         PageDto<RespOrderSumDto> responsePage = new PageDtoBuilder<RespOrderSumDto>()
                 .page(listDto)
-                .totalElements(totalElements)
-                .totalPages(totalPages)
                 .elementsPerPage(pageSize)
                 .currentPageNum(page)
                 .build();

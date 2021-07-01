@@ -29,13 +29,10 @@ public class DrinkAdditionService {
     AdditionsRepository additionsRepository;
 
     public ResponseDto<RespSimplePriceItemDto> addGeneralItem(ReqSimplePriceItemAddDto dto, TablesType tableType) {
-        List<ErrorDto> errorsAddition = DrinkAdditionValidationConfig.getValidatorDrinkAdd().validate(dto, ValidationAction.ADDITIONS_ADD);
-        if (errorsAddition.size() > 0) {
-            return new ResponseDto<>(errorsAddition);
-        }
-
-        List<ErrorDto> errorsDrink = DrinkAdditionValidationConfig.getValidatorDrinkAdd().validate(dto, ValidationAction.DRINK_ADD);
-        if (errorsAddition.size() > 0) {
+        List<ErrorDto> errorsAddition = DrinkAdditionValidationConfig.getValidatorDrinkAdd().validate(dto, ValidationAction.SIMPLE_PRICE_ITEM_ADD);
+        List<ErrorDto> errorsDrink = DrinkAdditionValidationConfig.getValidatorDrinkAdd().validate(dto, ValidationAction.SIMPLE_PRICE_ITEM_ADD);
+        if (errorsAddition.size() > 0 || errorsDrink.size() > 0) {
+            errorsAddition.addAll(errorsDrink);
             return new ResponseDto<>(errorsAddition);
         }
 
@@ -45,13 +42,11 @@ public class DrinkAdditionService {
     }
 
     public ResponseDto<RespSimplePriceItemDto> editGeneralItem(ReqSimplePriceItemUpDto dto, TablesType tableType) {
-        List<ErrorDto> errorsAddition = ConfigRepo.getValidatorRemark().validate(dto, ValidationAction.ADDITIONS_UPDATE);
-        if (errorsAddition.size() > 0) {
-            return new ResponseDto<>(errorsAddition);
-        }
+        List<ErrorDto> errorsAddition = ConfigRepo.getValidatorRemark().validate(dto, ValidationAction.SIMPLE_PRICE_ITEM_UPDATE);
         List<ErrorDto> errorsDrink = ConfigRepo.getValidatorRemark().validate(dto, ValidationAction.DRINK_UPDATE);
-        if (errorsDrink.size() > 0) {
-            return new ResponseDto<>(errorsDrink);
+        if (errorsAddition.size() > 0 || errorsDrink.size() > 0) {
+            errorsAddition.addAll(errorsDrink);
+            return new ResponseDto<>(errorsAddition);
         }
 
         GeneralPriceItemEntity entity = additionsRepository.update(Mappers.getMapper(SimpleItemsMapper.class).toGeneralPriceItemEntity(dto), tableType);
@@ -61,14 +56,10 @@ public class DrinkAdditionService {
 
     public ResponseDto<PageDto<RespSimplePriceItemDto>> getGeneralItemPage(int page, int pageSize, TablesType tableType) {
         List<ErrorDto> errorsPage = PageIdValidationConfig.getValidatorPageId().validate(page, ValidationAction.ADDITIONS_GETALL);
-        if (errorsPage.size() > 0) {
+        List<ErrorDto> errorsPageSize = PageIdValidationConfig.getValidatorPageId().validate(pageSize, ValidationAction.ADDITIONS_GETALL);
+        if (errorsPage.size() > 0 || errorsPageSize.size() > 0) {
             return new ResponseDto<>(errorsPage);
         }
-        List<ErrorDto> errorsPageSize = PageIdValidationConfig.getValidatorPageId().validate(pageSize, ValidationAction.ADDITIONS_GETALL);
-        if (errorsPageSize.size() > 0) {
-            return new ResponseDto<>(errorsPageSize);
-        }
-
         PageEntity<GeneralPriceItemEntity> listEntity = additionsRepository.findAllPage(page, pageSize, tableType);
         listEntity.setPage(page);
         listEntity.setPageSize(pageSize);
@@ -98,21 +89,14 @@ public class DrinkAdditionService {
     public ResponseDto<RespSimplePriceItemDto> delGeneralItemById(Long id, TablesType nameTable) {
 
         List<ErrorDto> errorsAdditionId = PageIdValidationConfig.getValidatorPageId().validate(id, ValidationAction.ADDITIONS_DEL);
-        if (errorsAdditionId.size() > 0) {
-            return new ResponseDto<>(errorsAdditionId);
-        }
         List<ErrorDto> errorsDrinkId = PageIdValidationConfig.getValidatorPageId().validate(id, ValidationAction.DRINK_DEL);
-        if (errorsDrinkId.size() > 0) {
-            return new ResponseDto<>(errorsDrinkId);
-        }
-
         List<ErrorDto> errorsAddition = ConfigRepo.getValidatorRemark().validate(id, ValidationAction.ADDITIONS_DEL);
-        if (errorsAddition.size() > 0) {
-            return new ResponseDto<>(errorsAddition);
-        }
         List<ErrorDto> errorsDrink = ConfigRepo.getValidatorRemark().validate(id, ValidationAction.DRINK_DEL);
-        if (errorsDrink.size() > 0) {
-            return new ResponseDto<>(errorsDrink);
+        if (errorsAdditionId.size() > 0 || errorsDrinkId.size() > 0 || errorsAddition.size() > 0 || errorsDrink.size() > 0) {
+            errorsAdditionId.addAll(errorsDrinkId);
+            errorsAdditionId.addAll(errorsAddition);
+            errorsAdditionId.addAll(errorsDrink);
+            return new ResponseDto<>(errorsAdditionId);
         }
         Optional<GeneralPriceItemEntity> entity = additionsRepository.delete(id, nameTable);
         return new ResponseDto<>(Mappers.getMapper(SimpleItemsMapper.class).toPriceItemDto(entity.get()));

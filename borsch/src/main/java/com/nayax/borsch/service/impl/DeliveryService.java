@@ -2,6 +2,7 @@ package com.nayax.borsch.service.impl;
 
 import com.nayax.borsch.mapper.OrderItemMapper;
 import com.nayax.borsch.mapper.OrderProcessingMapper;
+import com.nayax.borsch.model.dto.ErrorDto;
 import com.nayax.borsch.model.dto.PageDto;
 import com.nayax.borsch.model.dto.ResponseDto;
 import com.nayax.borsch.model.dto.order.response.RespOrderDeliveryDto;
@@ -13,6 +14,8 @@ import com.nayax.borsch.model.entity.order.OrderSumTimerEntity;
 import com.nayax.borsch.repository.impl.DeliverySummaryRepository;
 import com.nayax.borsch.utility.OrderEntityHashNoOrderUserTime;
 import com.nayax.borsch.utility.PageDtoBuilder;
+import com.nayax.borsch.validation.config.PageIdValidationConfig;
+import com.nayax.borsch.validation.enums.ValidationAction;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +34,11 @@ public class DeliveryService {
     DeliverySummaryRepository deliverySummaryRepository;
 
     public ResponseDto<PageDto<RespOrderDeliveryDto>> getPagedDeliveryInfo(int page, int pageSize, LocalDate date) {
+        List<ErrorDto> errorsPage = PageIdValidationConfig.getValidatorPageId().validate(page, ValidationAction.ADDITIONS_GETALL);
+        List<ErrorDto> errorsPageSize = PageIdValidationConfig.getValidatorPageId().validate(pageSize, ValidationAction.ADDITIONS_GETALL);
+        if (errorsPage.size() > 0 || errorsPageSize.size() > 0) {
+            return new ResponseDto<>(errorsPage);
+        }
         if (date == null) {
             date = LocalDate.now();
         }
@@ -76,20 +84,11 @@ public class DeliveryService {
             composed.setOrderDate(date);
             responseEntity.add(composed);
         }
-        int totalElements = responseEntity.size();
-        int pageFrom = (page - 1) * pageSize;
-        int pageTo = Math.min(pageFrom + pageSize, totalElements);
-        int totalPages = totalElements % pageSize == 0 ?
-                totalElements / pageSize :
-                totalElements / pageSize + 1;
-        responseEntity = responseEntity.subList(pageFrom, pageTo);
         List<RespOrderDeliveryDto> respList = responseEntity.stream()
                 .map(Mappers.getMapper(OrderProcessingMapper.class)::toOrderDelivery)
                 .collect(Collectors.toList());
         PageDto<RespOrderDeliveryDto> responsePage = new PageDtoBuilder<RespOrderDeliveryDto>()
                 .page(respList)
-                .totalElements(totalElements)
-                .totalPages(totalPages)
                 .elementsPerPage(pageSize)
                 .currentPageNum(page)
                 .build();
