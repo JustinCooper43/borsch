@@ -11,6 +11,8 @@ public enum ValidationAction {
 
     ADDITIONS_GETALL, DRINK_GETALL, REMARK_GETALL, DISH_GETALL,
 
+    DISH_GET_BY_ID,
+
     USER_ADD_EMAIL,
     ////////////////////
     PAGING;

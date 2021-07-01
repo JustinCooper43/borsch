@@ -41,10 +41,7 @@ public class ConfigRepo {
         repositoryValidator.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.DRINK_DEL),
                 obj -> (validationUtilRepository.checkId(((Long) obj), TablesType.EXTRAITEM)),
                 "Id of updated item doesn't exist", "id"));
-        repositoryValidator.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.DRINK_DEL),
-                obj -> (validationUtilRepository.checkId(((Long) obj), TablesType.SHAWARMA)),
-                "Id of updated item doesn't exist", "id"));
-        repositoryValidator.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.DISH_DELETE),
+        repositoryValidator.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.DISH_DELETE, ValidationAction.DISH_GET_BY_ID),
                 obj -> (validationUtilRepository.checkId(((Long) obj), TablesType.SHAWARMA)),
                 "Id of updated Dish doesn't exist", "id"));
 

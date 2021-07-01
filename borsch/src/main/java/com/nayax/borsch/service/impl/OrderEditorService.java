@@ -2,6 +2,7 @@ package com.nayax.borsch.service.impl;
 
 import com.nayax.borsch.mapper.AssortmentMapper;
 import com.nayax.borsch.mapper.SimpleItemsMapper;
+import com.nayax.borsch.model.dto.ErrorDto;
 import com.nayax.borsch.model.dto.ResponseDto;
 import com.nayax.borsch.model.dto.assortment.response.RespAssortmentItemDto;
 import com.nayax.borsch.model.dto.assortment.response.RespPriceItemDto;
@@ -14,6 +15,9 @@ import com.nayax.borsch.repository.impl.AdditionsRepository;
 import com.nayax.borsch.repository.impl.PriceItemRepository;
 import com.nayax.borsch.repository.impl.RepositoryShawarmaTypeImpl;
 import com.nayax.borsch.repository.impl.TablesType;
+import com.nayax.borsch.validation.config.ConfigRepo;
+import com.nayax.borsch.validation.config.DishValidationConfig;
+import com.nayax.borsch.validation.enums.ValidationAction;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +35,14 @@ public class OrderEditorService {
     PriceItemRepository priceItemRepository;
 
     public ResponseDto<List<RespSimplePriceItemDto>> additionalDropdown(Long dishId) {
+        List<ErrorDto> idErrors = DishValidationConfig.getValidator().validate(dishId, ValidationAction.DISH_GET_BY_ID);
+        if(idErrors.size()>0){
+            return new ResponseDto<>(idErrors);
+        }
+        idErrors.addAll(ConfigRepo.getRepositoryValidator().validate(dishId, ValidationAction.DISH_GET_BY_ID));
+        if(idErrors.size()>0){
+            return new ResponseDto<>(idErrors);
+        }
         List<GeneralPriceItemEntity> listEntity = additionsRepository.findAllAdditionsById(dishId);
         List<RespSimplePriceItemDto> listRespDto = Mappers.getMapper(SimpleItemsMapper.class).toListPagePriceItemDto(listEntity);
         return new ResponseDto<>(listRespDto);
