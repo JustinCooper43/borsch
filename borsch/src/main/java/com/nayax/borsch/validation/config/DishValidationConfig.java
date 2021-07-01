@@ -1,6 +1,5 @@
 package com.nayax.borsch.validation.config;
 
-import com.nayax.borsch.model.dto.assortment.request.ReqSimplePriceItemAddDto;
 import com.nayax.borsch.model.dto.assortment.request.ReqSimplePriceItemUpDto;
 import com.nayax.borsch.repository.impl.RepositoryShawarmaTypeImpl;
 import com.nayax.borsch.validation.Validator;
@@ -27,9 +26,9 @@ public class DishValidationConfig {
 //                 obj -> repositoryShawarmaType.findById(((Long) obj)).get().getId() != null,
 //                 "Dish Id is null","Id"));
 
-        dishValidator.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.DISH_UPDATE, ValidationAction.DISH_GET_BY_ID),
+        dishValidator.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.DISH_UPDATE, ValidationAction.DISH_VERIFY_ID),
                 obj -> ((ReqSimplePriceItemUpDto) obj).getId() != null, "Id is null", "id"));
-        dishValidator.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.DISH_UPDATE, ValidationAction.DISH_GET_BY_ID),
+        dishValidator.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.DISH_UPDATE, ValidationAction.DISH_VERIFY_ID),
                 obj -> ((ReqSimplePriceItemUpDto) obj).getId() != null && ((ReqSimplePriceItemUpDto) obj).getId() > 0, "Id is not positive", "id"));
         dishValidator.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.DISH_UPDATE, ValidationAction.DISH_ADD),
                 obj -> ((ReqSimplePriceItemUpDto) obj).getName() != null, "Name is null", "Name"));

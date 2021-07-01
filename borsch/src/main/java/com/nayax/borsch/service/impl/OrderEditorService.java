@@ -35,11 +35,11 @@ public class OrderEditorService {
     PriceItemRepository priceItemRepository;
 
     public ResponseDto<List<RespSimplePriceItemDto>> additionalDropdown(Long dishId) {
-        List<ErrorDto> idErrors = DishValidationConfig.getValidator().validate(dishId, ValidationAction.DISH_GET_BY_ID);
+        List<ErrorDto> idErrors = DishValidationConfig.getValidator().validate(dishId, ValidationAction.DISH_VERIFY_ID);
         if(idErrors.size()>0){
             return new ResponseDto<>(idErrors);
         }
-        idErrors.addAll(ConfigRepo.getRepositoryValidator().validate(dishId, ValidationAction.DISH_GET_BY_ID));
+        idErrors.addAll(ConfigRepo.getRepositoryValidator().validate(dishId, ValidationAction.DISH_VERIFY_ID));
         if(idErrors.size()>0){
             return new ResponseDto<>(idErrors);
         }

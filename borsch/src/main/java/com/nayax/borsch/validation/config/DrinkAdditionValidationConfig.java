@@ -78,14 +78,13 @@ public class DrinkAdditionValidationConfig {
                 obj -> ((ReqSimplePriceItemUpDto) obj).getName() != null && ((ReqSimplePriceItemUpDto) obj).getId() > 0,
                 "Id of updated item is invalid", "name"));
 
+        //common Long Id validation
         validatorDrinkAdd.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.SIMPLE_PRICE_ITEM_DEL,
-                ValidationAction.REMARK_DEL, ValidationAction.DISH_DELETE), obj -> obj != null
+                ValidationAction.REMARK_DEL, ValidationAction.DISH_DELETE, ValidationAction.USER_VERIFY_ID), obj -> obj != null
                 && (Long) obj > 0, "Id is invalid", "id"));
-
         validatorDrinkAdd.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.SIMPLE_PRICE_ITEM_DEL,
-                ValidationAction.REMARK_DEL, ValidationAction.DISH_DELETE), Objects::nonNull, "Id is null", "id"));
-
-
+                ValidationAction.REMARK_DEL, ValidationAction.DISH_DELETE, ValidationAction.USER_VERIFY_ID),
+                Objects::nonNull, "Id is null", "id"));
     }
 
     public static Validator getValidatorDrinkAdd() {

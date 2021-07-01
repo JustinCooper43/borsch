@@ -119,7 +119,7 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
         String table = getNameTable(nameTable);
         String sql = " declare @table nvarchar(20) = ? " +
                 " declare @SqlStr nvarchar(max) " +
-                " set @SqlStr = ' SELECT id, [Name] , Cost  FROM ' + @table + ' WHERE Active LIKE ''Y'' ' " +
+                " set @SqlStr = N' SELECT id, [Name] , Cost  FROM ' + @table + ' WHERE Active LIKE ''Y'' ' " +
                 " EXEC sp_executesql @SqlStr";
 
         List<GeneralPriceItemEntity> listItems;

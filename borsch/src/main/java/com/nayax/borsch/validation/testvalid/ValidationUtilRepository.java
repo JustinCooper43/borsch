@@ -15,12 +15,13 @@ public class ValidationUtilRepository {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
+    //TODO check if item for this ID is active
     public Boolean checkId(Long id, TablesType nameTable) {
         String table = getNameTable(nameTable);
         String sql =
                 " declare @table nvarchar(50) = ?;\n" +
-                "  declare @id bigint = ?; \n" +
-                "  declare @SqlStr nvarchar(max) SET @SqlStr = ' SELECT id From ' + @table + ' WHERE id = ' + convert(nvarchar,@id)  EXEC sp_executesql @SqlStr ";
+                        "  declare @id bigint = ?; \n" +
+                        "  declare @SqlStr nvarchar(max) SET @SqlStr = ' SELECT id From ' + @table + ' WHERE id = ' + convert(nvarchar,@id)  EXEC sp_executesql @SqlStr ";
 
         List<Long> listId = jdbcTemplate.query(sql, new SingleColumnRowMapper<>(Long.class), table, id);
 
@@ -32,7 +33,7 @@ public class ValidationUtilRepository {
         String sql = "SELECT Email FROM User WHERE Email LIKE ? ";
 
         List<String> listEmail = jdbcTemplate.query(sql, new SingleColumnRowMapper<>(String.class), email);
-        return listEmail.size() == 1;
+        return listEmail.size() != 1;
     }
 
     private String getNameTable(TablesType tablesType) {

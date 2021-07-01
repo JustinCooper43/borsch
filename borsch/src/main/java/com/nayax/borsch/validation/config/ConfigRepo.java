@@ -32,22 +32,28 @@ public class ConfigRepo {
                 obj -> (validationUtilRepository.checkId(((ReqSimplePriceItemUpDto) obj).getId(), TablesType.EXTRAITEM)),
                 "Id of updated item doesn't exist", "id"));
 
-        repositoryValidator.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.REMARK_DEL),
+        repositoryValidator.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.REMARK_DEL, ValidationAction.REMARK_VERIFY_ID),
                 obj -> (validationUtilRepository.checkId(((Long) obj), TablesType.REMARK)),
-                "Id of updated Remark doesn't exist", "id"));
-        repositoryValidator.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.ADDITIONS_DEL),
+                "Remark ID doesn't exist", "id"));
+        repositoryValidator.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.ADDITIONS_DEL, ValidationAction.ADDITIONS_VERIFY_ID),
                 obj -> (validationUtilRepository.checkId(((Long) obj), TablesType.ADDITION)),
-                "Id of updated Addition doesn't exist", "id"));
-        repositoryValidator.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.DRINK_DEL),
+                "Addition ID doesn't exist", "id"));
+        repositoryValidator.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.DRINK_DEL, ValidationAction.DRINK_VERIFY_ID),
                 obj -> (validationUtilRepository.checkId(((Long) obj), TablesType.EXTRAITEM)),
-                "Id of updated item doesn't exist", "id"));
-        repositoryValidator.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.DISH_DELETE, ValidationAction.DISH_GET_BY_ID),
+                "Drink ID doesn't exist", "id"));
+        repositoryValidator.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.DISH_DELETE, ValidationAction.DISH_VERIFY_ID),
                 obj -> (validationUtilRepository.checkId(((Long) obj), TablesType.SHAWARMA)),
-                "Id of updated Dish doesn't exist", "id"));
+                "Dish ID doesn't exist", "id"));
+        repositoryValidator.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.USER_VERIFY_ID),
+                obj -> (validationUtilRepository.checkId(((Long) obj), TablesType.USER)),
+                "No user found by given ID", "id"));
+        repositoryValidator.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.ORDER_VERIFY_ID),
+                obj -> (validationUtilRepository.checkId(((Long) obj), TablesType.ORDER)),
+                "No order found by given ID", "id"));
 
         repositoryValidator.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.USER_ADD_EMAIL),
-                obj -> !(validationUtilRepository.checkEmail((String) obj)),
-                "Email's item is exist", "email"));
+                obj -> (validationUtilRepository.checkEmail((String) obj)),
+                "Email's item already exists", "email"));
 
     }
 

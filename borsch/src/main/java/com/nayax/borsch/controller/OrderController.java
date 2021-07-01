@@ -36,42 +36,9 @@ public class OrderController {
     @Autowired
     OrderSummaryInfoService orderSummaryInfoService;
 
-    private RespOrderItemDto getRespOrderMock() {
-        RespOrderItemDto orderItem = new RespOrderItemDto();
-
-        RespSimplePriceItemDto shawa = new RespSimplePriceItemDto();
-        shawa.setId(2l);
-        shawa.setName("Щаурма с курицей");
-        shawa.setPrice(new BigDecimal("90.00"));
-        orderItem.setDish(shawa);
-
-        RespSimplePriceItemDto addition = new RespSimplePriceItemDto();
-        addition.setId(4l);
-        addition.setName("Картошка");
-        addition.setPrice(new BigDecimal("10.00"));
-        List<RespSimplePriceItemDto> respSimpleItemDtos = List.of(addition, addition, addition, addition, addition, addition, addition);
-        orderItem.setAdditions(respSimpleItemDtos);
-
-        RespSimplePriceItemDto drink = new RespSimplePriceItemDto();
-        addition.setId(4l);
-        addition.setName("Coca-cola");
-        addition.setPrice(new BigDecimal("23.50"));
-        orderItem.setDrink(drink);
-
-        RespSimpleItemDto remark = new RespSimpleItemDto();
-        remark.setId(1l);
-        remark.setName("побольше соуса");
-        orderItem.setRemark(remark);
-        orderItem.setCut(false);
-        orderItem.setQuantity(2);
-
-        return orderItem;
-    }
-
     @PostMapping
     public ResponseEntity<ResponseDto<RespOrderItemDto>> addOrder(@RequestBody ReqOrderItemAddDto dto) {
-        OrderEntity order = Mappers.getMapper(OrderItemMapper.class).toAddEntity(dto);
-        ResponseDto<RespOrderItemDto> result = orderItemService.addOrder(order);
+        ResponseDto<RespOrderItemDto> result = orderItemService.addOrder(dto);
         return ResponseEntity.ok(result);
     }
 
