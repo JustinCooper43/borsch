@@ -22,7 +22,7 @@ public class ConfigRepo {
     ValidationUtilRepository validationUtilRepository;
 
     {
-        validatorRemark.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.REMARK_UPDATE),
+        validatorRemark.add(SimpleValidatorComponent.getComponents(List.of(),
                 obj -> (validationUtilRepository.checkId(((ReqSimpleItemUpDto) obj).getId(), TablesType.REMARK)),
                 "Id of updated item doesn't exist", "id"));
         validatorRemark.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.ADDITIONS_UPDATE),
@@ -32,7 +32,7 @@ public class ConfigRepo {
                 obj -> (validationUtilRepository.checkId(((ReqSimplePriceItemUpDto) obj).getId(), TablesType.EXTRAITEM)),
                 "Id of updated item doesn't exist", "id"));
 
-        validatorRemark.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.REMARK_DEL),
+        validatorRemark.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.REMARK_DEL, ValidationAction.REMARK_UPDATE),
                 obj -> (validationUtilRepository.checkId(((Long) obj), TablesType.REMARK)),
                 "Id of updated Remark doesn't exist", "id"));
         validatorRemark.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.ADDITIONS_DEL),
@@ -46,7 +46,7 @@ public class ConfigRepo {
                 "Id of updated item doesn't exist", "id"));
         validatorRemark.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.DISH_DELETE),
                 obj -> (validationUtilRepository.checkId(((Long) obj), TablesType.SHAWARMA)),
-                "Id of updated item doesn't exist", "id"));
+                "Id of updated Dish doesn't exist", "id"));
 
         validatorRemark.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.USER_ADD_EMAIL),
                 obj -> !(validationUtilRepository.checkEmail((String) obj)),

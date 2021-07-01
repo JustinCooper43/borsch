@@ -26,14 +26,14 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
 
         String table = getNameTable(nameTable);
 
-        String sql = " declare @table nvarchar(20) = ?  " +
-                " declare @name nvarchar(12) = ?  " +
-                " declare @cost decimal(10,2) = ?  " +
-                " declare @active nvarchar(1) = ?  " +
-                " declare @SqlStr nvarchar(max)  " +
-                " SET @SqlStr =  ' INSERT INTO ' +  @table  + ' ( [Name] , Cost , Active )  " +
-                " OUTPUT INSERTED.* VALUES ( '''+ @name +''' , '+  convert(nvarchar,@cost)+ ', ''' + @active +''' ) ' " +
-                " EXEC sp_executesql @SqlStr ";
+        String sql = "  declare @table nvarchar(20) =  ?;\n" +
+                "  declare @name nvarchar(12) =  ? ;\n" +
+                "  declare @cost decimal(10,2) = ? ;\n" +
+                "  declare @active nvarchar(1) = ? ;\n" +
+                "  declare @SqlStr nvarchar(max)  \n" +
+                "  SET @SqlStr =  N' INSERT INTO ' +  @table  + ' ( [Name] , Cost , Active )  \n" +
+                "  OUTPUT INSERTED.* VALUES ('+ @name +' , '+  convert(nvarchar,@cost)+ ', ''' + @active +''' ) ' \n" +
+                "  EXEC sp_executesql @SqlStr  ";
 
 
         GeneralPriceItemEntity entity1 = jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
@@ -44,7 +44,8 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
                     entityDB.setActive((String) rs.getObject("Active"));
                     return entityDB;
                 },
-                table, entity.getName(), entity.getPrice(), entity.getActive()
+                //TODO fix entity name
+                table, "N'" + entity.getName() + "'", entity.getPrice(), entity.getActive()
         );
         return entity1;
     }
@@ -59,8 +60,8 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
                 " declare @cost decimal(10,2) = ? " +
                 " declare @id bigint = ? " +
                 " declare @SqlStr nvarchar(max) " +
-                " SET @SqlStr =  ' UPDATE ' + @table + ' " +
-                " SET  [Name] =  ''' + @name + ''' , Cost = '+  convert(nvarchar,@cost)+ ' WHERE id = ' +  convert(nvarchar,@id) " +
+                " SET @SqlStr =  N' UPDATE ' + @table + ' " +
+                " SET  [Name] =  N''' + @name + ''' , Cost = '+  convert(nvarchar,@cost)+ ' WHERE id = ' +  convert(nvarchar,@id) " +
                 " EXEC sp_executesql @SqlStr ";
 
         Optional<GeneralPriceItemEntity> itemFromDB = Optional.empty();
