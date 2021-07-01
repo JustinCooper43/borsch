@@ -8,6 +8,7 @@ import com.nayax.borsch.model.dto.ResponseDto;
 import com.nayax.borsch.model.dto.assortment.request.ReqSimpleItemAddDto;
 import com.nayax.borsch.model.dto.assortment.request.ReqSimpleItemUpDto;
 import com.nayax.borsch.model.dto.assortment.response.RespSimpleItemDto;
+import com.nayax.borsch.model.dto.assortment.response.RespSimplePriceItemDto;
 import com.nayax.borsch.model.entity.PageEntity;
 import com.nayax.borsch.model.entity.assortment.GeneralPriceItemEntity;
 import com.nayax.borsch.repository.impl.AdditionsRepository;
@@ -42,14 +43,10 @@ public class RemarksService {
 
     public ResponseDto<RespSimpleItemDto> editRemarkItem(ReqSimpleItemUpDto dto, TablesType tableType) {
 
-        List<ErrorDto> errors = ConfigRepo.getRepositoryValidator().validate(dto, ValidationAction.REMARK_UPDATE);
-        if (errors.size() > 0) {
-            return new ResponseDto<>(errors);
-        }
-
-        GeneralPriceItemEntity entity = additionsRepository.update(Mappers.getMapper(SimpleItemsMapper.class).toGeneralPriceItemEntity(dto), tableType);
-        RespSimpleItemDto respDto = Mappers.getMapper(SimpleItemsMapper.class).toItemDto(entity);
-        return new ResponseDto<>(respDto);
+        ResponseDto<RespSimpleItemDto> deleted = delRemarkItemById(dto.getId(),tableType);
+        ResponseDto<RespSimpleItemDto> add = addRemarkItem(Mappers.getMapper(SimpleItemsMapper.class).toItemAddDto(dto),tableType);
+        boolean result = additionsRepository.disabledAllows(dto.getId(),tableType);
+        return add;
     }
 
     public ResponseDto<PageDto<RespSimpleItemDto>> getRemarkItemPage(int page, int pageSize, TablesType tableType) {

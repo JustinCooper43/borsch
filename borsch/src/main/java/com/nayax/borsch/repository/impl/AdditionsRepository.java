@@ -4,14 +4,17 @@ import com.nayax.borsch.model.entity.PageEntity;
 import com.nayax.borsch.model.entity.assortment.GeneralPriceItemEntity;
 import com.nayax.borsch.repository.CrudItemGenericRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.*;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,6 +53,7 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
         return entity1;
     }
 
+
     @Override
     public GeneralPriceItemEntity update(GeneralPriceItemEntity entity, TablesType nameTable) {
 
@@ -82,6 +86,56 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
 
         }
         return itemFromDB.orElse(new GeneralPriceItemEntity());
+    }
+
+
+    private List<Long> dishByAllows(Long additionId, TablesType nameTable) {
+        String sql = "";
+        if (nameTable.equals(TablesType.ADDITION)) {
+            sql = "Select ShawarmaTypeId shawId from AdditionAllowedShawarmaType where AllowedAdditionId = ? and Active = 'Y';";
+
+        } else if (nameTable.equals(TablesType.REMARK)) {
+            sql = "Select ShawarmaTypeId shawId from RemarkAllowedShawarmaType where RemarkId = ? and Active = 'Y'";
+        }
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> (Long) rs.getObject("shawId"), additionId);
+    }
+
+
+    public boolean disabledAllows(Long id, TablesType nameTable) {
+        int result = 0;
+        String sql = "";
+        String sqlInsert = "";
+        List<Long> dishId = dishByAllows(id,nameTable);
+        if (nameTable.equals(TablesType.ADDITION)) {
+            sql = "  update AdditionAllowedShawarmaType set Active = 'N' where AllowedAdditionId = ? and Active = 'Y'";
+            sqlInsert = "  Insert into AdditionAllowedShawarmaType (ShawarmaTypeId,AllowedAdditionId,Active)\n" +
+                    "  values (?,?,?)";
+
+        } else if (nameTable.equals(TablesType.REMARK)) {
+            sql = "update RemarkAllowedShawarmaType set Active = 'N' where RemarkId = ? and Active = 'Y'";
+            sqlInsert = "Insert into RemarkAllowedShawarmaType (ShawarmaTypeId,RemarkId,Active)\n" +
+                    "values (?,?,?)";
+        }
+        try {
+            result = jdbcTemplate.update(sql, id);
+        } catch (EmptyResultDataAccessException e) {
+            e.printStackTrace();
+        }
+
+        jdbcTemplate.batchUpdate(sqlInsert, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                ps.setLong(1, dishId.get(i));
+                ps.setLong(2, id);
+                ps.setString(3, "Y");
+            }
+            @Override
+            public int getBatchSize() {
+                return dishId.size();
+            }
+        });
+        return result > 0;
     }
 
     @Override
@@ -160,7 +214,6 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
     @Override
     public Optional<GeneralPriceItemEntity> delete(Long id, TablesType nameTable) {
         String table = getNameTable(nameTable);
-
         String sql = " declare @table nvarchar(20) = ? " +
                 " declare @id bigint = ? " +
                 " declare @SqlStr nvarchar(max) " +

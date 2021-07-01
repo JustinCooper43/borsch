@@ -39,6 +39,11 @@ public interface SimpleItemsMapper {
     @Mapping(target = "active", ignore = true)
     GeneralPriceItemEntity toGeneralPriceItemEntity(ReqSimpleItemUpDto dto);
 
+
+    ReqSimplePriceItemAddDto toPriceItemAddDto(ReqSimplePriceItemUpDto dto);
+
+    ReqSimpleItemAddDto toItemAddDto(ReqSimpleItemUpDto dto);
+
     PageDto<RespSimplePriceItemDto> toPagePriceDto(PageEntity<GeneralPriceItemEntity> entityPage);
 
     List<RespSimplePriceItemDto> toListPagePriceItemDto(List<GeneralPriceItemEntity> entityList);

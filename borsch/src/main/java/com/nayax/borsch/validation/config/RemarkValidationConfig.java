@@ -24,9 +24,9 @@ public class RemarkValidationConfig {
                 obj -> ((ReqSimpleItemAddDto) obj).getName() != null && ((ReqSimpleItemAddDto) obj).getName().length() > 0,
                 "Item's name is empty","name"));
 
-        validatorRemark.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.REMARK_ADD),
-                obj -> ((ReqSimpleItemAddDto) obj).getName() != null && ((ReqSimpleItemAddDto) obj).getName().matches("^[~@#\\$%\\^&\\*:;<>\\.,/}\\{\\+]"),
-                "Item's name contains special characters","name"));
+//        validatorRemark.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.REMARK_ADD),
+//                obj -> ((ReqSimpleItemAddDto) obj).getName() != null && ((ReqSimpleItemAddDto) obj).getName().matches("^[~@#\\$%\\^&\\*:;<>\\.,/}\\{\\+]"),
+//                "Item's name contains special characters","name"));
 
         validatorRemark.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.REMARK_UPDATE),
                 obj -> ((ReqSimpleItemUpDto) obj).getName() != null,
@@ -36,9 +36,9 @@ public class RemarkValidationConfig {
                 obj -> ((ReqSimpleItemUpDto) obj).getName() != null && ((ReqSimpleItemUpDto) obj).getName().length() > 0,
                 "Name of updated item is empty","name"));
 
-        validatorRemark.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.REMARK_UPDATE),
-                obj -> ((ReqSimpleItemUpDto) obj).getName() != null && ((ReqSimpleItemUpDto) obj).getName().matches("^[~@#\\$%\\^&\\*:;<>\\.,/}\\{\\+]"),
-                "Name of updated item contains special characters","name"));
+//        validatorRemark.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.REMARK_UPDATE),
+//                obj -> ((ReqSimpleItemUpDto) obj).getName() != null && ((ReqSimpleItemUpDto) obj).getName().matches("^[~@#\\$%\\^&\\*:;<>\\.,/}\\{\\+]"),
+//                "Name of updated item contains special characters","name"));
 
         validatorRemark.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.REMARK_UPDATE),
                 obj -> ((ReqSimpleItemUpDto) obj).getId() != null,
