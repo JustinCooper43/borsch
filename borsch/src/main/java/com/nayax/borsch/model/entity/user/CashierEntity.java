@@ -1,25 +1,28 @@
 package com.nayax.borsch.model.entity.user;
 
 public class CashierEntity {
-
-    private Long cashierId;
+    private Long id;
+    private Long userId;
     private boolean cashPaymentAllowed;
-
     private String cardNumber;
     private String cardBank;
     private String cardNote;
     private String cardQrCode;
 
-
-
-
-
-    public Long getCashierId() {
-        return cashierId;
+    public Long getId() {
+        return id;
     }
 
-    public void setCashierId(Long cashierId) {
-        this.cashierId = cashierId;
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public boolean isCashPaymentAllowed() {
@@ -65,7 +68,7 @@ public class CashierEntity {
     @Override
     public String toString() {
         return "CashierEntity{" +
-                "cashierId=" + cashierId +
+                "userId=" + userId +
                 ", cashPaymentAllowed=" + cashPaymentAllowed +
                 ", cardNumber='" + cardNumber + '\'' +
                 ", cardBank='" + cardBank + '\'' +

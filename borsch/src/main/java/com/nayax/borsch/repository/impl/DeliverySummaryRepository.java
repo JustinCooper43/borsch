@@ -102,7 +102,7 @@ public class DeliverySummaryRepository {
                 public OrderSumTimerEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
                     OrderSumTimerEntity e = new OrderSumTimerEntity();
                     CashierEntity c = new CashierEntity();
-                    c.setCashierId(rs.getLong("CashierId"));
+                    c.setUserId(rs.getLong("CashierId"));
                     c.setCashPaymentAllowed(rs.getBoolean("CashPaymentAllowed"));
                     c.setCardNumber(rs.getNString("CCNumber"));
                     c.setCardBank(rs.getNString("CCBank"));
@@ -124,7 +124,7 @@ public class DeliverySummaryRepository {
                     }
                     return e;
                 }
-            }, date);
+            }, date.plusDays(1));
         } catch (DataAccessException e) {
 
         }

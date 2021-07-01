@@ -55,13 +55,13 @@ public class ProfileRepositoryImplementation {
 
         Long i = Objects.requireNonNull(keyHolder.getKey()).longValue();
         if (entity.getCashierEntity() != null) {
-            entity.getCashierEntity().setCashierId(i);
+            entity.getCashierEntity().setUserId(i);
             String sqlCashier = "INSERT INTO Cashier " +
                     "(UserId, CashPaymentAllowed " +
                     ",CCNumber, CCBank, CCNote, CCQRCode)" +
                     " OUTPUT INSERTED.* VALUES (?, ?, ?, ?, ?, ?)";
             CashierEntity cashierEntity = jdbcTemplate.queryForObject(sqlCashier, new BeanPropertyRowMapper<>(CashierEntity.class),
-                    entity.getCashierEntity().getCashierId(),
+                    entity.getCashierEntity().getUserId(),
                     entity.getCashierEntity().isCashPaymentAllowed(), entity.getCashierEntity().getCardNumber(),
                     entity.getCashierEntity().getCardBank(), entity.getCashierEntity().getCardNote(),
                     entity.getCashierEntity().getCardQrCode());
@@ -71,34 +71,13 @@ public class ProfileRepositoryImplementation {
 
 
     public ProfileEntity update(ProfileEntity entity) throws NotUpdateException {
-
-        String sql = "Declare @mainId bigint = ?; " +
-                "UPDATE [User] " +
-                "SET Active  = ?, " +
-                "RoleId  = ?, " +
-                "Email  = ?, " +
-                "FirstName  = ?, " +
-                "LastName = ?, " +
-                "PhoneNumber  = ? " +
-                "WHERE id = @mainId; " +
-
-                "UPDATE Cashier " +
-                "SET  " +
-                "CashPaymentAllowed = ?, " +
-                "CCNumber = ?, " +
-                "CCBank = ?, " +
-                "CCNote = ?, " +
-                "CCQRCode = ? " +
-                "WHERE UserId  = @mainId;";
-
-
-        jdbcTemplate.update(sql, entity.getUserEntity().getId(), entity.getUserEntity().getActive(),
-                entity.getUserEntity().getRoleId(), entity.getUserEntity().geteMail(), entity.getUserEntity().getFirstName(),
-                entity.getUserEntity().getLastName(), entity.getUserEntity().getPhone(), entity.getCashierEntity().isCashPaymentAllowed(),
-                entity.getCashierEntity().getCardNumber(), entity.getCashierEntity().getCardBank(), entity.getCashierEntity().getCardNote(),
-                entity.getCashierEntity().getCardQrCode());
-
-
+        String userUpd = " Declare @mainId bigint = ?; " +
+                " UPDATE [User] " +
+                " SET Email  = ?, FirstName  = ?, LastName = ?, PhoneNumber  = ? " +
+                " WHERE id = @mainId; ";
+        jdbcTemplate.update(userUpd, entity.getUserEntity().getId(),
+                entity.getUserEntity().geteMail(), entity.getUserEntity().getFirstName(),
+                entity.getUserEntity().getLastName(), entity.getUserEntity().getPhone());
         return findById(entity.getUserEntity().getId()).orElseThrow(NotUpdateException::new);
     }
 
@@ -134,7 +113,7 @@ public class ProfileRepositoryImplementation {
                     user.setPhone(rs.getNString("phNumber"));
                     user.setRoleName(rs.getNString("roleName"));
 
-                    cashier.setCashierId((Long) rs.getObject("cashierId"));
+                    cashier.setUserId((Long) rs.getObject("cashierId"));
                     cashier.setCashPaymentAllowed(rs.getBoolean("CashPay"));
                     cashier.setCardNumber(rs.getNString("Card"));
                     cashier.setCardBank(rs.getNString("Bank"));
@@ -184,7 +163,7 @@ public class ProfileRepositoryImplementation {
                 user.setPhone(rs.getNString("phNumber"));
                 user.setRoleName(rs.getNString("roleName"));
 
-                cashier.setCashierId((Long) rs.getObject("cashierId"));
+                cashier.setUserId((Long) rs.getObject("cashierId"));
                 cashier.setCashPaymentAllowed(rs.getBoolean("CashPay"));
                 cashier.setCardNumber(rs.getNString("Card"));
                 cashier.setCardBank(rs.getNString("Bank"));
@@ -257,7 +236,7 @@ public class ProfileRepositoryImplementation {
                     user.setLastName(rs.getNString("lName"));
                     user.setPhone(rs.getNString("phNumber"));
                     user.setRoleName(rs.getNString("roleName"));
-                    cashier.setCashierId((Long) rs.getObject("cashierId"));
+                    cashier.setUserId((Long) rs.getObject("cashierId"));
                     profile.setUserEntity(user);
                     profile.setCashierEntity(cashier);
                     return profile;
