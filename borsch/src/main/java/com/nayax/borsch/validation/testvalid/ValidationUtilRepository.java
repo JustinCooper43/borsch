@@ -20,7 +20,7 @@ public class ValidationUtilRepository {
         String sql =
                 " declare @table nvarchar(50) = ?;\n" +
                 "  declare @id bigint = ?; \n" +
-                "  declare @SqlStr nvarchar(max) SET @SqlStr = ' SELECT id From ' + @table + ' WHERE id = ' + convert(nvarchar,@id)  EXEC sp_executesql @SqlStr ";
+                "  declare @SqlStr nvarchar(max) SET @SqlStr = N' SELECT id From [' + @table + '] WHERE id = ' + convert(nvarchar,@id)  EXEC sp_executesql @SqlStr ";
 
         List<Long> listId = jdbcTemplate.query(sql, new SingleColumnRowMapper<>(Long.class), table, id);
 
