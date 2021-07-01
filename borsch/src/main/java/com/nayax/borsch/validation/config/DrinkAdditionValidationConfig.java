@@ -9,6 +9,7 @@ import com.nayax.borsch.validation.impl.ValidatorImpl;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
 public class DrinkAdditionValidationConfig {
 
@@ -47,7 +48,7 @@ public class DrinkAdditionValidationConfig {
 
         validatorDrinkAdd.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.ADDITIONS_UPDATE,
                 ValidationAction.DRINK_UPDATE, ValidationAction.DISH_UPDATE),
-                obj -> ((ReqSimplePriceItemUpDto) obj).getPrice() != null ,
+                obj -> ((ReqSimplePriceItemUpDto) obj).getPrice() != null,
                 "Price of updated item is null", "price"));
 
         validatorDrinkAdd.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.ADDITIONS_UPDATE,
@@ -72,8 +73,16 @@ public class DrinkAdditionValidationConfig {
 
         validatorDrinkAdd.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.ADDITIONS_UPDATE,
                 ValidationAction.DRINK_UPDATE, ValidationAction.DISH_UPDATE),
-                obj -> ((ReqSimplePriceItemUpDto) obj).getName() != null &&  ((ReqSimplePriceItemUpDto) obj).getId() > 0,
+                obj -> ((ReqSimplePriceItemUpDto) obj).getName() != null && ((ReqSimplePriceItemUpDto) obj).getId() > 0,
                 "Id of updated item is invalid", "name"));
+
+        validatorDrinkAdd.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.SIMPLE_PRICE_ITEM_DEL,
+                ValidationAction.REMARK_DEL, ValidationAction.DISH_DELETE), obj -> obj != null
+                && (Long) obj > 0, "Id is invalid", "id"));
+
+        validatorDrinkAdd.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.SIMPLE_PRICE_ITEM_DEL,
+                ValidationAction.REMARK_DEL, ValidationAction.DISH_DELETE), Objects::nonNull, "Id is null", "id"));
+
 
     }
 

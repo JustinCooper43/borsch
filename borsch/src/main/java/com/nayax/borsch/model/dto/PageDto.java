@@ -23,8 +23,6 @@ public class PageDto<T> {
     public static <T> PageDto<T> getPagedList(Integer page, Integer pageSize, List<T> itemList) {
         return new PageDtoBuilder<T>()
                 .page(itemList)
-                .totalElements(10 * pageSize)
-                .totalPages(10)
                 .elementsPerPage(pageSize)
                 .currentPageNum(page)
                 .build();

@@ -29,12 +29,7 @@ public class DrinkAdditionService {
     AdditionsRepository additionsRepository;
 
     public ResponseDto<RespSimplePriceItemDto> addGeneralItem(ReqSimplePriceItemAddDto dto, TablesType tableType) {
-        List<ErrorDto> errorsAddition = DrinkAdditionValidationConfig.getValidatorDrinkAdd().validate(dto, ValidationAction.ADDITIONS_ADD);
-        if (errorsAddition.size() > 0) {
-            return new ResponseDto<>(errorsAddition);
-        }
-
-        List<ErrorDto> errorsDrink = DrinkAdditionValidationConfig.getValidatorDrinkAdd().validate(dto, ValidationAction.DRINK_ADD);
+        List<ErrorDto> errorsAddition = DrinkAdditionValidationConfig.getValidatorDrinkAdd().validate(dto, ValidationAction.SIMPLE_PRICE_ITEM_ADD);
         if (errorsAddition.size() > 0) {
             return new ResponseDto<>(errorsAddition);
         }
@@ -44,18 +39,18 @@ public class DrinkAdditionService {
         return new ResponseDto<>(respDto);
     }
 
-    public ResponseDto<RespSimplePriceItemDto> editGeneralItem(ReqSimplePriceItemUpDto dto, TablesType nameTable) {
+    public ResponseDto<RespSimplePriceItemDto> editGeneralItem(ReqSimplePriceItemUpDto dto, TablesType tableType) {
         List<ErrorDto> errorsId = DrinkAdditionValidationConfig.getValidatorDrinkAdd().validate(dto, ValidationAction.DISH_UPDATE);
         if (errorsId.size() > 0) {
             return new ResponseDto<>(errorsId);
         }
-        if (nameTable.equals(TablesType.ADDITION)) {
-            List<ErrorDto> errors = ConfigRepo.getValidatorRemark().validate(dto.getId(), ValidationAction.ADDITIONS_DEL);
+        if (tableType.equals(TablesType.ADDITION)) {
+            List<ErrorDto> errors = ConfigRepo.getRepositoryValidator().validate(dto, ValidationAction.ADDITIONS_UPDATE);
             if (errors.size() > 0) {
                 return new ResponseDto<>(errors);
             }
-        } else if (nameTable.equals(TablesType.EXTRAITEM)) {
-            List<ErrorDto> errors = ConfigRepo.getValidatorRemark().validate(dto.getId(), ValidationAction.DRINK_DEL);
+        } else if (tableType.equals(TablesType.EXTRAITEM)) {
+            List<ErrorDto> errors = ConfigRepo.getRepositoryValidator().validate(dto, ValidationAction.DRINK_UPDATE);
             if (errors.size() > 0) {
                 return new ResponseDto<>(errors);
             }
@@ -65,18 +60,12 @@ public class DrinkAdditionService {
         return new ResponseDto<>(respDto);
     }
 
-
-
     public ResponseDto<PageDto<RespSimplePriceItemDto>> getGeneralItemPage(int page, int pageSize, TablesType tableType) {
-        List<ErrorDto> errorsPage = PageIdValidationConfig.getValidatorPageId().validate(page, ValidationAction.ADDITIONS_GETALL);
-        if (errorsPage.size() > 0) {
+        List<ErrorDto> errorsPage = PageIdValidationConfig.getValidatorPageId().validate(page, ValidationAction.PAGING);
+        List<ErrorDto> errorsPageSize = PageIdValidationConfig.getValidatorPageId().validate(pageSize, ValidationAction.PAGING);
+        if (errorsPage.size() > 0 || errorsPageSize.size() > 0) {
             return new ResponseDto<>(errorsPage);
         }
-        List<ErrorDto> errorsPageSize = PageIdValidationConfig.getValidatorPageId().validate(pageSize, ValidationAction.ADDITIONS_GETALL);
-        if (errorsPageSize.size() > 0) {
-            return new ResponseDto<>(errorsPageSize);
-        }
-
         PageEntity<GeneralPriceItemEntity> listEntity = additionsRepository.findAllPage(page, pageSize, tableType);
         listEntity.setPage(page);
         listEntity.setPageSize(pageSize);
@@ -104,17 +93,17 @@ public class DrinkAdditionService {
 //    }
 
     public ResponseDto<RespSimplePriceItemDto> delGeneralItemById(Long id, TablesType nameTable) {
-        List<ErrorDto> errorsId = DrinkAdditionValidationConfig.getValidatorDrinkAdd().validate(id, ValidationAction.DRINK_DEL);
+        List<ErrorDto> errorsId = DrinkAdditionValidationConfig.getValidatorDrinkAdd().validate(id, ValidationAction.SIMPLE_PRICE_ITEM_DEL);
         if (errorsId.size() > 0) {
             return new ResponseDto<>(errorsId);
         }
         if (nameTable.equals(TablesType.ADDITION)) {
-            List<ErrorDto> errors = ConfigRepo.getValidatorRemark().validate(id, ValidationAction.ADDITIONS_DEL);
+            List<ErrorDto> errors = ConfigRepo.getRepositoryValidator().validate(id, ValidationAction.ADDITIONS_DEL);
             if (errors.size() > 0) {
                 return new ResponseDto<>(errors);
             }
         } else if (nameTable.equals(TablesType.EXTRAITEM)) {
-            List<ErrorDto> errors = ConfigRepo.getValidatorRemark().validate(id, ValidationAction.DRINK_DEL);
+            List<ErrorDto> errors = ConfigRepo.getRepositoryValidator().validate(id, ValidationAction.DRINK_DEL);
             if (errors.size() > 0) {
                 return new ResponseDto<>(errors);
             }

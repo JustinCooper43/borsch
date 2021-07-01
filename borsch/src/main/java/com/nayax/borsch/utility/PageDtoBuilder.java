@@ -30,16 +30,6 @@ public class PageDtoBuilder<T> {
         return this;
     }
 
-    public PageDtoBuilder<T> totalPages(Integer number) {
-        instancePage.setTotalPages(number);
-        return this;
-    }
-
-    public PageDtoBuilder<T> totalElements(Integer number) {
-        instancePage.setTotalElements(number);
-        return this;
-    }
-
     public PageDto<T> build() {
         paginationList();
         instancePage.setTotalPages(getTotalPages(instancePage.getPageSize(),instancePage.getResponseList().size()));
