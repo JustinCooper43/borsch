@@ -56,7 +56,7 @@ public class ShavarmaService {
         if (errorsId.size() > 0) {
             return new ResponseDto<>(errorsId);
         }
-        List<ErrorDto> errorsFromRepo = ConfigRepo.getValidatorRemark().validate(id, ValidationAction.DISH_DELETE);
+        List<ErrorDto> errorsFromRepo = ConfigRepo.getRepositoryValidator().validate(id, ValidationAction.DISH_DELETE);
         if (errorsFromRepo.size() > 0) {
             return new ResponseDto<>(errorsFromRepo);
         }

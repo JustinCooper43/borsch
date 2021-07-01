@@ -30,9 +30,7 @@ public class DrinkAdditionService {
 
     public ResponseDto<RespSimplePriceItemDto> addGeneralItem(ReqSimplePriceItemAddDto dto, TablesType tableType) {
         List<ErrorDto> errorsAddition = DrinkAdditionValidationConfig.getValidatorDrinkAdd().validate(dto, ValidationAction.SIMPLE_PRICE_ITEM_ADD);
-        List<ErrorDto> errorsDrink = DrinkAdditionValidationConfig.getValidatorDrinkAdd().validate(dto, ValidationAction.SIMPLE_PRICE_ITEM_ADD);
-        if (errorsAddition.size() > 0 || errorsDrink.size() > 0) {
-            errorsAddition.addAll(errorsDrink);
+        if (errorsAddition.size() > 0) {
             return new ResponseDto<>(errorsAddition);
         }
 
@@ -42,11 +40,16 @@ public class DrinkAdditionService {
     }
 
     public ResponseDto<RespSimplePriceItemDto> editGeneralItem(ReqSimplePriceItemUpDto dto, TablesType tableType) {
-        List<ErrorDto> errorsAddition = ConfigRepo.getValidatorRemark().validate(dto, ValidationAction.SIMPLE_PRICE_ITEM_UPDATE);
-        List<ErrorDto> errorsDrink = ConfigRepo.getValidatorRemark().validate(dto, ValidationAction.DRINK_UPDATE);
-        if (errorsAddition.size() > 0 || errorsDrink.size() > 0) {
-            errorsAddition.addAll(errorsDrink);
-            return new ResponseDto<>(errorsAddition);
+        if (tableType.equals(TablesType.ADDITION)) {
+            List<ErrorDto> errors = ConfigRepo.getRepositoryValidator().validate(dto, ValidationAction.ADDITIONS_UPDATE);
+            if (errors.size() > 0) {
+                return new ResponseDto<>(errors);
+            }
+        } else if (tableType.equals(TablesType.EXTRAITEM)) {
+            List<ErrorDto> errors = ConfigRepo.getRepositoryValidator().validate(dto, ValidationAction.DRINK_UPDATE);
+            if (errors.size() > 0) {
+                return new ResponseDto<>(errors);
+            }
         }
 
         GeneralPriceItemEntity entity = additionsRepository.update(Mappers.getMapper(SimpleItemsMapper.class).toGeneralPriceItemEntity(dto), tableType);
@@ -55,8 +58,8 @@ public class DrinkAdditionService {
     }
 
     public ResponseDto<PageDto<RespSimplePriceItemDto>> getGeneralItemPage(int page, int pageSize, TablesType tableType) {
-        List<ErrorDto> errorsPage = PageIdValidationConfig.getValidatorPageId().validate(page, ValidationAction.ADDITIONS_GETALL);
-        List<ErrorDto> errorsPageSize = PageIdValidationConfig.getValidatorPageId().validate(pageSize, ValidationAction.ADDITIONS_GETALL);
+        List<ErrorDto> errorsPage = PageIdValidationConfig.getValidatorPageId().validate(page, ValidationAction.PAGING);
+        List<ErrorDto> errorsPageSize = PageIdValidationConfig.getValidatorPageId().validate(pageSize, ValidationAction.PAGING);
         if (errorsPage.size() > 0 || errorsPageSize.size() > 0) {
             return new ResponseDto<>(errorsPage);
         }
@@ -87,16 +90,20 @@ public class DrinkAdditionService {
 //    }
 
     public ResponseDto<RespSimplePriceItemDto> delGeneralItemById(Long id, TablesType nameTable) {
-
-        List<ErrorDto> errorsAdditionId = PageIdValidationConfig.getValidatorPageId().validate(id, ValidationAction.ADDITIONS_DEL);
-        List<ErrorDto> errorsDrinkId = PageIdValidationConfig.getValidatorPageId().validate(id, ValidationAction.DRINK_DEL);
-        List<ErrorDto> errorsAddition = ConfigRepo.getValidatorRemark().validate(id, ValidationAction.ADDITIONS_DEL);
-        List<ErrorDto> errorsDrink = ConfigRepo.getValidatorRemark().validate(id, ValidationAction.DRINK_DEL);
-        if (errorsAdditionId.size() > 0 || errorsDrinkId.size() > 0 || errorsAddition.size() > 0 || errorsDrink.size() > 0) {
-            errorsAdditionId.addAll(errorsDrinkId);
-            errorsAdditionId.addAll(errorsAddition);
-            errorsAdditionId.addAll(errorsDrink);
-            return new ResponseDto<>(errorsAdditionId);
+        List<ErrorDto> errorsId = DrinkAdditionValidationConfig.getValidatorDrinkAdd().validate(id, ValidationAction.SIMPLE_PRICE_ITEM_DEL);
+        if (errorsId.size() > 0) {
+            return new ResponseDto<>(errorsId);
+        }
+        if (nameTable.equals(TablesType.ADDITION)) {
+            List<ErrorDto> errors = ConfigRepo.getRepositoryValidator().validate(id, ValidationAction.ADDITIONS_DEL);
+            if (errors.size() > 0) {
+                return new ResponseDto<>(errors);
+            }
+        } else if (nameTable.equals(TablesType.EXTRAITEM)) {
+            List<ErrorDto> errors = ConfigRepo.getRepositoryValidator().validate(id, ValidationAction.DRINK_DEL);
+            if (errors.size() > 0) {
+                return new ResponseDto<>(errors);
+            }
         }
         Optional<GeneralPriceItemEntity> entity = additionsRepository.delete(id, nameTable);
         return new ResponseDto<>(Mappers.getMapper(SimpleItemsMapper.class).toPriceItemDto(entity.get()));

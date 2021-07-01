@@ -42,7 +42,7 @@ public class RemarksService {
 
     public ResponseDto<RespSimpleItemDto> editRemarkItem(ReqSimpleItemUpDto dto, TablesType tableType) {
 
-        List<ErrorDto> errors = ConfigRepo.getValidatorRemark().validate(dto, ValidationAction.REMARK_UPDATE);
+        List<ErrorDto> errors = ConfigRepo.getRepositoryValidator().validate(dto, ValidationAction.REMARK_UPDATE);
         if (errors.size() > 0) {
             return new ResponseDto<>(errors);
         }
@@ -94,7 +94,7 @@ public class RemarksService {
         if (errors.size() > 0) {
             return new ResponseDto<>(errors);
         }
-        List<ErrorDto> errorsFromRepo = ConfigRepo.getValidatorRemark().validate(id, ValidationAction.REMARK_DEL);
+        List<ErrorDto> errorsFromRepo = ConfigRepo.getRepositoryValidator().validate(id, ValidationAction.REMARK_DEL);
         if (errorsFromRepo.size() > 0) {
             return new ResponseDto<>(errorsFromRepo);
         }

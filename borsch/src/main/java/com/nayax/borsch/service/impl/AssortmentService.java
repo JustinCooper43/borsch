@@ -63,14 +63,14 @@ public class AssortmentService {
     }
 
     public ResponseDto<RespAssortmentDto> updateAssortment(ReqAssortmentUpDto dto) {
-        List<ErrorDto> errors = AssortmentValidationConfig.getValidator().validate(dto.getDish(), ValidationAction.ASSORTMEN_UPDATE);
-        errors.addAll(ConfigRepo.getValidatorRemark().validate(dto.getDish(), ValidationAction.DISH_DELETE)); /// check by id
+        List<ErrorDto> errors = AssortmentValidationConfig.getValidator().validate(dto.getDish(), ValidationAction.ASSORTMENT_UPDATE);
+        errors.addAll(ConfigRepo.getRepositoryValidator().validate(dto.getDish(), ValidationAction.DISH_DELETE)); /// check by id
 
         for (Long l : dto.getRemarks()) {
-            errors.addAll(ConfigRepo.getValidatorRemark().validate(l, ValidationAction.REMARK_DEL));/// check by id
+            errors.addAll(ConfigRepo.getRepositoryValidator().validate(l, ValidationAction.REMARK_DEL));/// check by id
         }
         for (Long l : dto.getAdditions()) {
-            errors.addAll(ConfigRepo.getValidatorRemark().validate(l, ValidationAction.ADDITIONS_DEL));/// check by id
+            errors.addAll(ConfigRepo.getRepositoryValidator().validate(l, ValidationAction.ADDITIONS_DEL));/// check by id
             return new ResponseDto<>(errors);
         }
         assortmentRepository.update(Mappers.getMapper(AssortmentMapper.class).toAssortmentUpdateEntity(dto));
