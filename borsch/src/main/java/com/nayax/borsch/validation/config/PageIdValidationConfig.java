@@ -26,6 +26,7 @@ public class PageIdValidationConfig {
         validatorPageId.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.ADDITIONS_DEL,
                 ValidationAction.REMARK_DEL, ValidationAction.DRINK_DEL), obj -> obj != null
                 && (Long) obj > 0, "Id is invalid", "id"));
+
         validatorPageId.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.ADDITIONS_DEL,
                 ValidationAction.REMARK_DEL, ValidationAction.DRINK_DEL, ValidationAction.DISH_DELETE), Objects::nonNull, "Id is null", "id"));
     }
