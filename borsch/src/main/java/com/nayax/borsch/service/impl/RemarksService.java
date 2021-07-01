@@ -54,12 +54,12 @@ public class RemarksService {
 
     public ResponseDto<PageDto<RespSimpleItemDto>> getRemarkItemPage(int page, int pageSize, TablesType tableType) {
         List<ErrorDto> errorsPage = PageIdValidationConfig.getValidatorPageId().validate(page, ValidationAction.REMARK_GETALL);
+//        if (errorsPage.size() > 0) {
+//            return new ResponseDto<>(errorsPage);
+//        }
+        errorsPage.addAll(PageIdValidationConfig.getValidatorPageId().validate(pageSize, ValidationAction.REMARK_GETALL));
         if (errorsPage.size() > 0) {
             return new ResponseDto<>(errorsPage);
-        }
-        List<ErrorDto> errorsPageSize = PageIdValidationConfig.getValidatorPageId().validate(pageSize, ValidationAction.REMARK_GETALL);
-        if (errorsPageSize.size() > 0) {
-            return new ResponseDto<>(errorsPageSize);
         }
 
         PageEntity<GeneralPriceItemEntity> listEntity = additionsRepository.findAllPage(page, pageSize, tableType);

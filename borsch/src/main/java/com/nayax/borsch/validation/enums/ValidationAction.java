@@ -12,9 +12,10 @@ public enum ValidationAction {
 
     ADDITIONS_GETALL,DRINK_GETALL,REMARK_GETALL,DISH_GETALL,
     ASSORTMEN_UPDATE,
-    USER_ADD_EMAIL;
+    USER_ADD_EMAIL,
 
 
-
+////////////////////
+    PAGING;
 
 }

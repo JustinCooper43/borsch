@@ -13,16 +13,14 @@ import com.nayax.borsch.repository.impl.RepositoryAssortmentImpl;
 import com.nayax.borsch.repository.impl.RepositoryShawarmaTypeImpl;
 import com.nayax.borsch.utility.PageDtoBuilder;
 import com.nayax.borsch.validation.config.AssortmentValidationConfig;
+import com.nayax.borsch.validation.config.PageIdValidationConfig;
 import com.nayax.borsch.validation.enums.ValidationAction;
 import com.nayax.borsch.validation.config.ConfigRepo;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,19 +30,23 @@ public class AssortmentService {
     private RepositoryAssortmentImpl assortmentRepository;
 
     @Autowired
-    RepositoryShawarmaTypeImpl shawarmaType;
+    private RepositoryShawarmaTypeImpl shawarmaType;
 
-    public ResponseDto<PageDto<RespAssortmentDto>> getAllAssortment(int page,int pageSize){
+    public ResponseDto<PageDto<RespAssortmentDto>> getAllAssortment(int page, int pageSize) {
 
+        List<ErrorDto> errorsPage = PageIdValidationConfig.getValidatorPageId().validate(page, ValidationAction.PAGING);
+        errorsPage.addAll(PageIdValidationConfig.getValidatorPageId().validate(pageSize, ValidationAction.PAGING));
+        if (errorsPage.size() > 0) {
+            return new ResponseDto<>(errorsPage);
+        }
         List<AssortmentRespEntity> assortmentEntity = assortmentRepository.findAll();
 
-        int totalElements = assortmentEntity.size();
-        int pageFrom = (page - 1) * pageSize;
-        int pageTo = Math.min(pageFrom + pageSize, totalElements);
-        int totalPages = totalElements % pageSize == 0 ?
-                totalElements / pageSize :
-                totalElements / pageSize + 1;
-        assortmentEntity = assortmentEntity.subList(pageFrom, pageTo);
+        int totalPages = PageDtoBuilder.getTotalPages(pageSize, assortmentEntity.size());
+
+        if (totalPages < page) {
+            errorsPage.add(new ErrorDto("Incorrect number page", "page"));
+            return new ResponseDto<>(errorsPage);
+        }
 
 
         List<RespAssortmentDto> dto = assortmentEntity.stream()
@@ -53,8 +55,6 @@ public class AssortmentService {
 
         PageDto<RespAssortmentDto> responsePage = new PageDtoBuilder<RespAssortmentDto>()
                 .page(dto)
-                .totalElements(totalElements)
-                .totalPages(totalPages)
                 .elementsPerPage(pageSize)
                 .currentPageNum(page)
                 .build();
@@ -62,25 +62,27 @@ public class AssortmentService {
         return new ResponseDto<>(responsePage);
     }
 
-
-    public ResponseDto<RespAssortmentDto> updateAssortment(ReqAssortmentUpDto dto){
+    public ResponseDto<RespAssortmentDto> updateAssortment(ReqAssortmentUpDto dto) {
         List<ErrorDto> errors = AssortmentValidationConfig.getValidator().validate(dto.getDish(), ValidationAction.ASSORTMEN_UPDATE);
-        for (Long l: dto.getRemarks()) {
-            errors.addAll(ConfigRepo.getValidatorRemark().validate(l,ValidationAction.REMARK_UPDATE));
+        errors.addAll(ConfigRepo.getValidatorRemark().validate(dto.getDish(), ValidationAction.DISH_DELETE)); /// check by id
+
+        for (Long l : dto.getRemarks()) {
+            errors.addAll(ConfigRepo.getValidatorRemark().validate(l, ValidationAction.REMARK_DEL));/// check by id
         }
-        for (Long l : dto.getAdditions()){
-            errors.addAll(ConfigRepo.getValidatorRemark().validate(l,ValidationAction.ADDITIONS_UPDATE));
+        for (Long l : dto.getAdditions()) {
+            errors.addAll(ConfigRepo.getValidatorRemark().validate(l, ValidationAction.ADDITIONS_DEL));/// check by id
+            return new ResponseDto<>(errors);
         }
         assortmentRepository.update(Mappers.getMapper(AssortmentMapper.class).toAssortmentUpdateEntity(dto));
         AssortmentRespEntity respEntity = new AssortmentRespEntity();
         respEntity.setDish(shawarmaType.findById(dto.getDish()).get());
         Set<Long> ids = new HashSet<>();
         ids.add(respEntity.getDish().getId());
-        Map<ShawarmaItemEntity,List<GeneralPriceItemEntity>> rem = assortmentRepository.findAllRemarks(ids);
+        Map<ShawarmaItemEntity, List<GeneralPriceItemEntity>> rem = assortmentRepository.findAllRemarks(ids);
         ShawarmaItemEntity shawarmaItemEntity = new ShawarmaItemEntity();
         shawarmaItemEntity.setId(dto.getDish());
         respEntity.setRemarks(rem.get(shawarmaItemEntity));
-        Map<ShawarmaItemEntity,List<GeneralPriceItemEntity>> add = shawarmaType.getAdditionsByShawarwa(ids);
+        Map<ShawarmaItemEntity, List<GeneralPriceItemEntity>> add = shawarmaType.getAdditionsByShawarwa(ids);
         respEntity.setAdditions(add.get(shawarmaItemEntity));
         respEntity.setHalfAble(respEntity.getDish().isHalfAble());
         RespAssortmentDto result = Mappers.getMapper(AssortmentMapper.class).assortmentEntityToDto(respEntity);
