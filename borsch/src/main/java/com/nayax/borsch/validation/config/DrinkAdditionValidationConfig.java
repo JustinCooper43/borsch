@@ -17,17 +17,17 @@ public class DrinkAdditionValidationConfig {
 
     static {
         validatorDrinkAdd.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.ADDITIONS_ADD,
-                ValidationAction.DRINK_ADD, ValidationAction.DISH_ADD),
+                ValidationAction.DRINK_ADD, ValidationAction.DISH_ADD,ValidationAction.SIMPLE_PRICE_ITEM_ADD),
                 obj -> ((ReqSimplePriceItemAddDto) obj).getName() != null,
                 "Item's name is null", "name"));
 
         validatorDrinkAdd.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.ADDITIONS_ADD,
-                ValidationAction.DRINK_ADD, ValidationAction.DISH_ADD),
+                ValidationAction.DRINK_ADD, ValidationAction.DISH_ADD,ValidationAction.SIMPLE_PRICE_ITEM_ADD),
                 obj -> ((ReqSimplePriceItemAddDto) obj).getPrice() != null,
                 "Item's price is null", "price"));
 
         validatorDrinkAdd.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.ADDITIONS_ADD,
-                ValidationAction.DRINK_ADD, ValidationAction.DISH_ADD),
+                ValidationAction.DRINK_ADD, ValidationAction.DISH_ADD,ValidationAction.SIMPLE_PRICE_ITEM_ADD),
                 obj -> ((ReqSimplePriceItemAddDto) obj).getName() != null && ((ReqSimplePriceItemAddDto) obj).getName().length() > 0,
                 "Item's name is empty", "name"));
 
@@ -37,10 +37,12 @@ public class DrinkAdditionValidationConfig {
 //                "Item's name contains special characters", "name"));
 
         validatorDrinkAdd.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.ADDITIONS_ADD,
-                ValidationAction.DRINK_ADD, ValidationAction.DISH_ADD),
+                ValidationAction.DRINK_ADD, ValidationAction.DISH_ADD,ValidationAction.SIMPLE_PRICE_ITEM_ADD),
                 obj -> ((ReqSimplePriceItemAddDto) obj).getPrice() != null && ((ReqSimplePriceItemAddDto) obj).getPrice().compareTo(BigDecimal.ZERO) > 0,
                 "Item's price is negative number", "price"));
 
+        
+        //Update
         validatorDrinkAdd.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.ADDITIONS_UPDATE,
                 ValidationAction.DRINK_UPDATE, ValidationAction.DISH_UPDATE),
                 obj -> ((ReqSimplePriceItemUpDto) obj).getPrice() != null && ((ReqSimplePriceItemUpDto) obj).getPrice().compareTo(BigDecimal.ZERO) > 0,

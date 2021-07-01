@@ -42,7 +42,7 @@ public class ShavarmaService {
     public ResponseDto<RespSimplePriceItemDto> updateDish(ReqSimplePriceItemUpDto dto) {
         ShawarmaItemEntity entity = Mappers.getMapper(AssortmentMapper.class).toShawarmaItemEntity(dto);
         List<ErrorDto> errors = DishValidationConfig.getValidator().validate(dto, ValidationAction.DISH_UPDATE);
-        errors.addAll(ConfigRepo.getValidatorRemark().validate(dto.getId(),ValidationAction.DISH_DELETE));
+        errors.addAll(ConfigRepo.getRepositoryValidator().validate(dto.getId(),ValidationAction.DISH_DELETE));
         if (errors.size() > 0) {
             return new ResponseDto<>(errors);
         }

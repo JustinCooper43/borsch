@@ -55,7 +55,7 @@ public class DrinkAdditionService {
                 return new ResponseDto<>(errors);
             }
         }
-        GeneralPriceItemEntity entity = additionsRepository.update(Mappers.getMapper(SimpleItemsMapper.class).toGeneralPriceItemEntity(dto), nameTable);
+        GeneralPriceItemEntity entity = additionsRepository.update(Mappers.getMapper(SimpleItemsMapper.class).toGeneralPriceItemEntity(dto), tableType);
         RespSimplePriceItemDto respDto = Mappers.getMapper(SimpleItemsMapper.class).toPriceItemDto(entity);
         return new ResponseDto<>(respDto);
     }
