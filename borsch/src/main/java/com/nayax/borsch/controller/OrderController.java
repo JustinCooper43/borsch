@@ -76,8 +76,8 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<ResponseDto<List<RespOrderItemDto>>> getListOrders(Long userId, @RequestParam(required = false) String dateTime) {
-        return ResponseEntity.ok(orderItemService.getListOrder(userId, dateTime));
+    public ResponseEntity<ResponseDto<List<RespOrderItemDto>>> getListOrders(Long userId, @RequestParam(required = false) String date) {
+        return ResponseEntity.ok(orderItemService.getListOrder(userId, date));
     }
 
     @GetMapping("/history/{userId}")
@@ -104,8 +104,9 @@ public class OrderController {
 
     @GetMapping("/delivery")
     public ResponseEntity<ResponseDto<PageDto<RespOrderDeliveryDto>>> getDelivery(
-            @RequestParam Integer page, @RequestParam Integer pageSize, @RequestParam(required = false) LocalDate dateTime) {
-        ResponseDto<PageDto<RespOrderDeliveryDto>> response = deliveryService.getPagedDeliveryInfo(page, pageSize, dateTime);
+            @RequestParam Integer page, @RequestParam Integer pageSize, @RequestParam(required = false) String dateStr) {
+        LocalDate date = LocalDate.parse(dateStr);
+        ResponseDto<PageDto<RespOrderDeliveryDto>> response = deliveryService.getPagedDeliveryInfo(page, pageSize, date);
         return ResponseEntity.ok(response);
     }
 

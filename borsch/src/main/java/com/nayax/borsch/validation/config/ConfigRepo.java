@@ -1,4 +1,4 @@
-package com.nayax.borsch.validation.testvalid.config;
+package com.nayax.borsch.validation.config;
 
 import com.nayax.borsch.model.dto.assortment.request.ReqSimpleItemUpDto;
 import com.nayax.borsch.model.dto.assortment.request.ReqSimplePriceItemUpDto;
@@ -42,6 +42,9 @@ public class ConfigRepo {
                 obj -> (validationUtilRepository.checkId(((Long) obj), TablesType.EXTRAITEM)),
                 "Id of updated item doesn't exist", "id"));
         validatorRemark.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.DRINK_DEL),
+                obj -> (validationUtilRepository.checkId(((Long) obj), TablesType.SHAWARMA)),
+                "Id of updated item doesn't exist", "id"));
+        validatorRemark.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.DISH_DELETE),
                 obj -> (validationUtilRepository.checkId(((Long) obj), TablesType.SHAWARMA)),
                 "Id of updated item doesn't exist", "id"));
 

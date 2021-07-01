@@ -54,6 +54,6 @@ public interface SimpleItemsMapper {
     }
 
     default LocalDate ldtToDate(LocalDateTime localDateTime) {
-        return localDateTime.toLocalDate();
+        return localDateTime != null ? localDateTime.toLocalDate() : null;
     }
 }

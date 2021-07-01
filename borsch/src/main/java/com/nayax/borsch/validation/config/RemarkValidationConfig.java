@@ -13,8 +13,6 @@ import java.util.List;
 public class RemarkValidationConfig {
 
     private static final Validator validatorRemark = new ValidatorImpl();
-    private static final AdditionsRepository additionsRepository= new AdditionsRepository();
-
 
     static{
 

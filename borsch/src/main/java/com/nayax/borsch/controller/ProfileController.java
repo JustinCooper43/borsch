@@ -39,8 +39,6 @@ public class ProfileController {
     public ResponseEntity<ResponseDto<RespProfileDto>> update(@PathVariable(value = "id") Long id, @RequestBody ReqProfileUpDto dto) {
 
         dto.getUser().setId(id);
-        dto.getPayments().setCashierId(id);
-
         ResponseDto<RespProfileDto> responseDto = service.update(dto);
         return ResponseEntity.ok(responseDto);
     }

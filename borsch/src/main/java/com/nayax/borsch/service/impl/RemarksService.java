@@ -7,15 +7,15 @@ import com.nayax.borsch.model.dto.PageDto;
 import com.nayax.borsch.model.dto.ResponseDto;
 import com.nayax.borsch.model.dto.assortment.request.ReqSimpleItemAddDto;
 import com.nayax.borsch.model.dto.assortment.request.ReqSimpleItemUpDto;
-import com.nayax.borsch.model.dto.assortment.request.ReqSimplePriceItemUpDto;
 import com.nayax.borsch.model.dto.assortment.response.RespSimpleItemDto;
-import com.nayax.borsch.model.dto.assortment.response.RespSimplePriceItemDto;
 import com.nayax.borsch.model.entity.PageEntity;
 import com.nayax.borsch.model.entity.assortment.GeneralPriceItemEntity;
 import com.nayax.borsch.repository.impl.AdditionsRepository;
 import com.nayax.borsch.repository.impl.TablesType;
+import com.nayax.borsch.validation.config.PageIdValidationConfig;
+import com.nayax.borsch.validation.config.RemarkValidationConfig;
 import com.nayax.borsch.validation.enums.ValidationAction;
-import com.nayax.borsch.validation.testvalid.config.ConfigRepo;
+import com.nayax.borsch.validation.config.ConfigRepo;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +30,11 @@ public class RemarksService {
     AdditionsRepository additionsRepository;
 
     public ResponseDto<RespSimpleItemDto> addRemarkItem(ReqSimpleItemAddDto dto, TablesType tableType) {
+
+        List<ErrorDto> errors = RemarkValidationConfig.getValidatorRemark().validate(dto, ValidationAction.REMARK_ADD);
+        if (errors.size() > 0) {
+            return new ResponseDto<>(errors);
+        }
         GeneralPriceItemEntity entity = additionsRepository.add(Mappers.getMapper(SimpleItemsMapper.class).toGeneralPriceItemEntity(dto), tableType);
         RespSimpleItemDto respDto = Mappers.getMapper(SimpleItemsMapper.class).toItemDto(entity);
         return new ResponseDto<>(respDto);
@@ -48,6 +53,14 @@ public class RemarksService {
     }
 
     public ResponseDto<PageDto<RespSimpleItemDto>> getRemarkItemPage(int page, int pageSize, TablesType tableType) {
+        List<ErrorDto> errorsPage = PageIdValidationConfig.getValidatorPageId().validate(page, ValidationAction.REMARK_GETALL);
+        if (errorsPage.size() > 0) {
+            return new ResponseDto<>(errorsPage);
+        }
+        List<ErrorDto> errorsPageSize = PageIdValidationConfig.getValidatorPageId().validate(pageSize, ValidationAction.REMARK_GETALL);
+        if (errorsPageSize.size() > 0) {
+            return new ResponseDto<>(errorsPageSize);
+        }
 
         PageEntity<GeneralPriceItemEntity> listEntity = additionsRepository.findAllPage(page, pageSize, tableType);
         listEntity.setPage(page);
@@ -77,10 +90,13 @@ public class RemarksService {
     }
 
     public ResponseDto<RespSimpleItemDto> delRemarkItemById(Long id, TablesType nameTable) {
-
-        List<ErrorDto> errors = ConfigRepo.getValidatorRemark().validate(id, ValidationAction.REMARK_DEL);
+        List<ErrorDto> errors = PageIdValidationConfig.getValidatorPageId().validate(id, ValidationAction.REMARK_DEL);
         if (errors.size() > 0) {
             return new ResponseDto<>(errors);
+        }
+        List<ErrorDto> errorsFromRepo = ConfigRepo.getValidatorRemark().validate(id, ValidationAction.REMARK_DEL);
+        if (errorsFromRepo.size() > 0) {
+            return new ResponseDto<>(errorsFromRepo);
         }
         Optional<GeneralPriceItemEntity> entity = additionsRepository.delete(id, nameTable);
         return new ResponseDto<>(Mappers.getMapper(SimpleItemsMapper.class).toItemDto(entity.get()));

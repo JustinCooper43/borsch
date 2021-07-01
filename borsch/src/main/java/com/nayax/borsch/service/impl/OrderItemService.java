@@ -12,6 +12,7 @@ import com.nayax.borsch.model.entity.order.OrderEntity;
 import com.nayax.borsch.repository.impl.OrderItemRepo;
 import com.nayax.borsch.repository.impl.OrderItemRepository;
 import com.nayax.borsch.repository.impl.RepositoryOrderSummaryImpl;
+import com.nayax.borsch.utility.PageDtoBuilder;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,23 +33,23 @@ public class OrderItemService {
     RepositoryOrderSummaryImpl orderSummaryRepository;
 
 
-    public ResponseDto<List<RespOrderItemDto>> getListOrder(Long userId, String dateTime) {
+    public ResponseDto<List<RespOrderItemDto>> getListOrder(Long userId, String dateString) {
 
-        LocalDate date = LocalDate.parse(dateTime);
+        LocalDate date = LocalDate.parse(dateString);
         List<OrderEntity> listOrders = orderItemRepo.getListOrders(userId, date);
         Set<Long> setOrderId = new HashSet<>();
         for (OrderEntity entity : listOrders) {
             setOrderId.add(entity.getOrderId());
         }
+        if (!setOrderId.isEmpty()) {
+            Map<Long, List<GeneralPriceItemEntity>> mapUserIdAddition = orderItemRepo.getMapAdditions(setOrderId, date);
 
-        Map<Long, List<GeneralPriceItemEntity>> mapUserIdAddition = orderItemRepo.getMapAdditions(setOrderId, date);
+            for (OrderEntity var : listOrders) {
+                var.setAdditions(mapUserIdAddition.get(var.getOrderId()));
+            }
 
-        for (OrderEntity var : listOrders) {
-            var.setAdditions(mapUserIdAddition.get(var.getOrderId()));
+            setCostOrderItem(listOrders);
         }
-
-        setCostOrderItem(listOrders);
-
         List<RespOrderItemDto> listDto = Mappers.getMapper(OrderItemMapper.class).toListRespOrderDto(listOrders);
         return new ResponseDto<>(listDto);
     }
@@ -90,17 +91,23 @@ public class OrderItemService {
 
     public ResponseDto<PageDto<RespOrderItemDto>> getPagedHistory(Long userId, int page, int pageSize) {
         PageEntity<OrderEntity> listEntity = orderItemRepo.getPagedHistory(userId, page, pageSize);
+        if (listEntity.getResponseList().get(0).getOrderId() == null) {
+            return new ResponseDto<>(new PageDtoBuilder<RespOrderItemDto>()
+                    .page(new ArrayList<>())
+                    .currentPageNum(page)
+                    .totalPages(0)
+                    .totalElements(0)
+                    .elementsPerPage(pageSize)
+                    .build());
+        }
         listEntity.setPage(page);
         listEntity.setPageSize(pageSize);
-
         Integer totalElements = listEntity.getTotalElements();
         int totalPages = totalElements % pageSize == 0 ?
                 totalElements / pageSize :
                 totalElements / pageSize + 1;
         listEntity.setTotalPages(totalPages);
-
         PageDto<RespOrderItemDto> listDto = Mappers.getMapper(OrderItemMapper.class).toPageDto(listEntity);
-
         return new ResponseDto<>(listDto);
     }
 }
