@@ -9,6 +9,7 @@ import com.nayax.borsch.validation.impl.ValidatorImpl;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
 public class DrinkAdditionValidationConfig {
 
@@ -16,17 +17,17 @@ public class DrinkAdditionValidationConfig {
 
     static {
         validatorDrinkAdd.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.ADDITIONS_ADD,
-                ValidationAction.DRINK_ADD, ValidationAction.DISH_ADD),
+                ValidationAction.DRINK_ADD, ValidationAction.DISH_ADD,ValidationAction.SIMPLE_PRICE_ITEM_ADD),
                 obj -> ((ReqSimplePriceItemAddDto) obj).getName() != null,
                 "Item's name is null", "name"));
 
         validatorDrinkAdd.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.ADDITIONS_ADD,
-                ValidationAction.DRINK_ADD, ValidationAction.DISH_ADD),
+                ValidationAction.DRINK_ADD, ValidationAction.DISH_ADD,ValidationAction.SIMPLE_PRICE_ITEM_ADD),
                 obj -> ((ReqSimplePriceItemAddDto) obj).getPrice() != null,
                 "Item's price is null", "price"));
 
         validatorDrinkAdd.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.ADDITIONS_ADD,
-                ValidationAction.DRINK_ADD, ValidationAction.DISH_ADD),
+                ValidationAction.DRINK_ADD, ValidationAction.DISH_ADD,ValidationAction.SIMPLE_PRICE_ITEM_ADD),
                 obj -> ((ReqSimplePriceItemAddDto) obj).getName() != null && ((ReqSimplePriceItemAddDto) obj).getName().length() > 0,
                 "Item's name is empty", "name"));
 
@@ -36,10 +37,12 @@ public class DrinkAdditionValidationConfig {
 //                "Item's name contains special characters", "name"));
 
         validatorDrinkAdd.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.ADDITIONS_ADD,
-                ValidationAction.DRINK_ADD, ValidationAction.DISH_ADD),
+                ValidationAction.DRINK_ADD, ValidationAction.DISH_ADD,ValidationAction.SIMPLE_PRICE_ITEM_ADD),
                 obj -> ((ReqSimplePriceItemAddDto) obj).getPrice() != null && ((ReqSimplePriceItemAddDto) obj).getPrice().compareTo(BigDecimal.ZERO) > 0,
                 "Item's price is negative number", "price"));
 
+        
+        //Update
         validatorDrinkAdd.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.ADDITIONS_UPDATE,
                 ValidationAction.DRINK_UPDATE, ValidationAction.DISH_UPDATE),
                 obj -> ((ReqSimplePriceItemUpDto) obj).getPrice() != null && ((ReqSimplePriceItemUpDto) obj).getPrice().compareTo(BigDecimal.ZERO) > 0,
@@ -47,7 +50,7 @@ public class DrinkAdditionValidationConfig {
 
         validatorDrinkAdd.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.ADDITIONS_UPDATE,
                 ValidationAction.DRINK_UPDATE, ValidationAction.DISH_UPDATE),
-                obj -> ((ReqSimplePriceItemUpDto) obj).getPrice() != null ,
+                obj -> ((ReqSimplePriceItemUpDto) obj).getPrice() != null,
                 "Price of updated item is null", "price"));
 
         validatorDrinkAdd.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.ADDITIONS_UPDATE,
@@ -72,8 +75,16 @@ public class DrinkAdditionValidationConfig {
 
         validatorDrinkAdd.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.ADDITIONS_UPDATE,
                 ValidationAction.DRINK_UPDATE, ValidationAction.DISH_UPDATE),
-                obj -> ((ReqSimplePriceItemUpDto) obj).getName() != null &&  ((ReqSimplePriceItemUpDto) obj).getId() > 0,
+                obj -> ((ReqSimplePriceItemUpDto) obj).getName() != null && ((ReqSimplePriceItemUpDto) obj).getId() > 0,
                 "Id of updated item is invalid", "name"));
+
+        validatorDrinkAdd.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.SIMPLE_PRICE_ITEM_DEL,
+                ValidationAction.REMARK_DEL, ValidationAction.DISH_DELETE), obj -> obj != null
+                && (Long) obj > 0, "Id is invalid", "id"));
+
+        validatorDrinkAdd.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.SIMPLE_PRICE_ITEM_DEL,
+                ValidationAction.REMARK_DEL, ValidationAction.DISH_DELETE), Objects::nonNull, "Id is null", "id"));
+
 
     }
 

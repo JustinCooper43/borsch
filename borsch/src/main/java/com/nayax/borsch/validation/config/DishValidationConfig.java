@@ -28,6 +28,8 @@ public class DishValidationConfig {
 //                 "Dish Id is null","Id"));
 
          dishValidator.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.DISH_UPDATE),
+                 obj -> ((ReqSimplePriceItemUpDto) obj).getId()!= null,"Id is null","Name"));
+         dishValidator.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.DISH_UPDATE),
                  obj -> ((ReqSimplePriceItemUpDto) obj).getName() != null,"Name is null","Name"));
          dishValidator.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.DISH_UPDATE),
                  obj -> ((ReqSimplePriceItemUpDto) obj).getPrice() != null ,"Price is null","Price"));

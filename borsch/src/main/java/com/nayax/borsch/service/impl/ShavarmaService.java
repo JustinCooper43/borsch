@@ -11,10 +11,9 @@ import com.nayax.borsch.model.dto.assortment.response.RespSimplePriceItemDto;
 import com.nayax.borsch.model.entity.PageEntity;
 import com.nayax.borsch.model.entity.assortment.ShawarmaItemEntity;
 import com.nayax.borsch.repository.impl.RepositoryShawarmaTypeImpl;
-import com.nayax.borsch.validation.componentimpl.SimpleValidatorComponent;
+import com.nayax.borsch.utility.PageDtoBuilder;
 import com.nayax.borsch.validation.config.ConfigRepo;
 import com.nayax.borsch.validation.config.DishValidationConfig;
-import com.nayax.borsch.validation.config.DrinkAdditionValidationConfig;
 import com.nayax.borsch.validation.config.PageIdValidationConfig;
 import com.nayax.borsch.validation.enums.ValidationAction;
 import org.mapstruct.factory.Mappers;
@@ -42,7 +41,8 @@ public class ShavarmaService {
 
     public ResponseDto<RespSimplePriceItemDto> updateDish(ReqSimplePriceItemUpDto dto) {
         ShawarmaItemEntity entity = Mappers.getMapper(AssortmentMapper.class).toShawarmaItemEntity(dto);
-        List<ErrorDto> errors = DishValidationConfig.getValidator().validate(dto.getId(), ValidationAction.DISH_UPDATE);
+        List<ErrorDto> errors = DishValidationConfig.getValidator().validate(dto, ValidationAction.DISH_UPDATE);
+        errors.addAll(ConfigRepo.getRepositoryValidator().validate(dto.getId(),ValidationAction.DISH_DELETE));
         if (errors.size() > 0) {
             return new ResponseDto<>(errors);
         }
@@ -57,7 +57,7 @@ public class ShavarmaService {
         if (errorsId.size() > 0) {
             return new ResponseDto<>(errorsId);
         }
-        List<ErrorDto> errorsFromRepo = ConfigRepo.getValidatorRemark().validate(id, ValidationAction.DISH_DELETE);
+        List<ErrorDto> errorsFromRepo = ConfigRepo.getRepositoryValidator().validate(id, ValidationAction.DISH_DELETE);
         if (errorsFromRepo.size() > 0) {
             return new ResponseDto<>(errorsFromRepo);
         }
@@ -74,17 +74,21 @@ public class ShavarmaService {
     }
 
     public ResponseDto<PageDto<RespSimplePriceItemDto>> getDishByPage(int page, int pageSize) {
-
+        List<ErrorDto> errorsPage = PageIdValidationConfig.getValidatorPageId().validate(page, ValidationAction.PAGING);
+        errorsPage.addAll(PageIdValidationConfig.getValidatorPageId().validate(pageSize, ValidationAction.PAGING));
+        if (errorsPage.size() > 0) {
+            return new ResponseDto<>(errorsPage);
+        }
 
         PageEntity<ShawarmaItemEntity> listEntity = repositoryShawarmaType.findAll(page, pageSize);
+        int totalPages = PageDtoBuilder.getTotalPages(pageSize, listEntity.getResponseList().size());
+        if (totalPages < page) {
+            errorsPage.add(new ErrorDto("Incorrect number page", "page"));
+            return new ResponseDto<>(errorsPage);
+        }
 
         listEntity.setPage(page);
         listEntity.setPageSize(pageSize);
-
-        Integer totalElements = listEntity.getTotalElements();
-        int totalPages = totalElements % pageSize == 0 ?
-                totalElements / pageSize :
-                totalElements / pageSize + 1;
         listEntity.setTotalPages(totalPages);
 
         PageDto<RespSimplePriceItemDto> pageDto = Mappers.getMapper(AssortmentMapper.class).toPageDto(listEntity);

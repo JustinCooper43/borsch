@@ -95,8 +95,6 @@ public class OrderItemService {
             return new ResponseDto<>(new PageDtoBuilder<RespOrderItemDto>()
                     .page(new ArrayList<>())
                     .currentPageNum(page)
-                    .totalPages(0)
-                    .totalElements(0)
                     .elementsPerPage(pageSize)
                     .build());
         }
