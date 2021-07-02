@@ -87,8 +87,6 @@ public class DrinkAdditionService {
             return new ResponseDto<PageDto<RespSimplePriceItemDto>>(errorsPage).setStatus(ErrorStatus.UNPROCESSIBLE.statusName);
         }
         PageEntity<GeneralPriceItemEntity> listEntity = additionsRepository.findAllPage(page, pageSize, tableType);
-        listEntity.setPage(page);
-        listEntity.setPageSize(pageSize);
 
         int totalPages = PageDtoBuilder.getTotalPages(pageSize,listEntity.getTotalElements());
         if (totalPages < page) {
@@ -96,6 +94,10 @@ public class DrinkAdditionService {
             return new ResponseDto<PageDto<RespSimplePriceItemDto>>(errorsPage).setStatus(ErrorStatus.UNPROCESSIBLE.statusName);
         }
         PageDto<RespSimplePriceItemDto> listRespDto = Mappers.getMapper(SimpleItemsMapper.class).toPagePriceDto(listEntity);
+
+        listEntity.setPage(page);
+        listEntity.setPageSize(pageSize);
+        listRespDto.setTotalPages(totalPages);
         return new ResponseDto<>(listRespDto).setStatus(ErrorStatus.OK.statusName);
     }
 
@@ -115,7 +117,7 @@ public class DrinkAdditionService {
     public ResponseDto<RespSimplePriceItemDto> delGeneralItemById(Long id, TablesType nameTable) {
         List<ErrorDto> errorsId = DrinkAdditionValidationConfig.getValidatorDrinkAdd().validate(id, ValidationAction.SIMPLE_PRICE_ITEM_DEL);
         if (errorsId.size() > 0) {
-            return new ResponseDto<RespSimplePriceItemDto>(errorsId).setStatus(ErrorStatus.UNAUTHORIZED.statusName);
+            return new ResponseDto<RespSimplePriceItemDto>(errorsId).setStatus(ErrorStatus.UNPROCESSIBLE.statusName);
         }
         if (nameTable.equals(TablesType.ADDITION)) {
             List<ErrorDto> errors = ConfigRepo.getRepositoryValidator().validate(id, ValidationAction.ADDITIONS_DEL);

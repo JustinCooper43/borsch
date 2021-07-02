@@ -78,7 +78,7 @@ public class AssortmentService {
         respEntity.setDish(shawarmaType.findById(dto.getDish()).get());
         Set<Long> ids = new HashSet<>();
         ids.add(respEntity.getDish().getId());
-        Map<ShawarmaItemEntity, List<GeneralPriceItemEntity>> rem = assortmentRepository.findAllRemarks(ids);
+        Map<ShawarmaItemEntity, List<GeneralPriceItemEntity>> rem = shawarmaType.getAllRemarks(ids);
         ShawarmaItemEntity shawarmaItemEntity = new ShawarmaItemEntity();
         shawarmaItemEntity.setId(dto.getDish());
         respEntity.setRemarks(rem.get(shawarmaItemEntity));
