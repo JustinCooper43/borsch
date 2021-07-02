@@ -60,7 +60,7 @@ public class ProfileService {
         }
         errors.addAll(ConfigRepo.getRepositoryValidator().validate(dto.getUser().getId(), ValidationAction.USER_VERIFY_ID));
         if (errors.size() > 0) {
-            return new ResponseDto<RespProfileDto>(errors).setStatus("422");
+            return new ResponseDto<RespProfileDto>(errors).setStatus("403");
         }
 
         ProfileEntity entity = ProfileMapper.toUpEntity(dto);
@@ -154,6 +154,15 @@ public class ProfileService {
     }
 
     public ResponseDto<RespLoginCashierDto> registration(ReqUserAddDto dto) {
+        List<ErrorDto> validationErrors = ProfileConfigValid.getValidatorProfile().validate(dto, ValidationAction.USER_ADD);
+        if (validationErrors.size() > 0) {
+            return new ResponseDto<RespLoginCashierDto>(validationErrors).setStatus("422");
+        }
+        validationErrors.addAll(ConfigRepo.getRepositoryValidator().validate(dto.geteMail(), ValidationAction.USER_ADD_EMAIL));
+        if (validationErrors.size() > 0) {
+            return new ResponseDto<RespLoginCashierDto>(validationErrors).setStatus("403");
+        }
+
         RespLoginCashierDto resp = new RespLoginCashierDto();
         ProfileEntity profileEntity = new ProfileEntity();
         profileEntity.setCashierEntity(null);
