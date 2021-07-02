@@ -14,6 +14,7 @@ import com.nayax.borsch.repository.impl.OrderItemRepo;
 import com.nayax.borsch.repository.impl.OrderItemRepository;
 import com.nayax.borsch.repository.impl.RepositoryOrderSummaryImpl;
 import com.nayax.borsch.utility.PageDtoBuilder;
+import com.nayax.borsch.utility.enums.ErrorStatus;
 import com.nayax.borsch.validation.config.*;
 import com.nayax.borsch.validation.enums.ValidationAction;
 import org.mapstruct.factory.Mappers;
@@ -148,8 +149,7 @@ public class OrderItemService {
         PageEntity<OrderEntity> listEntity = orderItemRepo.getPagedHistory(userId, page, pageSize);
         if (listEntity.getResponseList().get(0).getOrderId() == null) {
             ResponseDto<PageDto<RespOrderItemDto>> response = new ResponseDto<>();
-            response.setStatus("404");
-            return response;
+            return response.setStatus(ErrorStatus.NOT_FOUND.statusName);
         }
         listEntity.setPage(page);
         listEntity.setPageSize(pageSize);

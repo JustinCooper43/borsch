@@ -19,9 +19,9 @@ public class ValidationUtilRepository {
     public Boolean checkId(Long id, TablesType nameTable) {
         String table = getNameTable(nameTable);
         String sql =
-                " declare @table nvarchar(50) = ?;\n" +
-                "  declare @id bigint = ?; \n" +
-                "  declare @SqlStr nvarchar(max) SET @SqlStr = N' SELECT id From ' + @table + ' WHERE id = ' + convert(nvarchar,@id)  EXEC sp_executesql @SqlStr ";
+                " declare @table nvarchar(50) = ?; " +
+                " declare @id bigint = ?; " +
+                " declare @SqlStr nvarchar(max) SET @SqlStr = N' SELECT id From ' + @table + ' WHERE id = ' + convert(nvarchar,@id) + ' And Active = ''Y'' '  EXEC sp_executesql @SqlStr ; ";
 
         List<Long> listId = jdbcTemplate.query(sql, new SingleColumnRowMapper<>(Long.class), table, id);
 

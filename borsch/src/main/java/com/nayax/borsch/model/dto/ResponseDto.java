@@ -5,7 +5,7 @@ import java.util.List;
 public class ResponseDto<T> {
     private T data;
     private List<ErrorDto> errors;
-    private String status = "200";
+    private String status;
 
     public ResponseDto() {
     }
@@ -42,4 +42,5 @@ public class ResponseDto<T> {
     public void setErrors(List<ErrorDto> errors) {
         this.errors = errors;
     }
+
 }
