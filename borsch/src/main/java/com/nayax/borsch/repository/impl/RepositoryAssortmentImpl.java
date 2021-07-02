@@ -82,21 +82,21 @@ public class RepositoryAssortmentImpl {
                            "update AdditionAllowedShawarmaType set Active = 'N' where ShawarmaTypeId = ? ;" +
                            "update ShawarmaType set Halfable = ? where id = ?";
 
-        String sqlInsert1 = "Insert into RemarkAllowedShawarmaType (ShawarmaTypeId,RemarkId,Active) values(?,?,?)";
+//        String sqlInsert1 = "Insert into RemarkAllowedShawarmaType (ShawarmaTypeId,RemarkId,Active) values(?,?,?)";
         String sqlInsert2 = "Insert into AdditionAllowedShawarmaType (ShawarmaTypeId,AllowedAdditionId,Active) values(?,?,?)";
         jdbcTemplate.update(sqlUpdate,entity.getDish(),entity.getDish(),entity.isHalfAble() ? 1 : 0, entity.getDish());
-        jdbcTemplate.batchUpdate(sqlInsert1, new BatchPreparedStatementSetter() {
-            @Override
-            public void setValues(PreparedStatement ps, int i) throws SQLException {
-                ps.setLong(1,entity.getDish());
-                ps.setLong(2,entity.getRemarksId().get(i));
-                ps.setString(3,"Y");
-            }
-            @Override
-            public int getBatchSize() {
-                return entity.getRemarksId().size();
-            }
-        });
+//        jdbcTemplate.batchUpdate(sqlInsert1, new BatchPreparedStatementSetter() {
+//            @Override
+//            public void setValues(PreparedStatement ps, int i) throws SQLException {
+//                ps.setLong(1,entity.getDish());
+//                ps.setLong(2,entity.getRemarksId().get(i));
+//                ps.setString(3,"Y");
+//            }
+//            @Override
+//            public int getBatchSize() {
+//                return entity.getRemarksId().size();
+//            }
+//        });
         jdbcTemplate.batchUpdate(sqlInsert2, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {

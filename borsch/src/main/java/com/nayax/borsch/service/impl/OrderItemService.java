@@ -67,23 +67,6 @@ public class OrderItemService {
         return new ResponseDto<>(listDto).setStatus(ErrorStatus.OK.statusName);
     }
 
-    private void setCostOrderItem(List<OrderEntity> listOrders) {
-
-        for (OrderEntity orderItem : listOrders) {
-            BigDecimal dishPrice = orderItem.getDish().getPrice();
-            BigDecimal drinkPrice = orderItem.getDrink().getPrice();
-            BigDecimal additionPrice = new BigDecimal("0");
-            for (GeneralPriceItemEntity additItem : orderItem.getAdditions()) {
-                additionPrice = additionPrice.add(additItem.getPrice());
-            }
-            BigDecimal totalPrice = dishPrice.add(drinkPrice).add(additionPrice);
-            BigDecimal quantity = new BigDecimal(orderItem.getQuantity());
-
-            totalPrice = totalPrice.multiply(quantity);
-            orderItem.setCost(totalPrice);
-        }
-    }
-
     public ResponseDto<RespOrderItemDto> addOrder(ReqOrderItemAddDto dto) {
         List<ErrorDto> validationErrors = OrderItemValidationConfig.getOrderItemValidator().validate(dto, ValidationAction.ORDER_ITEM_ADD);
         if (validationErrors.size() > 0) {
@@ -157,5 +140,22 @@ public class OrderItemService {
         listEntity.setTotalPages(totalPages);
         PageDto<RespOrderItemDto> listDto = Mappers.getMapper(OrderItemMapper.class).toPageDto(listEntity);
         return new ResponseDto<>(listDto).setStatus(ErrorStatus.OK.statusName);
+    }
+
+    private void setCostOrderItem(List<OrderEntity> listOrders) {
+
+        for (OrderEntity orderItem : listOrders) {
+            BigDecimal dishPrice = orderItem.getDish().getPrice();
+            BigDecimal drinkPrice = orderItem.getDrink().getPrice();
+            BigDecimal additionPrice = new BigDecimal("0");
+            for (GeneralPriceItemEntity additItem : orderItem.getAdditions()) {
+                additionPrice = additionPrice.add(additItem.getPrice());
+            }
+            BigDecimal totalPrice = dishPrice.add(drinkPrice).add(additionPrice);
+            BigDecimal quantity = new BigDecimal(orderItem.getQuantity());
+
+            totalPrice = totalPrice.multiply(quantity);
+            orderItem.setCost(totalPrice);
+        }
     }
 }

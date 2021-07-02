@@ -1,27 +1,20 @@
 package com.nayax.borsch.controller;
 
-import com.nayax.borsch.mapper.OrderItemMapper;
 import com.nayax.borsch.model.dto.PageDto;
 import com.nayax.borsch.model.dto.ResponseDto;
-import com.nayax.borsch.model.dto.assortment.response.RespSimpleItemDto;
-import com.nayax.borsch.model.dto.assortment.response.RespSimplePriceItemDto;
 import com.nayax.borsch.model.dto.order.request.ReqOrderItemAddDto;
 import com.nayax.borsch.model.dto.order.response.RespOrderDeliveryDto;
 import com.nayax.borsch.model.dto.order.response.RespOrderItemDto;
 import com.nayax.borsch.model.dto.order.response.RespOrderSumDto;
 import com.nayax.borsch.model.dto.order.response.RespOrderSumInfoDto;
-import com.nayax.borsch.model.entity.order.OrderEntity;
 import com.nayax.borsch.service.impl.DeliveryService;
 import com.nayax.borsch.service.impl.OrderItemService;
 import com.nayax.borsch.service.impl.OrderSummaryInfoService;
-import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -63,11 +56,10 @@ public class OrderController {
     }
 
     @GetMapping("/summary/info")
-    public ResponseEntity<ResponseDto<RespOrderSumInfoDto>> getOrderInfo(@RequestParam(required = false) LocalDateTime dateTime) {
-        return ResponseEntity.ok(orderSummaryInfoService.getOrderSumInfo(dateTime));
+    public ResponseEntity<ResponseDto<RespOrderSumInfoDto>> getOrderInfo(@RequestParam(required = false) String date) {
+        LocalDate localDate = LocalDate.parse(date);
+        return ResponseEntity.ok(orderSummaryInfoService.getOrderSumInfo(localDate));
     }
-
-
 
     @GetMapping("/delivery")
     public ResponseEntity<ResponseDto<PageDto<RespOrderDeliveryDto>>> getDelivery(

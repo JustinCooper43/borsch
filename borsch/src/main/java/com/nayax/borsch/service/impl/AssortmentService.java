@@ -71,9 +71,9 @@ public class AssortmentService {
         if (errors.size() > 0){
             return new ResponseDto<RespAssortmentDto>(errors).setStatus(ErrorStatus.NOT_FOUND.statusName);
         }
-        for (Long l : dto.getRemarks()) {
-            errors.addAll(ConfigRepo.getRepositoryValidator().validate(l, ValidationAction.REMARK_DEL));/// check by id
-        }
+//        for (Long l : dto.getRemarks()) {
+//            errors.addAll(ConfigRepo.getRepositoryValidator().validate(l, ValidationAction.REMARK_DEL));/// check by id
+//        }
         for (Long l : dto.getAdditions()) {
             errors.addAll(ConfigRepo.getRepositoryValidator().validate(l, ValidationAction.ADDITIONS_DEL));/// check by id
         }
@@ -85,10 +85,10 @@ public class AssortmentService {
         respEntity.setDish(shawarmaType.findById(dto.getDish()).get());
         Set<Long> ids = new HashSet<>();
         ids.add(respEntity.getDish().getId());
-        Map<ShawarmaItemEntity, List<GeneralPriceItemEntity>> rem = shawarmaType.getAllRemarks(ids);
+//        Map<ShawarmaItemEntity, List<GeneralPriceItemEntity>> rem = shawarmaType.getAllRemarks(ids);
         ShawarmaItemEntity shawarmaItemEntity = new ShawarmaItemEntity();
         shawarmaItemEntity.setId(dto.getDish());
-        respEntity.setRemarks(rem.get(shawarmaItemEntity));
+//        respEntity.setRemarks(rem.get(shawarmaItemEntity));
         Map<ShawarmaItemEntity, List<GeneralPriceItemEntity>> add = shawarmaType.getAdditionsByShawarwa(ids);
         respEntity.setAdditions(add.get(shawarmaItemEntity));
         respEntity.setHalfAble(respEntity.getDish().isHalfAble());

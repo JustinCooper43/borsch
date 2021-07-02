@@ -49,7 +49,7 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
                     return entityDB;
                 },
                 //TODO fix entity name
-                table,  entity.getName() , entity.getPrice(), entity.getActive()
+                table, entity.getName(), entity.getPrice(), entity.getActive()
         );
         return entity1;
     }
@@ -103,11 +103,11 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
     }
 
 
-    public boolean disabledAllows(Long id,Long newId, TablesType nameTable) {
+    public boolean disabledAllows(Long id, Long newId, TablesType nameTable) {
         int result = 0;
         String sql = "";
         String sqlInsert = "";
-        List<Long> dishId = dishByAllows(id,nameTable);
+        List<Long> dishId = dishByAllows(id, nameTable);
         if (nameTable.equals(TablesType.ADDITION)) {
             sql = "  update AdditionAllowedShawarmaType set Active = 'N' where AllowedAdditionId = ? and Active = 'Y'";
             sqlInsert = "  Insert into AdditionAllowedShawarmaType (ShawarmaTypeId,AllowedAdditionId,Active)\n" +
@@ -124,18 +124,21 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
             e.printStackTrace();
         }
 
-        jdbcTemplate.batchUpdate(sqlInsert, new BatchPreparedStatementSetter() {
-            @Override
-            public void setValues(PreparedStatement ps, int i) throws SQLException {
-                ps.setLong(1, dishId.get(i));
-                ps.setLong(2, newId);
-                ps.setString(3, "Y");
-            }
-            @Override
-            public int getBatchSize() {
-                return dishId.size();
-            }
-        });
+        if (dishId.size() > 0) {
+            jdbcTemplate.batchUpdate(sqlInsert, new BatchPreparedStatementSetter() {
+                @Override
+                public void setValues(PreparedStatement ps, int i) throws SQLException {
+                    ps.setLong(1, dishId.get(i));
+                    ps.setLong(2, newId);
+                    ps.setString(3, "Y");
+                }
+
+                @Override
+                public int getBatchSize() {
+                    return dishId.size();
+                }
+            });
+        }
         return result > 0;
     }
 

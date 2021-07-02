@@ -164,6 +164,39 @@ public class OrderItemRepo {
         return listResult;
     }
 
+    public List<OrderItemTotalCostInfo> getOrderInfo(LocalDate date) {
+        String sql = " SELECT [Order].UserId userId ,  [Order].CreationTime creatTime , [Order].id orderId, [Order].Quantity quantity,  " +
+                " ShawarmaType.Cost [dish.price],  " +
+                " ExtraItem.Cost [drink.price], " +
+                " sum(Addition.[Cost]) additionCost, " +
+                " sum(Payment.[Sum]) totalPayed  " +
+                " FROM [Order]  " +
+                " JOIN ShawarmaType ON ShawarmaType.id = [Order].ShawarmaTypeId   " +
+                " JOIN ExtraItem ON ExtraItem.id = [Order].ExtraItemId   " +
+                " JOIN AdditionSelectedOrder ON AdditionSelectedOrder.OrderId = [Order].id  " +
+                " JOIN Addition ON Addition.id = AdditionSelectedOrder.AdditionId  " +
+                " JOIN Payment ON Payment.OrderId = [Order].id " +
+                " WHERE  [Order].CreationTime BETWEEN ? AND ? " +
+                " AND Payment.Confirmation = 1 " +
+                " GROUP BY [Order].UserId, [Order].CreationTime, [Order].id , [Order].Quantity, ShawarmaType.Cost, ExtraItem.Cost ";
+        List<OrderItemTotalCostInfo> listResult;
+        listResult = jdbcTemplate.query(sql, new RowMapper<OrderItemTotalCostInfo>() {
+            @Override
+            public OrderItemTotalCostInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
+                OrderItemTotalCostInfo entity = new OrderItemTotalCostInfo();
+                entity.setUserId((Long) rs.getObject("userId"));
+                entity.setOrderId((Long) rs.getObject("orderId"));
+                entity.setDrinkCost((BigDecimal) rs.getObject("drink.price"));
+                entity.setDishCost((BigDecimal) rs.getObject("dish.price"));
+                entity.setAdditionCost((BigDecimal) rs.getObject("additionCost"));
+                entity.setPayedSum((BigDecimal) rs.getObject("totalPayed"));
+                entity.setQuantity((int) rs.getShort("quantity"));
+                return entity;
+            }
+        }, date, date.plusDays(1));
+        return listResult;
+    }
+
     public Map<Long, BigDecimal> getPayedSumById(LocalDateTime dateTime) {
 
         String sql = "SELECT [UserId], sum (Payment.[sum]) totalPayed " +
@@ -184,6 +217,25 @@ public class OrderItemRepo {
                 return null;
             }
         }, dateTime);
+        return mapPaymentUser;
+    }
+
+    public Map<Long, BigDecimal> getPayedSumById(LocalDate date) {
+        String sql = "SELECT [UserId], sum (Payment.[sum]) totalPayed " +
+                "FROM [Order] " +
+                "JOIN Payment on Payment.OrderId = [Order].id " +
+                "WHERE [Order].CreationTime BETWEEN ? AND ? " +
+                "GROUP BY [UserId]";
+        Map<Long, BigDecimal> mapPaymentUser = new HashMap<>();
+        jdbcTemplate.query(sql, new RowMapper<Object>() {
+            @Override
+            public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+                Long userId = (Long) rs.getObject("UserId");
+                BigDecimal payedSum = (BigDecimal) rs.getObject("totalPayed");
+                mapPaymentUser.put(userId, payedSum);
+                return null;
+            }
+        }, date, date.plusDays(1));
         return mapPaymentUser;
     }
 

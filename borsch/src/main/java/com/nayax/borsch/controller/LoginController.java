@@ -4,6 +4,7 @@ import com.nayax.borsch.model.dto.ResponseDto;
 import com.nayax.borsch.model.dto.user.request.ReqUserAddDto;
 import com.nayax.borsch.model.dto.user.response.RespLoginDto;
 import com.nayax.borsch.service.impl.ProfileService;
+import com.nayax.borsch.utility.enums.ErrorStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,7 +24,7 @@ public class LoginController {
         RespLoginDto respLoginDto = new RespLoginDto();
         respLoginDto.setUser(service.checkCashierLogining(email).getData());
         respLoginDto.setTime(LocalDateTime.now());
-        ResponseDto<RespLoginDto> responseDto = new ResponseDto<>(respLoginDto);
+        ResponseDto<RespLoginDto> responseDto = new ResponseDto<>(respLoginDto).setStatus(ErrorStatus.OK.statusName);
         return ResponseEntity.ok(responseDto);
     }
 

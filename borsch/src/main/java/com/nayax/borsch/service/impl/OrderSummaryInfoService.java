@@ -41,11 +41,11 @@ public class OrderSummaryInfoService {
     @Autowired
     private PaymentRepository paymentRepository;
 
-    public ResponseDto<RespOrderSumInfoDto> getOrderSumInfo(LocalDateTime dateTime) {
+    public ResponseDto<RespOrderSumInfoDto> getOrderSumInfo(LocalDate date) {
 
-        Map<Long, BigDecimal> map = orderItemRepo.getPayedSumById(dateTime);
+        Map<Long, BigDecimal> map = orderItemRepo.getPayedSumById(date);
         //get all dish, drink, additions
-        List<OrderItemTotalCostInfo> listResult = orderItemRepo.getOrderInfo(dateTime);
+        List<OrderItemTotalCostInfo> listResult = orderItemRepo.getOrderInfo(date);
         BigDecimal totalCost = calculateTotalCost(listResult);
         BigDecimal confirm = confirmedPayedSum(map, listResult);
         BigDecimal unConfirm = unConfirmedPayedSum(confirm, totalCost);

@@ -37,7 +37,7 @@ public class TimerService {
 
         OrderStartEntity entity = Mappers.getMapper(OrderItemMapper.class).toOrderStart(dto);
         entity.setStartTime(LocalDateTime.now());
-        return new ResponseDto<>(orderSummaryRepository.startNewSummaryOrder(entity));
+        return new ResponseDto<>(orderSummaryRepository.startNewSummaryOrder(entity)).setStatus(ErrorStatus.OK.statusName);
     }
 
     public ResponseDto<RespOrderStatusDto> getOrderStatus() {
@@ -45,14 +45,14 @@ public class TimerService {
         RespOrderStatusDto response = new RespOrderStatusDto();
         if (orderSumId.isEmpty()) {
             response.setStatus(OrderSummaryStatus.NOT_OPEN);
-            return new ResponseDto<RespOrderStatusDto>(response);
+            return new ResponseDto<RespOrderStatusDto>(response).setStatus(ErrorStatus.OK.statusName);
         }
         response.setStatus(OrderSummaryStatus.OPEN);
         response.setEndTime(orderSummaryRepository.getSummaryOrderStatus(orderSumId.get()));
-        return new ResponseDto<RespOrderStatusDto>(response);
+        return new ResponseDto<RespOrderStatusDto>(response).setStatus(ErrorStatus.OK.statusName);
     }
 
     public ResponseDto<Boolean> stopOrder() {
-        return new ResponseDto<>(orderSummaryRepository.stopSummaryOrder(LocalDateTime.now()));
+        return new ResponseDto<>(orderSummaryRepository.stopSummaryOrder(LocalDateTime.now())).setStatus(ErrorStatus.OK.statusName);
     }
 }

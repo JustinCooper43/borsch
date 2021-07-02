@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @SpringBootTest
 public class PaymentServiceTest {
@@ -21,7 +21,7 @@ public class PaymentServiceTest {
         ReqPayConfirmDto request = new ReqPayConfirmDto();
         request.setPaid(new BigDecimal("23"));
         request.setUserId(7L);
-        request.setOrderDate(LocalDate.of(2020, 10, 10));
+        request.setOrderDate(LocalDateTime.of(2020, 10, 10, 10, 10));
 
         ResponseDto<Boolean> response = paymentService.confirmPayment(request);
 
