@@ -80,10 +80,12 @@ public class DrinkAdditionValidationConfig {
 
         //common Long Id validation
         validatorDrinkAdd.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.SIMPLE_PRICE_ITEM_DEL,
-                ValidationAction.REMARK_DEL, ValidationAction.DISH_DELETE, ValidationAction.USER_VERIFY_ID), obj -> obj != null
+                ValidationAction.REMARK_DEL, ValidationAction.DISH_DELETE,
+                ValidationAction.USER_VERIFY_ID, ValidationAction.DISH_VERIFY_ID), obj -> obj != null
                 && (Long) obj > 0, "Id is invalid", "id"));
         validatorDrinkAdd.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.SIMPLE_PRICE_ITEM_DEL,
-                ValidationAction.REMARK_DEL, ValidationAction.DISH_DELETE, ValidationAction.USER_VERIFY_ID),
+                ValidationAction.REMARK_DEL, ValidationAction.DISH_DELETE,
+                ValidationAction.USER_VERIFY_ID, ValidationAction.DISH_VERIFY_ID),
                 Objects::nonNull, "Id is null", "id"));
     }
 

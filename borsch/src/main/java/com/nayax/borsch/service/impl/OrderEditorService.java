@@ -16,7 +16,7 @@ import com.nayax.borsch.repository.impl.PriceItemRepository;
 import com.nayax.borsch.repository.impl.RepositoryShawarmaTypeImpl;
 import com.nayax.borsch.repository.impl.TablesType;
 import com.nayax.borsch.validation.config.ConfigRepo;
-import com.nayax.borsch.validation.config.DishValidationConfig;
+import com.nayax.borsch.validation.config.DrinkAdditionValidationConfig;
 import com.nayax.borsch.validation.enums.ValidationAction;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,12 +35,12 @@ public class OrderEditorService {
     PriceItemRepository priceItemRepository;
 
     public ResponseDto<List<RespSimplePriceItemDto>> additionalDropdown(Long dishId) {
-        List<ErrorDto> idErrors = DishValidationConfig.getValidator().validate(dishId, ValidationAction.DISH_VERIFY_ID);
-        if(idErrors.size()>0){
+        List<ErrorDto> idErrors = DrinkAdditionValidationConfig.getValidatorDrinkAdd().validate(dishId, ValidationAction.DISH_VERIFY_ID);
+        if (idErrors.size() > 0) {
             return new ResponseDto<>(idErrors);
         }
         idErrors.addAll(ConfigRepo.getRepositoryValidator().validate(dishId, ValidationAction.DISH_VERIFY_ID));
-        if(idErrors.size()>0){
+        if (idErrors.size() > 0) {
             return new ResponseDto<>(idErrors);
         }
         List<GeneralPriceItemEntity> listEntity = additionsRepository.findAllAdditionsById(dishId);

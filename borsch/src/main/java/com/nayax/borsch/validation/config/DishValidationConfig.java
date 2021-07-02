@@ -26,9 +26,9 @@ public class DishValidationConfig {
 //                 obj -> repositoryShawarmaType.findById(((Long) obj)).get().getId() != null,
 //                 "Dish Id is null","Id"));
 
-        dishValidator.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.DISH_UPDATE, ValidationAction.DISH_VERIFY_ID),
+        dishValidator.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.DISH_UPDATE),
                 obj -> ((ReqSimplePriceItemUpDto) obj).getId() != null, "Id is null", "id"));
-        dishValidator.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.DISH_UPDATE, ValidationAction.DISH_VERIFY_ID),
+        dishValidator.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.DISH_UPDATE),
                 obj -> ((ReqSimplePriceItemUpDto) obj).getId() != null && ((ReqSimplePriceItemUpDto) obj).getId() > 0, "Id is not positive", "id"));
         dishValidator.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.DISH_UPDATE, ValidationAction.DISH_ADD),
                 obj -> ((ReqSimplePriceItemUpDto) obj).getName() != null, "Name is null", "Name"));
