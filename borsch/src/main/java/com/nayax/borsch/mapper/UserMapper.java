@@ -37,6 +37,8 @@ public interface UserMapper {
     @Mapping(target = "active", ignore = true)
     UserEntity toUpdateEntity(ReqUserUpdateDto dto);
 
+    @Mapping(target = "cashier", ignore = true)
+    RespLoginCashierDto userToLoginNoCashier(RespUserDto dto);
 //    @Named("splitFirstName")
 //    public static String splitFirstName(String name) {
 //        String[] strings = name.split(" ");

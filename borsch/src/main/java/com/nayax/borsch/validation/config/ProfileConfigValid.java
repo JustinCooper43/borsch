@@ -220,7 +220,7 @@ public class ProfileConfigValid {
             "User email is not Valid", "eMail"));
     validatorProfile.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.USER_ADD),
             obj -> ((ReqUserAddDto) obj).getPhone() != null &&
-                    ((ReqUserAddDto) obj).getPhone().isEmpty(), "Phone number is empty", "phone"));
+                    ((ReqUserAddDto) obj).getPhone().length() > 9, "Phone number is empty", "phone"));
     validatorProfile.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.USER_ADD),
             obj -> ((ReqUserAddDto) obj).getPhone() != null && ((ReqUserAddDto) obj).getPhone().matches(
                     "^(\\+\\d{1,3}( )?)?((\\(\\d{3}\\))|\\d{3})[- .]?\\d{3}[- .]?\\d{4}$"
