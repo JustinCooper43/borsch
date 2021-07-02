@@ -30,7 +30,7 @@ public class ValidationUtilRepository {
 
     public Boolean checkEmail(String email) {
 
-        String sql = "SELECT Email FROM User WHERE Email LIKE ? ";
+        String sql = "SELECT Email FROM [User] WHERE Email LIKE ? AND Active = 'Y'";
 
         List<String> listEmail = jdbcTemplate.query(sql, new SingleColumnRowMapper<>(String.class), email);
         return listEmail.size() == 0;
