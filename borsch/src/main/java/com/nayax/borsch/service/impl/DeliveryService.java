@@ -14,6 +14,7 @@ import com.nayax.borsch.model.entity.order.OrderSumTimerEntity;
 import com.nayax.borsch.repository.impl.DeliverySummaryRepository;
 import com.nayax.borsch.utility.OrderEntityHashNoOrderUserTime;
 import com.nayax.borsch.utility.PageDtoBuilder;
+import com.nayax.borsch.utility.enums.ErrorStatus;
 import com.nayax.borsch.validation.config.PageIdValidationConfig;
 import com.nayax.borsch.validation.enums.ValidationAction;
 import org.mapstruct.factory.Mappers;
@@ -37,7 +38,7 @@ public class DeliveryService {
         List<ErrorDto> errorsPage = PageIdValidationConfig.getValidatorPageId().validate(page, ValidationAction.ADDITIONS_GETALL);
         List<ErrorDto> errorsPageSize = PageIdValidationConfig.getValidatorPageId().validate(pageSize, ValidationAction.ADDITIONS_GETALL);
         if (errorsPage.size() > 0 || errorsPageSize.size() > 0) {
-            return new ResponseDto<>(errorsPage);
+            return new ResponseDto<PageDto<RespOrderDeliveryDto>>(errorsPage).setStatus(ErrorStatus.UNPROCESSIBLE.statusName);
         }
         if (date == null) {
             date = LocalDate.now();
@@ -92,6 +93,6 @@ public class DeliveryService {
                 .elementsPerPage(pageSize)
                 .currentPageNum(page)
                 .build();
-        return new ResponseDto<>(responsePage);
+        return new ResponseDto<>(responsePage).setStatus(ErrorStatus.OK.statusName);
     }
 }

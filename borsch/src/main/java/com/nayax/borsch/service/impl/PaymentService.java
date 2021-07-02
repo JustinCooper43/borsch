@@ -11,6 +11,7 @@ import com.nayax.borsch.model.entity.user.ProfileEntity;
 import com.nayax.borsch.repository.impl.OrderItemRepository;
 import com.nayax.borsch.repository.impl.PaymentRepository;
 import com.nayax.borsch.repository.impl.ProfileRepositoryImplementation;
+import com.nayax.borsch.utility.enums.ErrorStatus;
 import com.nayax.borsch.validation.config.ConfigRepo;
 import com.nayax.borsch.validation.config.DrinkAdditionValidationConfig;
 import com.nayax.borsch.validation.config.PaymentConfirmationValidationConfig;
@@ -35,13 +36,13 @@ public class PaymentService {
     public ResponseDto<Boolean> confirmPayment(ReqPayConfirmDto dto) {
         List<ErrorDto> validationErrors = PaymentConfirmationValidationConfig.getPaymentValidator().validate(dto, ValidationAction.CONFIRM_PAYMENT);
         if (validationErrors.size() > 0) {
-            return new ResponseDto<Boolean>(validationErrors).setStatus("422");
+            return new ResponseDto<Boolean>(validationErrors).setStatus(ErrorStatus.UNPROCESSIBLE.statusName);
         }
 
         validationErrors.addAll(ConfigRepo.getRepositoryValidator().validate(dto.getUserId(), ValidationAction.USER_VERIFY_ID));
-        validationErrors.addAll(ConfigRepo.getRepositoryValidator().validate(dto.getOrderDate(), ValidationAction.SUMM_ORDER_OPEN));
+        validationErrors.addAll(ConfigRepo.getRepositoryValidator().validate(dto.getOrderDate(), ValidationAction.ORDER_ITEM_ADD));
         if (validationErrors.size() > 0) {
-            return new ResponseDto<Boolean>(validationErrors).setStatus("422");
+            return new ResponseDto<Boolean>(validationErrors).setStatus(ErrorStatus.UNPROCESSIBLE.statusName);
         }
 
         PaymentConfirmation entity = Mappers.getMapper(OrderProcessingMapper.class).toConfirmationEntity(dto);
@@ -50,23 +51,23 @@ public class PaymentService {
             entity.setOrderId(orderToConfirm.get().get(0));
             entity.setCashierId(orderToConfirm.get().get(1));
             boolean response = paymentRepository.confirmPayment(entity);
-            return new ResponseDto<>(response).setStatus(response ? "200" : "422");
+            return new ResponseDto<>(response).setStatus(response ? ErrorStatus.OK.statusName : ErrorStatus.UNPROCESSIBLE.statusName);
         }
-        return new ResponseDto<>(false).setStatus("404");
+        return new ResponseDto<>(false).setStatus(ErrorStatus.NOT_FOUND.statusName);
     }
 
     public ResponseDto<RespPaymentInfoDto> getPaymentStatusByUserId(Long userId) {
         List<ErrorDto> validationErrors = DrinkAdditionValidationConfig.getValidatorDrinkAdd().validate(userId, ValidationAction.USER_VERIFY_ID);
         if (validationErrors.size() > 0) {
-            return new ResponseDto<RespPaymentInfoDto>(validationErrors).setStatus("422");
+            return new ResponseDto<RespPaymentInfoDto>(validationErrors).setStatus(ErrorStatus.UNPROCESSIBLE.statusName);
         }
 
         validationErrors.addAll(ConfigRepo.getRepositoryValidator().validate(userId, ValidationAction.USER_VERIFY_ID));
         if (validationErrors.size() > 0) {
-            return new ResponseDto<RespPaymentInfoDto>(validationErrors).setStatus("422");
+            return new ResponseDto<RespPaymentInfoDto>(validationErrors).setStatus(ErrorStatus.UNPROCESSIBLE.statusName);
         }
 
-        ProfileEntity currentOrderCashierInfo = profileRepository.findById(
+        ProfileEntity currentOrderCashierInfo = profileRepository.findByUserId(
                 profileRepository.getCurrentCashierUserIdByEmail("%")
                         .orElse(profileRepository.latestOrderSummaryCashier()))
                 .orElse(new ProfileEntity());
@@ -78,6 +79,6 @@ public class PaymentService {
         paymentInfo.setConfirmed(payed.compareTo(cost) >= 0);
         paymentInfo.setCompleted(paymentInfo.isConfirmed());
         RespPaymentInfoDto responseDto = Mappers.getMapper(OrderProcessingMapper.class).toPaymentInfo(paymentInfo);
-        return new ResponseDto<>(responseDto).setStatus("200");
+        return new ResponseDto<>(responseDto).setStatus(ErrorStatus.OK.statusName);
     }
 }

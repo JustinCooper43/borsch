@@ -15,6 +15,7 @@ import com.nayax.borsch.repository.impl.OrderItemRepo;
 import com.nayax.borsch.repository.impl.PaymentRepository;
 import com.nayax.borsch.repository.impl.RepositoryOrderSummaryImpl;
 import com.nayax.borsch.utility.PageDtoBuilder;
+import com.nayax.borsch.utility.enums.ErrorStatus;
 import com.nayax.borsch.validation.config.PageIdValidationConfig;
 import com.nayax.borsch.validation.enums.ValidationAction;
 import org.mapstruct.factory.Mappers;
@@ -102,14 +103,14 @@ public class OrderSummaryInfoService {
         List<ErrorDto> errorsPage = PageIdValidationConfig.getValidatorPageId().validate(page, ValidationAction.PAGING);
         errorsPage.addAll(PageIdValidationConfig.getValidatorPageId().validate(pageSize, ValidationAction.PAGING));
         if (errorsPage.size() > 0) {
-            return new ResponseDto<>(errorsPage);
+            return new ResponseDto<PageDto<RespOrderSumDto>>(errorsPage).setStatus(ErrorStatus.UNPROCESSIBLE.statusName);
         }
 
         List<OrderSummaryEntity> orderSum = orderSummary.findAll(date);
         int totalPages = PageDtoBuilder.getTotalPages(pageSize, orderSum.size());
         if (totalPages < page) {
             errorsPage.add(new ErrorDto("Incorrect number page", "page"));
-            return new ResponseDto<>(errorsPage);
+            return new ResponseDto<PageDto<RespOrderSumDto>>(errorsPage).setStatus(ErrorStatus.UNPROCESSIBLE.statusName);
         }
         Map<Long, BigDecimal> pay = paymentRepository.getSumPaymentByUser(date);
 
@@ -134,6 +135,6 @@ public class OrderSummaryInfoService {
                 .elementsPerPage(pageSize)
                 .currentPageNum(page)
                 .build();
-        return new ResponseDto<>(responsePage);
+        return new ResponseDto<>(responsePage).setStatus(ErrorStatus.OK.statusName);
     }
 }

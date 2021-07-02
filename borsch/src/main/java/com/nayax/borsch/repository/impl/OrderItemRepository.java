@@ -142,12 +142,7 @@ public class OrderItemRepository {
 
     public Integer getOrderCountByUserId(Long userId) {
         String sql = " SELECT COUNT(id) response FROM [Order] WHERE UserId = ? ";
-        return jdbcTemplate.query(sql, new ResultSetExtractor<>() {
-            @Override
-            public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {
-                return rs.getInt("response");
-            }
-        }, userId);
+        return jdbcTemplate.query(sql, (rs, rowNum) -> (Integer) rs.getObject("response"), userId).get(0);
     }
 
 

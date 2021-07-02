@@ -45,7 +45,7 @@ public class ConfigRepo {
         repositoryValidator.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.DISH_DELETE, ValidationAction.DISH_VERIFY_ID),
                 obj -> (validationUtilRepository.checkId(((Long) obj), TablesType.SHAWARMA)),
                 "Dish ID doesn't exist", "id"));
-        repositoryValidator.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.USER_VERIFY_ID),
+        repositoryValidator.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.USER_VERIFY_ID,ValidationAction.USER_VERIFY_CASHIER),
                 obj -> (validationUtilRepository.checkId(((Long) obj), TablesType.USER)),
                 "No user found by given ID", "id"));
         repositoryValidator.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.ORDER_VERIFY_ID),
@@ -56,9 +56,13 @@ public class ConfigRepo {
                 obj -> (validationUtilRepository.checkEmail((String) obj)),
                 "Email's item already exists", "email"));
 
-        repositoryValidator.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.SUMM_ORDER_OPEN),
+        repositoryValidator.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.ORDER_ITEM_ADD),
                 obj -> (validationUtilRepository.checkDateTimeAfterCurrentOrderStart((LocalDateTime) obj)),
                 "No open summary orders by the moment", "orderDate"));
+
+        repositoryValidator.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.USER_VERIFY_CASHIER),
+                obj -> (validationUtilRepository.checkCashierForUserId(((Long) obj))),
+                "There is no active payment data for given userID", "id"));
 
     }
 

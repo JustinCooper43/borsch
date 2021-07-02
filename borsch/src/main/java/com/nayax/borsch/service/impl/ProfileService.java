@@ -8,6 +8,7 @@ import com.nayax.borsch.model.dto.ResponseDto;
 import com.nayax.borsch.model.dto.user.request.ReqProfileAddDto;
 import com.nayax.borsch.model.dto.user.request.ReqProfileUpDto;
 import com.nayax.borsch.model.dto.user.request.ReqUserAddDto;
+import com.nayax.borsch.model.dto.user.response.RespLoginDto;
 import com.nayax.borsch.model.dto.user.response.RespProfileDto;
 import com.nayax.borsch.model.dto.user.response.nested.RespLoginCashierDto;
 import com.nayax.borsch.model.entity.user.CashierEntity;
@@ -15,13 +16,16 @@ import com.nayax.borsch.model.entity.user.ProfileEntity;
 import com.nayax.borsch.model.entity.user.UserEntity;
 import com.nayax.borsch.repository.impl.ProfileRepositoryImplementation;
 import com.nayax.borsch.repository.impl.RepositoryCashierImplementation;
-import com.nayax.borsch.validation.config.DishValidationConfig;
+import com.nayax.borsch.utility.enums.ErrorStatus;
+import com.nayax.borsch.validation.config.ConfigRepo;
+import com.nayax.borsch.validation.config.DrinkAdditionValidationConfig;
 import com.nayax.borsch.validation.config.ProfileConfigValid;
 import com.nayax.borsch.validation.enums.ValidationAction;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -41,6 +45,11 @@ public class ProfileService {
         if (errors.size() > 0) {
             return new ResponseDto<>(errors);
         }
+        errors.addAll(ConfigRepo.getRepositoryValidator().validate(dto.getUser().geteMail(), ValidationAction.USER_ADD_EMAIL));
+        if (errors.size() > 0) {
+            return new ResponseDto<RespProfileDto>(errors).setStatus(ErrorStatus.UNPROCESSIBLE.statusName);
+        }
+
         ProfileEntity entity = ProfileMapper.toAddEntity(dto);
         entity.getUserEntity().setActive("Y");
         RespProfileDto respProfileDto = ProfileMapper.toDto(profileRepository.add(entity));
@@ -52,6 +61,11 @@ public class ProfileService {
         if (errors.size() > 0) {
             return new ResponseDto<>(errors);
         }
+        errors.addAll(ConfigRepo.getRepositoryValidator().validate(dto.getUser().getId(), ValidationAction.USER_VERIFY_ID));
+        if (errors.size() > 0) {
+            return new ResponseDto<RespProfileDto>(errors).setStatus(ErrorStatus.FORBIDDEN.statusName);
+        }
+
         ProfileEntity entity = ProfileMapper.toUpEntity(dto);
         Optional<CashierEntity> cashier = cashierRepository.findById(entity.getUserEntity().getId());
         entity.getCashierEntity().setUserId(entity.getUserEntity().getId());
@@ -66,7 +80,16 @@ public class ProfileService {
     }
 
     public ResponseDto<RespProfileDto> delete(Long id) {
-        RespProfileDto respProfileDto = ProfileMapper.toDto(profileRepository.delete(id));
+        List<ErrorDto> errors = DrinkAdditionValidationConfig.getValidatorDrinkAdd().validate(id, ValidationAction.USER_VERIFY_ID);
+        if (errors.size() > 0) {
+            return new ResponseDto<RespProfileDto>(errors).setStatus(ErrorStatus.UNPROCESSIBLE.statusName);
+        }
+        errors.addAll(ConfigRepo.getRepositoryValidator().validate(id, ValidationAction.USER_VERIFY_ID));
+        if (errors.size() > 0) {
+            return new ResponseDto<RespProfileDto>(errors).setStatus(ErrorStatus.UNPROCESSIBLE.statusName);
+        }
+
+        RespProfileDto respProfileDto = ProfileMapper.toDto(profileRepository.deleteByUserId(id));
         return new ResponseDto<>(respProfileDto);
     }
 
@@ -76,8 +99,12 @@ public class ProfileService {
         if (errors.size() > 0) {
             return new ResponseDto<>(errors);
         }
+        errors.addAll(ConfigRepo.getRepositoryValidator().validate(id, ValidationAction.USER_VERIFY_ID));
+        if (errors.size() > 0) {
+            return new ResponseDto<RespProfileDto>(errors).setStatus(ErrorStatus.UNPROCESSIBLE.statusName);
+        }
 
-        Optional<ProfileEntity> entity = profileRepository.findById(id);
+        Optional<ProfileEntity> entity = profileRepository.findByUserId(id);
         ResponseDto<RespProfileDto> response = new ResponseDto<>();
         if (entity.isPresent()) {
             response.setData(ProfileMapper.toDto(entity.get()));
@@ -129,31 +156,35 @@ public class ProfileService {
         return response;
     }
 
-    public ResponseDto<RespLoginCashierDto> registration(ReqUserAddDto dto) {
-        RespLoginCashierDto resp = new RespLoginCashierDto();
-        ProfileEntity profileEntity = new ProfileEntity();
-        profileEntity.setCashierEntity(null);
+    public ResponseDto<RespLoginDto> registration(ReqUserAddDto dto) {
+        List<ErrorDto> validationErrors = ProfileConfigValid.getValidatorProfile().validate(dto, ValidationAction.USER_ADD);
+        if (validationErrors.size() > 0) {
+            return new ResponseDto<RespLoginDto>(validationErrors).setStatus(ErrorStatus.UNPROCESSIBLE.statusName);
+        }
+        validationErrors.addAll(ConfigRepo.getRepositoryValidator().validate(dto.geteMail(), ValidationAction.USER_ADD_EMAIL));
+        if (validationErrors.size() > 0) {
+            return new ResponseDto<RespLoginDto>(validationErrors).setStatus(ErrorStatus.FORBIDDEN.statusName);
+        }
+
         UserEntity userEntity = Mappers.getMapper(UserMapper.class).toAddEntity(dto);
         userEntity.setActive("Y");
+        ProfileEntity profileEntity = new ProfileEntity();
         profileEntity.setUserEntity(userEntity);
         RespProfileDto respProfileDto = ProfileMapper.toDto(profileRepository.add(profileEntity));
-        resp.setCashier(false);
-        resp.seteMail(respProfileDto.getUser().geteMail());
-        resp.setRole(respProfileDto.getUser().getRole());
-        resp.setFirstName(respProfileDto.getUser().getFirstName());
-        resp.setLastName(respProfileDto.getUser().getLastName());
-        resp.setId(respProfileDto.getUser().getId());
-        resp.setPhone(respProfileDto.getUser().getPhone());
-        return new ResponseDto<>(resp);
+        RespLoginDto response = new RespLoginDto();
+
+        response.setUser(Mappers.getMapper(UserMapper.class).userToLoginNoCashier(respProfileDto.getUser()));
+        response.setTime(LocalDateTime.now());
+        return new ResponseDto<>(response).setStatus(ErrorStatus.OK.statusName);
     }
 
-    public ResponseDto<RespProfileDto> updateCurrentCashierInSumOrd(Long id) {
-        RespProfileDto respProfileDto = ProfileMapper.toDto(profileRepository.updateCurrentCashierInSumOrd(id));
+    public ResponseDto<RespProfileDto> updateCurrentCashierInSumOrd(Long cashierId) {
+        RespProfileDto respProfileDto = ProfileMapper.toDto(profileRepository.updateCurrentCashierInSumOrd(cashierId));
         return new ResponseDto<>(respProfileDto);
     }
 
     public ResponseDto<RespProfileDto> getCurrentCashier() {
-        RespProfileDto respProfileDto = ProfileMapper.toDto(profileRepository.findById(profileRepository.latestOrderSummaryCashier()).get());
+        RespProfileDto respProfileDto = ProfileMapper.toDto(profileRepository.findByUserId(profileRepository.latestOrderSummaryCashier()).get());
         return new ResponseDto<>(respProfileDto);
     }
 }
