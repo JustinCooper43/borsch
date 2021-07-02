@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/addition")
@@ -25,6 +25,11 @@ public class AdditionEditorController {
     @GetMapping
     public ResponseEntity<ResponseDto<PageDto<RespSimplePriceItemDto>>> getAddition(@RequestParam int page, @RequestParam int pageSize) {
         return ResponseEntity.ok(drinkAdditionService.getGeneralItemPage(page, pageSize, TablesType.ADDITION));
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<ResponseDto<List<RespSimplePriceItemDto>>> getAllAdditions() {
+        return ResponseEntity.ok(drinkAdditionService.getAllGeneralItems(TablesType.ADDITION));
     }
 
     @PutMapping("/{id}")

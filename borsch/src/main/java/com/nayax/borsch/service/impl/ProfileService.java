@@ -131,9 +131,10 @@ public class ProfileService {
             currentCashierId = currentCashier.get();
         } else {
             currentCashierId = -1L;
-            ErrorDto e = new ErrorDto();
-            e.setMessage("Cashier Id by email %s not found " + email);
-            listErrors.add(e);
+            System.out.println("Cashier Id by email " + email + " not found");
+//            ErrorDto e = new ErrorDto();
+//            e.setMessage("Cashier Id by email %s not found " + email);
+//            listErrors.add(e);
         }
         Optional<ProfileEntity> currentUser = profileRepository.findByEmail(email);
         if (currentUser.isPresent()) {
@@ -142,18 +143,17 @@ public class ProfileService {
             ErrorDto e = new ErrorDto();
             e.setMessage("User by email %s not found " + email);
             listErrors.add(e);
+            return new ResponseDto<RespLoginCashierDto>(listErrors).setStatus(ErrorStatus.NOT_FOUND.statusName);
         }
         ResponseDto<RespLoginCashierDto> response = new ResponseDto<>();
-        if (user != null) {
-            RespLoginCashierDto dto = Mappers.getMapper(UserMapper.class).toLoginDto(user);
-            if (user.getCashierEntity().getUserId() != null
-                    && user.getCashierEntity().getUserId().equals(currentCashierId)) {
-                dto.setCashier(true);
-            }
-            response.setData(dto);
+        RespLoginCashierDto dto = Mappers.getMapper(UserMapper.class).toLoginDto(user);
+        if (user.getCashierEntity().getUserId() != null
+                && user.getCashierEntity().getUserId().equals(currentCashierId)) {
+            dto.setCashier(true);
         }
+        response.setData(dto);
         response.setErrors(listErrors);
-        return response;
+        return response.setStatus(ErrorStatus.OK.statusName);
     }
 
     public ResponseDto<RespLoginDto> registration(ReqUserAddDto dto) {
