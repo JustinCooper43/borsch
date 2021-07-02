@@ -41,11 +41,11 @@ public class OrderItemService {
         List<ErrorDto> validationErrors = DateTimeValidatorConfig.getDateTimeValidator().validate(dateString, ValidationAction.DATE);
         validationErrors.addAll(DrinkAdditionValidationConfig.getValidatorDrinkAdd().validate(userId, ValidationAction.USER_VERIFY_ID));
         if (validationErrors.size() > 0) {
-            return new ResponseDto<>(validationErrors);
+            return new ResponseDto<List<RespOrderItemDto>>(validationErrors).setStatus(ErrorStatus.UNPROCESSIBLE.statusName);
         }
         validationErrors.addAll(ConfigRepo.getRepositoryValidator().validate(userId, ValidationAction.USER_VERIFY_ID));
         if (validationErrors.size() > 0) {
-            return new ResponseDto<>(validationErrors);
+            return new ResponseDto<List<RespOrderItemDto>>(validationErrors).setStatus(ErrorStatus.UNPROCESSIBLE.statusName);
         }
 
         LocalDate date = LocalDate.parse(dateString);
@@ -64,7 +64,7 @@ public class OrderItemService {
             setCostOrderItem(listOrders);
         }
         List<RespOrderItemDto> listDto = Mappers.getMapper(OrderItemMapper.class).toListRespOrderDto(listOrders);
-        return new ResponseDto<>(listDto);
+        return new ResponseDto<>(listDto).setStatus(ErrorStatus.OK.statusName);
     }
 
     private void setCostOrderItem(List<OrderEntity> listOrders) {
@@ -87,7 +87,7 @@ public class OrderItemService {
     public ResponseDto<RespOrderItemDto> addOrder(ReqOrderItemAddDto dto) {
         List<ErrorDto> validationErrors = OrderItemValidationConfig.getOrderItemValidator().validate(dto, ValidationAction.ORDER_ITEM_ADD);
         if (validationErrors.size() > 0) {
-            return new ResponseDto<>(validationErrors);
+            return new ResponseDto<RespOrderItemDto>(validationErrors).setStatus(ErrorStatus.UNPROCESSIBLE.statusName);
         }
 
         validationErrors = ConfigRepo.getRepositoryValidator().validate(dto.getUserId(), ValidationAction.USER_VERIFY_ID);
@@ -98,7 +98,7 @@ public class OrderItemService {
             validationErrors.addAll(ConfigRepo.getRepositoryValidator().validate(additionId, ValidationAction.ADDITIONS_VERIFY_ID));
         }
         if (validationErrors.size() > 0) {
-            return new ResponseDto<>(validationErrors);
+            return new ResponseDto<RespOrderItemDto>(validationErrors).setStatus(ErrorStatus.UNPROCESSIBLE.statusName);
         }
 
         OrderEntity entity = Mappers.getMapper(OrderItemMapper.class).toAddEntity(dto);
@@ -106,27 +106,28 @@ public class OrderItemService {
         if (latestOrderSummaryId.isPresent()) {
             entity.setOrderSummaryId(latestOrderSummaryId.get());
         } else {
-            return new ResponseDto<RespOrderItemDto>(List.of(new ErrorDto("No currently opened order"))).setStatus("422");
+            return new ResponseDto<RespOrderItemDto>(List.of(new ErrorDto("No currently opened order")))
+                    .setStatus(ErrorStatus.UNPROCESSIBLE.statusName);
         }
 
         OrderEntity order = orderItemRepository.add(entity);
         RespOrderItemDto orderDto = Mappers.getMapper(OrderItemMapper.class).toDto(order);
-        return new ResponseDto<>(orderDto);
+        return new ResponseDto<>(orderDto).setStatus(ErrorStatus.OK.statusName);
     }
 
     public ResponseDto<RespOrderItemDto> deleteOrder(Long id) {
         List<ErrorDto> validationErrors = (DrinkAdditionValidationConfig.getValidatorDrinkAdd().validate(id, ValidationAction.ORDER_VERIFY_ID));
         if (validationErrors.size() > 0) {
-            return new ResponseDto<>(validationErrors);
+            return new ResponseDto<RespOrderItemDto>(validationErrors).setStatus(ErrorStatus.UNPROCESSIBLE.statusName);
         }
         validationErrors.addAll(ConfigRepo.getRepositoryValidator().validate(id, ValidationAction.ORDER_VERIFY_ID));
         if (validationErrors.size() > 0) {
-            return new ResponseDto<>(validationErrors);
+            return new ResponseDto<RespOrderItemDto>(validationErrors).setStatus(ErrorStatus.UNPROCESSIBLE.statusName);
         }
 
         OrderEntity order = orderItemRepository.deleteById(id);
         RespOrderItemDto orderDto = Mappers.getMapper(OrderItemMapper.class).toDto(order);
-        return new ResponseDto<>(orderDto);
+        return new ResponseDto<>(orderDto).setStatus(ErrorStatus.OK.statusName);
     }
 
     public ResponseDto<PageDto<RespOrderItemDto>> getPagedHistory(Long userId, int page, int pageSize) {
@@ -134,16 +135,16 @@ public class OrderItemService {
         validationErrors.addAll(PageIdValidationConfig.getValidatorPageId().validate(page, ValidationAction.PAGING));
         validationErrors.addAll(PageIdValidationConfig.getValidatorPageId().validate(pageSize, ValidationAction.PAGING));
         if (validationErrors.size() > 0) {
-            return new ResponseDto<>(validationErrors);
+            return new ResponseDto<PageDto<RespOrderItemDto>>(validationErrors).setStatus(ErrorStatus.UNPROCESSIBLE.statusName);
         }
         validationErrors.addAll(ConfigRepo.getRepositoryValidator().validate(userId, ValidationAction.USER_VERIFY_ID));
         if (validationErrors.size() > 0) {
-            return new ResponseDto<>(validationErrors);
+            return new ResponseDto<PageDto<RespOrderItemDto>>(validationErrors).setStatus(ErrorStatus.UNPROCESSIBLE.statusName);
         }
         int totalPages = PageDtoBuilder.getTotalPages(pageSize, orderItemRepository.getOrderCountByUserId(userId));
         if (totalPages < page) {
             validationErrors.add(new ErrorDto("Incorrect number page", "page"));
-            return new ResponseDto<>(validationErrors);
+            return new ResponseDto<PageDto<RespOrderItemDto>>(validationErrors).setStatus(ErrorStatus.UNPROCESSIBLE.statusName);
         }
 
         PageEntity<OrderEntity> listEntity = orderItemRepo.getPagedHistory(userId, page, pageSize);
@@ -155,6 +156,6 @@ public class OrderItemService {
         listEntity.setPageSize(pageSize);
         listEntity.setTotalPages(totalPages);
         PageDto<RespOrderItemDto> listDto = Mappers.getMapper(OrderItemMapper.class).toPageDto(listEntity);
-        return new ResponseDto<>(listDto);
+        return new ResponseDto<>(listDto).setStatus(ErrorStatus.OK.statusName);
     }
 }

@@ -15,6 +15,7 @@ import com.nayax.borsch.model.entity.user.ProfileEntity;
 import com.nayax.borsch.model.entity.user.UserEntity;
 import com.nayax.borsch.repository.impl.ProfileRepositoryImplementation;
 import com.nayax.borsch.repository.impl.RepositoryCashierImplementation;
+import com.nayax.borsch.utility.enums.ErrorStatus;
 import com.nayax.borsch.validation.config.ConfigRepo;
 import com.nayax.borsch.validation.config.DrinkAdditionValidationConfig;
 import com.nayax.borsch.validation.config.ProfileConfigValid;
@@ -44,7 +45,7 @@ public class ProfileService {
         }
         errors.addAll(ConfigRepo.getRepositoryValidator().validate(dto.getUser().geteMail(), ValidationAction.USER_ADD_EMAIL));
         if (errors.size() > 0) {
-            return new ResponseDto<RespProfileDto>(errors).setStatus("422");
+            return new ResponseDto<RespProfileDto>(errors).setStatus(ErrorStatus.UNPROCESSIBLE.statusName);
         }
 
         ProfileEntity entity = ProfileMapper.toAddEntity(dto);
@@ -60,7 +61,7 @@ public class ProfileService {
         }
         errors.addAll(ConfigRepo.getRepositoryValidator().validate(dto.getUser().getId(), ValidationAction.USER_VERIFY_ID));
         if (errors.size() > 0) {
-            return new ResponseDto<RespProfileDto>(errors).setStatus("403");
+            return new ResponseDto<RespProfileDto>(errors).setStatus(ErrorStatus.FORBIDDEN.statusName);
         }
 
         ProfileEntity entity = ProfileMapper.toUpEntity(dto);
@@ -79,11 +80,11 @@ public class ProfileService {
     public ResponseDto<RespProfileDto> delete(Long id) {
         List<ErrorDto> errors = DrinkAdditionValidationConfig.getValidatorDrinkAdd().validate(id, ValidationAction.USER_VERIFY_ID);
         if (errors.size() > 0) {
-            return new ResponseDto<RespProfileDto>(errors).setStatus("422");
+            return new ResponseDto<RespProfileDto>(errors).setStatus(ErrorStatus.UNPROCESSIBLE.statusName);
         }
         errors.addAll(ConfigRepo.getRepositoryValidator().validate(id, ValidationAction.USER_VERIFY_ID));
         if (errors.size() > 0) {
-            return new ResponseDto<RespProfileDto>(errors).setStatus("422");
+            return new ResponseDto<RespProfileDto>(errors).setStatus(ErrorStatus.UNPROCESSIBLE.statusName);
         }
 
         RespProfileDto respProfileDto = ProfileMapper.toDto(profileRepository.deleteByUserId(id));
@@ -98,7 +99,7 @@ public class ProfileService {
         }
         errors.addAll(ConfigRepo.getRepositoryValidator().validate(id, ValidationAction.USER_VERIFY_ID));
         if (errors.size() > 0) {
-            return new ResponseDto<RespProfileDto>(errors).setStatus("422");
+            return new ResponseDto<RespProfileDto>(errors).setStatus(ErrorStatus.UNPROCESSIBLE.statusName);
         }
 
         Optional<ProfileEntity> entity = profileRepository.findByUserId(id);

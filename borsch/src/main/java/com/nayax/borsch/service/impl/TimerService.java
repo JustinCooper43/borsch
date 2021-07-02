@@ -8,6 +8,7 @@ import com.nayax.borsch.model.dto.order.request.ReqOrderStartDto;
 import com.nayax.borsch.model.dto.order.response.RespOrderStatusDto;
 import com.nayax.borsch.model.entity.order.OrderStartEntity;
 import com.nayax.borsch.repository.impl.RepositoryOrderSummaryImpl;
+import com.nayax.borsch.utility.enums.ErrorStatus;
 import com.nayax.borsch.validation.config.ConfigRepo;
 import com.nayax.borsch.validation.config.DrinkAdditionValidationConfig;
 import com.nayax.borsch.validation.enums.ValidationAction;
@@ -27,11 +28,11 @@ public class TimerService {
     public ResponseDto<Boolean> startOrder(ReqOrderStartDto dto) {
         List<ErrorDto> validationErrors = DrinkAdditionValidationConfig.getValidatorDrinkAdd().validate(dto.getUserId(), ValidationAction.USER_VERIFY_ID);
         if (validationErrors.size() > 0) {
-            return new ResponseDto<Boolean>(validationErrors).setStatus("422");
+            return new ResponseDto<Boolean>(validationErrors).setStatus(ErrorStatus.UNPROCESSIBLE.statusName);
         }
         validationErrors.addAll(ConfigRepo.getRepositoryValidator().validate(dto.getUserId(), ValidationAction.USER_VERIFY_CASHIER));
         if (validationErrors.size() > 0) {
-            return new ResponseDto<Boolean>(validationErrors).setStatus("403");
+            return new ResponseDto<Boolean>(validationErrors).setStatus(ErrorStatus.FORBIDDEN.statusName);
         }
 
         OrderStartEntity entity = Mappers.getMapper(OrderItemMapper.class).toOrderStart(dto);
