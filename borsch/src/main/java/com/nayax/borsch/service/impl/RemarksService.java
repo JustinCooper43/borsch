@@ -70,14 +70,17 @@ public class RemarksService {
         }
 
         PageEntity<GeneralPriceItemEntity> listEntity = additionsRepository.findAllPage(page, pageSize, tableType);
-        listEntity.setPage(page);
-        listEntity.setPageSize(pageSize);
+
 
         int totalPages = PageDtoBuilder.getTotalPages(pageSize,listEntity.getTotalElements());
         if (totalPages < page) {
             errorsPage.add(new ErrorDto("Incorrect number page", "page"));
             return new ResponseDto<PageDto<RespSimpleItemDto>>(errorsPage).setStatus(ErrorStatus.UNPROCESSIBLE.statusName);
         }
+
+        listEntity.setPage(page);
+        listEntity.setPageSize(pageSize);
+        listEntity.setTotalPages(totalPages);
         PageDto<RespSimpleItemDto> listRespDto = Mappers.getMapper(SimpleItemsMapper.class).toPageDto(listEntity);
         return new ResponseDto<>(listRespDto).setStatus(ErrorStatus.OK.statusName);
     }

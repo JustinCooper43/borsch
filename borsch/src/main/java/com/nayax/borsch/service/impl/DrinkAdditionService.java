@@ -78,6 +78,9 @@ public class DrinkAdditionService {
 
         listEntity.setPage(page);
         listEntity.setPageSize(pageSize);
+        listRespDto.setPage(page);
+        listRespDto.setPageSize(pageSize);
+        listRespDto.setTotalElements(listEntity.getTotalElements());
         listRespDto.setTotalPages(totalPages);
         return new ResponseDto<>(listRespDto).setStatus(ErrorStatus.OK.statusName);
     }

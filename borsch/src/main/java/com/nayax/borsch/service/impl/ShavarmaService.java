@@ -101,8 +101,8 @@ public class ShavarmaService {
         listEntity.setPage(page);
         listEntity.setPageSize(pageSize);
         listEntity.setTotalPages(totalPages);
-
+        
         PageDto<RespSimplePriceItemDto> pageDto = Mappers.getMapper(AssortmentMapper.class).toPageDto(listEntity);
-        return new ResponseDto<>(pageDto);
+        return new ResponseDto<>(pageDto).setStatus(ErrorStatus.OK.statusName);
     }
 }
