@@ -136,7 +136,7 @@ public class OrderItemRepository {
             orderWithCashier.add(rs.getLong("id"));
             orderWithCashier.add(rs.getLong("CashierId"));
             return orderWithCashier;
-        }, entity.getUserId(), entity.getOrderDate(), entity.getOrderDate().plusDays(1));
+        }, entity.getUserId(), entity.getOrderDate().toLocalDate(), entity.getOrderDate().plusDays(1).toLocalDate());
         return response.size() == 0 ? Optional.empty() : Optional.of(response.get(0));
     }
 

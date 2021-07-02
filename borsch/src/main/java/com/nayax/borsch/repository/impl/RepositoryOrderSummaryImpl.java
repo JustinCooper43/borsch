@@ -154,7 +154,7 @@ public class RepositoryOrderSummaryImpl {
                 " SELECT [Cashier].id, ?, ? " +
                 " FROM [Cashier] " +
                 " WHERE [Cashier].UserId = ? ; ";
-        return 1 == jdbcTemplate.update(sql, entity.getUserId(), entity.getStartTime(), entity.getEndTime());
+        return 1 == jdbcTemplate.update(sql, entity.getStartTime(), entity.getEndTime(), entity.getUserId());
     }
 
     public LocalDateTime getSummaryOrderStatus(Long orderSumId) {

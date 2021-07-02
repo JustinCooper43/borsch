@@ -106,7 +106,7 @@ public class OrderItemService {
         if (latestOrderSummaryId.isPresent()) {
             entity.setOrderSummaryId(latestOrderSummaryId.get());
         } else {
-            return new ResponseDto<>(List.of(new ErrorDto("No currently opened order", 422)));
+            return new ResponseDto<RespOrderItemDto>(List.of(new ErrorDto("No currently opened order"))).setStatus("422");
         }
 
         OrderEntity order = orderItemRepository.add(entity);

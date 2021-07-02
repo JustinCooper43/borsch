@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.SingleColumnRowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -43,5 +44,11 @@ public class ValidationUtilRepository {
             }
         }
         return result;
+    }
+
+    public Boolean checkDateTimeAfterCurrentOrderStart(LocalDateTime dateTime){
+        String sql = "SELECT [id] FROM [OrderSummary] WHERE [StartTime] < ? AND [StopTime] IS NULL ; ";
+        //There is at least one open order at given time
+        return 0 < jdbcTemplate.query(sql, new SingleColumnRowMapper<>(Long.class), dateTime).size();
     }
 }
