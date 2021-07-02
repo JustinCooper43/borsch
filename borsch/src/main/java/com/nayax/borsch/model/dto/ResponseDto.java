@@ -41,4 +41,5 @@ public class ResponseDto<T> {
     public void setErrors(List<ErrorDto> errors) {
         this.errors = errors;
     }
+
 }

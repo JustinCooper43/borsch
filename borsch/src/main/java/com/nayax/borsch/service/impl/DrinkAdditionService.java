@@ -39,10 +39,25 @@ public class DrinkAdditionService {
         return new ResponseDto<>(respDto);
     }
 
+
+
+
     public ResponseDto<RespSimplePriceItemDto> editGeneralItem(ReqSimplePriceItemUpDto dto, TablesType tableType) {
+        List<ErrorDto> errorsId = DrinkAdditionValidationConfig.getValidatorDrinkAdd().validate(dto, ValidationAction.ADDITIONS_UPDATE);
+        if (errorsId.size() > 0) {
+            return new ResponseDto<>(errorsId);
+        }
         ResponseDto<RespSimplePriceItemDto> deleted = delGeneralItemById(dto.getId(),tableType);
+        if (deleted.getErrors() != null){
+            return deleted;
+        }
         ResponseDto<RespSimplePriceItemDto> add = addGeneralItem(Mappers.getMapper(SimpleItemsMapper.class).toPriceItemAddDto(dto),tableType);
-        boolean result = additionsRepository.disabledAllows(dto.getId(),tableType);
+        if (add.getErrors() != null){
+            return deleted;
+        }
+        if (!tableType.equals(TablesType.EXTRAITEM)) {
+            boolean result = additionsRepository.disabledAllows(dto.getId(), add.getData().getId(), tableType);
+        }
 //        List<ErrorDto> errorsId = DrinkAdditionValidationConfig.getValidatorDrinkAdd().validate(dto, ValidationAction.DISH_UPDATE);
 //        if (errorsId.size() > 0) {
 //            return new ResponseDto<>(errorsId);

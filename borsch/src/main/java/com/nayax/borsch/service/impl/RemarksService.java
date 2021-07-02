@@ -42,10 +42,19 @@ public class RemarksService {
     }
 
     public ResponseDto<RespSimpleItemDto> editRemarkItem(ReqSimpleItemUpDto dto, TablesType tableType) {
-
+        List<ErrorDto> errors = RemarkValidationConfig.getValidatorRemark().validate(dto, ValidationAction.REMARK_UPDATE);
+        if (errors.size() > 0) {
+            return new ResponseDto<>(errors);
+        }
         ResponseDto<RespSimpleItemDto> deleted = delRemarkItemById(dto.getId(),tableType);
+        if (deleted.getErrors() != null){
+            return deleted;
+        }
         ResponseDto<RespSimpleItemDto> add = addRemarkItem(Mappers.getMapper(SimpleItemsMapper.class).toItemAddDto(dto),tableType);
-        boolean result = additionsRepository.disabledAllows(dto.getId(),tableType);
+        if (add.getErrors() != null){
+            return deleted;
+        }
+        boolean result = additionsRepository.disabledAllows(dto.getId(),add.getData().getId(),tableType);
         return add;
     }
 
@@ -89,6 +98,7 @@ public class RemarksService {
     public ResponseDto<RespSimpleItemDto> delRemarkItemById(Long id, TablesType nameTable) {
         List<ErrorDto> errors = PageIdValidationConfig.getValidatorPageId().validate(id, ValidationAction.REMARK_DEL);
         if (errors.size() > 0) {
+
             return new ResponseDto<>(errors);
         }
         List<ErrorDto> errorsFromRepo = ConfigRepo.getRepositoryValidator().validate(id, ValidationAction.REMARK_DEL);

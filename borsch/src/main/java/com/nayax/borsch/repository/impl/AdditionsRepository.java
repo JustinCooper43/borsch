@@ -29,14 +29,15 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
 
         String table = getNameTable(nameTable);
 
-        String sql = "  declare @table nvarchar(20) =  ?;\n" +
-                "  declare @name nvarchar(12) =  ? ;\n" +
-                "  declare @cost decimal(10,2) = ? ;\n" +
-                "  declare @active nvarchar(1) = ? ;\n" +
-                "  declare @SqlStr nvarchar(max)  \n" +
-                "  SET @SqlStr =  N' INSERT INTO ' +  @table  + ' ( [Name] , Cost , Active )  \n" +
-                "  OUTPUT INSERTED.* VALUES ('+ @name +' , '+  convert(nvarchar,@cost)+ ', ''' + @active +''' ) ' \n" +
-                "  EXEC sp_executesql @SqlStr  ";
+        String sql = "declare @table nvarchar(20) =  ?;\n" +
+                "declare @name nvarchar(12) =  ? ;\n" +
+                "declare @cost decimal(10,2) = ? ;\n" +
+                "declare @active nvarchar(1) = ? ;\n" +
+                "declare @SqlStr nvarchar(max)  \n" +
+                "SET @SqlStr =  N' INSERT INTO ' +  @table  + ' ( [Name] , Cost , Active ) \n" +
+                "OUTPUT INSERTED.* VALUES (N'''+ @name +''' , '+  convert(nvarchar,@cost)+ ', N''' + @active +''' ) ' \n" +
+                "\n" +
+                "EXEC sp_executesql @SqlStr   ";
 
 
         GeneralPriceItemEntity entity1 = jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
@@ -48,7 +49,7 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
                     return entityDB;
                 },
                 //TODO fix entity name
-                table, "N'" + entity.getName() + "'", entity.getPrice(), entity.getActive()
+                table,  entity.getName() , entity.getPrice(), entity.getActive()
         );
         return entity1;
     }
@@ -102,7 +103,7 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
     }
 
 
-    public boolean disabledAllows(Long id, TablesType nameTable) {
+    public boolean disabledAllows(Long id,Long newId, TablesType nameTable) {
         int result = 0;
         String sql = "";
         String sqlInsert = "";
@@ -127,7 +128,7 @@ public class AdditionsRepository implements CrudItemGenericRepository<GeneralPri
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
                 ps.setLong(1, dishId.get(i));
-                ps.setLong(2, id);
+                ps.setLong(2, newId);
                 ps.setString(3, "Y");
             }
             @Override
