@@ -58,23 +58,6 @@ public class DrinkAdditionService {
         if (!tableType.equals(TablesType.EXTRAITEM)) {
             boolean result = additionsRepository.disabledAllows(dto.getId(), add.getData().getId(), tableType);
         }
-//        List<ErrorDto> errorsId = DrinkAdditionValidationConfig.getValidatorDrinkAdd().validate(dto, ValidationAction.DISH_UPDATE);
-//        if (errorsId.size() > 0) {
-//            return new ResponseDto<>(errorsId);
-//        }
-//        if (tableType.equals(TablesType.ADDITION)) {
-//            List<ErrorDto> errors = ConfigRepo.getRepositoryValidator().validate(dto, ValidationAction.ADDITIONS_UPDATE);
-//            if (errors.size() > 0) {
-//                return new ResponseDto<>(errors);
-//            }
-//        } else if (tableType.equals(TablesType.EXTRAITEM)) {
-//            List<ErrorDto> errors = ConfigRepo.getRepositoryValidator().validate(dto, ValidationAction.DRINK_UPDATE);
-//            if (errors.size() > 0) {
-//                return new ResponseDto<>(errors);
-//            }
-//        }
-//        GeneralPriceItemEntity entity = additionsRepository.update(Mappers.getMapper(SimpleItemsMapper.class).toGeneralPriceItemEntity(dto), tableType);
-//        RespSimplePriceItemDto respDto = Mappers.getMapper(SimpleItemsMapper.class).toPriceItemDto(entity);
         return add.setStatus(ErrorStatus.OK.statusName);
     }
 
