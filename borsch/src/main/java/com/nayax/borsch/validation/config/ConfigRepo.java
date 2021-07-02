@@ -11,6 +11,7 @@ import com.nayax.borsch.validation.testvalid.ValidationUtilRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -54,6 +55,10 @@ public class ConfigRepo {
         repositoryValidator.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.USER_ADD_EMAIL),
                 obj -> (validationUtilRepository.checkEmail((String) obj)),
                 "Email's item already exists", "email"));
+
+        repositoryValidator.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.SUMM_ORDER_OPEN),
+                obj -> (validationUtilRepository.checkDateTimeAfterCurrentOrderStart((LocalDateTime) obj)),
+                "No open summary orders by the moment", "orderDate"));
 
     }
 

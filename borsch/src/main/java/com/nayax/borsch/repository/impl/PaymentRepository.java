@@ -24,7 +24,7 @@ public class PaymentRepository {
     public boolean confirmPayment(PaymentConfirmation entity) {
         String sql = " INSERT INTO Payment ([Sum] ,[Completion] ,[Confirmation] ,[Type] ,[CashierId] ,[OrderId]) " +
                 " VALUES (?, 1, 1, 0, ?, ?) ; ";
-        return jdbcTemplate.update(sql, entity.getPaid(), entity.getCashierId(), entity.getOrderId()) == 1;
+        return 1 == jdbcTemplate.update(sql, entity.getPaid(), entity.getCashierId(), entity.getOrderId());
     }
 
     public Optional<BigDecimal> getPayedSumForLatestOrderSummary(Long userId) {

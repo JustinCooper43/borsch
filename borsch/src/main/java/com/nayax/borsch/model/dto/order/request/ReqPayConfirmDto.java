@@ -1,12 +1,12 @@
 package com.nayax.borsch.model.dto.order.request;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class ReqPayConfirmDto {
 
     private Long userId;
-    private LocalDate orderDate;
+    private LocalDateTime orderDate;
     private BigDecimal paid;
 
     public Long getUserId() {
@@ -17,11 +17,11 @@ public class ReqPayConfirmDto {
         this.userId = userId;
     }
 
-    public LocalDate getOrderDate() {
+    public LocalDateTime getOrderDate() {
         return orderDate;
     }
 
-    public void setOrderDate(LocalDate orderDate) {
+    public void setOrderDate(LocalDateTime orderDate) {
         this.orderDate = orderDate;
     }
 
