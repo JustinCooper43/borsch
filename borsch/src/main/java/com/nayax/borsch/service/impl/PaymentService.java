@@ -39,7 +39,7 @@ public class PaymentService {
         }
 
         validationErrors.addAll(ConfigRepo.getRepositoryValidator().validate(dto.getUserId(), ValidationAction.USER_VERIFY_ID));
-        validationErrors.addAll(ConfigRepo.getRepositoryValidator().validate(dto.getOrderDate(), ValidationAction.SUMM_ORDER_OPEN));
+        validationErrors.addAll(ConfigRepo.getRepositoryValidator().validate(dto.getOrderDate(), ValidationAction.ORDER_ITEM_ADD));
         if (validationErrors.size() > 0) {
             return new ResponseDto<Boolean>(validationErrors).setStatus("422");
         }

@@ -56,7 +56,7 @@ public class ConfigRepo {
                 obj -> (validationUtilRepository.checkEmail((String) obj)),
                 "Email's item already exists", "email"));
 
-        repositoryValidator.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.SUMM_ORDER_OPEN),
+        repositoryValidator.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.ORDER_ITEM_ADD),
                 obj -> (validationUtilRepository.checkDateTimeAfterCurrentOrderStart((LocalDateTime) obj)),
                 "No open summary orders by the moment", "orderDate"));
 

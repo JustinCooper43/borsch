@@ -21,7 +21,7 @@ public enum ValidationAction {
 
     PAGING,
 
-    CONFIRM_PAYMENT, SUMM_ORDER_OPEN,
+    CONFIRM_PAYMENT,
 
     DATE, DATETIME;
 }
