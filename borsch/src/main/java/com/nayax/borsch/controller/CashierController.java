@@ -56,10 +56,10 @@ public class CashierController {
 
 
     @PostMapping("/current/{id}")
-    public ResponseEntity<ResponseDto<RespProfileDto>> update(@PathVariable(value = "id") Long id) {
+    public ResponseEntity<ResponseDto<RespProfileDto>> update(@PathVariable(value = "id") Long cashierId) {
 
 
-        ResponseDto<RespProfileDto> respDto = service.updateCurrentCashierInSumOrd(id);
+        ResponseDto<RespProfileDto> respDto = service.updateCurrentCashierInSumOrd(cashierId);
 
         return ResponseEntity.ok(respDto);
     }

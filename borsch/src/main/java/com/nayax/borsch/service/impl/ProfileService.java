@@ -15,7 +15,8 @@ import com.nayax.borsch.model.entity.user.ProfileEntity;
 import com.nayax.borsch.model.entity.user.UserEntity;
 import com.nayax.borsch.repository.impl.ProfileRepositoryImplementation;
 import com.nayax.borsch.repository.impl.RepositoryCashierImplementation;
-import com.nayax.borsch.validation.config.DishValidationConfig;
+import com.nayax.borsch.validation.config.ConfigRepo;
+import com.nayax.borsch.validation.config.DrinkAdditionValidationConfig;
 import com.nayax.borsch.validation.config.ProfileConfigValid;
 import com.nayax.borsch.validation.enums.ValidationAction;
 import org.mapstruct.factory.Mappers;
@@ -41,6 +42,11 @@ public class ProfileService {
         if (errors.size() > 0) {
             return new ResponseDto<>(errors);
         }
+        errors.addAll(ConfigRepo.getRepositoryValidator().validate(dto.getUser().geteMail(), ValidationAction.USER_ADD_EMAIL));
+        if (errors.size() > 0) {
+            return new ResponseDto<RespProfileDto>(errors).setStatus("422");
+        }
+
         ProfileEntity entity = ProfileMapper.toAddEntity(dto);
         entity.getUserEntity().setActive("Y");
         RespProfileDto respProfileDto = ProfileMapper.toDto(profileRepository.add(entity));
@@ -52,6 +58,11 @@ public class ProfileService {
         if (errors.size() > 0) {
             return new ResponseDto<>(errors);
         }
+        errors.addAll(ConfigRepo.getRepositoryValidator().validate(dto.getUser().getId(), ValidationAction.USER_VERIFY_ID));
+        if (errors.size() > 0) {
+            return new ResponseDto<RespProfileDto>(errors).setStatus("422");
+        }
+
         ProfileEntity entity = ProfileMapper.toUpEntity(dto);
         Optional<CashierEntity> cashier = cashierRepository.findById(entity.getUserEntity().getId());
         entity.getCashierEntity().setUserId(entity.getUserEntity().getId());
@@ -66,7 +77,16 @@ public class ProfileService {
     }
 
     public ResponseDto<RespProfileDto> delete(Long id) {
-        RespProfileDto respProfileDto = ProfileMapper.toDto(profileRepository.delete(id));
+        List<ErrorDto> errors = DrinkAdditionValidationConfig.getValidatorDrinkAdd().validate(id, ValidationAction.USER_VERIFY_ID);
+        if (errors.size() > 0) {
+            return new ResponseDto<RespProfileDto>(errors).setStatus("422");
+        }
+        errors.addAll(ConfigRepo.getRepositoryValidator().validate(id, ValidationAction.USER_VERIFY_ID));
+        if (errors.size() > 0) {
+            return new ResponseDto<RespProfileDto>(errors).setStatus("422");
+        }
+
+        RespProfileDto respProfileDto = ProfileMapper.toDto(profileRepository.deleteByUserId(id));
         return new ResponseDto<>(respProfileDto);
     }
 
@@ -76,8 +96,12 @@ public class ProfileService {
         if (errors.size() > 0) {
             return new ResponseDto<>(errors);
         }
+        errors.addAll(ConfigRepo.getRepositoryValidator().validate(id, ValidationAction.USER_VERIFY_ID));
+        if (errors.size() > 0) {
+            return new ResponseDto<RespProfileDto>(errors).setStatus("422");
+        }
 
-        Optional<ProfileEntity> entity = profileRepository.findById(id);
+        Optional<ProfileEntity> entity = profileRepository.findByUserId(id);
         ResponseDto<RespProfileDto> response = new ResponseDto<>();
         if (entity.isPresent()) {
             response.setData(ProfileMapper.toDto(entity.get()));
@@ -147,13 +171,13 @@ public class ProfileService {
         return new ResponseDto<>(resp);
     }
 
-    public ResponseDto<RespProfileDto> updateCurrentCashierInSumOrd(Long id) {
-        RespProfileDto respProfileDto = ProfileMapper.toDto(profileRepository.updateCurrentCashierInSumOrd(id));
+    public ResponseDto<RespProfileDto> updateCurrentCashierInSumOrd(Long cashierId) {
+        RespProfileDto respProfileDto = ProfileMapper.toDto(profileRepository.updateCurrentCashierInSumOrd(cashierId));
         return new ResponseDto<>(respProfileDto);
     }
 
     public ResponseDto<RespProfileDto> getCurrentCashier() {
-        RespProfileDto respProfileDto = ProfileMapper.toDto(profileRepository.findById(profileRepository.latestOrderSummaryCashier()).get());
+        RespProfileDto respProfileDto = ProfileMapper.toDto(profileRepository.findByUserId(profileRepository.latestOrderSummaryCashier()).get());
         return new ResponseDto<>(respProfileDto);
     }
 }

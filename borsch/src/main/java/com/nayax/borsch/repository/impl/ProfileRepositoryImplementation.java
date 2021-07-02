@@ -66,7 +66,7 @@ public class ProfileRepositoryImplementation {
                     entity.getCashierEntity().getCardBank(), entity.getCashierEntity().getCardNote(),
                     entity.getCashierEntity().getCardQrCode());
         }
-        return findById(i).orElseThrow(NotUpdateException::new);
+        return findByUserId(i).orElseThrow(NotUpdateException::new);
     }
 
 
@@ -78,11 +78,11 @@ public class ProfileRepositoryImplementation {
         jdbcTemplate.update(userUpd, entity.getUserEntity().getId(),
                 entity.getUserEntity().geteMail(), entity.getUserEntity().getFirstName(),
                 entity.getUserEntity().getLastName(), entity.getUserEntity().getPhone());
-        return findById(entity.getUserEntity().getId()).orElseThrow(NotUpdateException::new);
+        return findByUserId(entity.getUserEntity().getId()).orElseThrow(NotUpdateException::new);
     }
 
 
-    public Optional<ProfileEntity> findById(Long userId) {
+    public Optional<ProfileEntity> findByUserId(Long userId) {
 
         String sql = " SELECT u.id  userId, u.Active activeUser, u.RoleId roleId, " +
                 " u.Email userEmail, u.FirstName fName, u.LastName lName, u.PhoneNumber phNumber, r.[Name] roleName, " +
@@ -180,8 +180,8 @@ public class ProfileRepositoryImplementation {
     }
 
 
-    public ProfileEntity delete(Long id) {
-        Optional<ProfileEntity> entity = findById(id);
+    public ProfileEntity deleteByUserId(Long id) {
+        Optional<ProfileEntity> entity = findByUserId(id);
         if (entity.isPresent()) {
             String query = "Update [User] SET Active = 'N' where id = ?";
             jdbcTemplate.update(query, id);
@@ -280,7 +280,7 @@ public class ProfileRepositoryImplementation {
         });
     }
 
-    public ProfileEntity updateCurrentCashierInSumOrd(Long id) {
+    public ProfileEntity updateCurrentCashierInSumOrd(Long cashierId) {
 
 
         String sql = "UPDATE OrderSummary SET CashierId = ? where id =  (" +
@@ -292,11 +292,11 @@ public class ProfileRepositoryImplementation {
 
         try {
             jdbcTemplate.update(sql,
-                    id);
+                    cashierId);
         } catch (EmptyResultDataAccessException e) {
 
         }
-        return findById(id).orElse(null);
+        return findByUserId(cashierId).orElse(null);
     }
 }
 

@@ -66,7 +66,7 @@ public class PaymentService {
             return new ResponseDto<RespPaymentInfoDto>(validationErrors).setStatus("422");
         }
 
-        ProfileEntity currentOrderCashierInfo = profileRepository.findById(
+        ProfileEntity currentOrderCashierInfo = profileRepository.findByUserId(
                 profileRepository.getCurrentCashierUserIdByEmail("%")
                         .orElse(profileRepository.latestOrderSummaryCashier()))
                 .orElse(new ProfileEntity());
