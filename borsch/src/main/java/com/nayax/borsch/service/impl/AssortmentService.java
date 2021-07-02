@@ -12,6 +12,7 @@ import com.nayax.borsch.model.entity.assortment.ShawarmaItemEntity;
 import com.nayax.borsch.repository.impl.RepositoryAssortmentImpl;
 import com.nayax.borsch.repository.impl.RepositoryShawarmaTypeImpl;
 import com.nayax.borsch.utility.PageDtoBuilder;
+import com.nayax.borsch.utility.enums.ErrorStatus;
 import com.nayax.borsch.validation.config.AssortmentValidationConfig;
 import com.nayax.borsch.validation.config.PageIdValidationConfig;
 import com.nayax.borsch.validation.enums.ValidationAction;
@@ -37,7 +38,7 @@ public class AssortmentService {
         List<ErrorDto> errorsPage = PageIdValidationConfig.getValidatorPageId().validate(page, ValidationAction.PAGING);
         errorsPage.addAll(PageIdValidationConfig.getValidatorPageId().validate(pageSize, ValidationAction.PAGING));
         if (errorsPage.size() > 0) {
-            return new ResponseDto<>(errorsPage);
+            return new ResponseDto<PageDto<RespAssortmentDto>>(errorsPage).setStatus(ErrorStatus.UNPROCESSIBLE.statusName);
         }
         List<AssortmentRespEntity> assortmentEntity = assortmentRepository.findAll();
 
@@ -45,9 +46,8 @@ public class AssortmentService {
 
         if (totalPages < page) {
             errorsPage.add(new ErrorDto("Incorrect number page", "page"));
-            return new ResponseDto<>(errorsPage);
+            return new ResponseDto<PageDto<RespAssortmentDto>>(errorsPage).setStatus(ErrorStatus.UNPROCESSIBLE.statusName);
         }
-
 
         List<RespAssortmentDto> dto = assortmentEntity.stream()
                 .map(Mappers.getMapper(AssortmentMapper.class)::assortmentEntityToDto)
@@ -59,19 +59,26 @@ public class AssortmentService {
                 .currentPageNum(page)
                 .build();
 
-        return new ResponseDto<>(responsePage);
+        return new ResponseDto<>(responsePage).setStatus(ErrorStatus.OK.statusName);
     }
 
     public ResponseDto<RespAssortmentDto> updateAssortment(ReqAssortmentUpDto dto) {
-        List<ErrorDto> errors = AssortmentValidationConfig.getValidator().validate(dto.getDish(), ValidationAction.ASSORTMENT_UPDATE);
+        List<ErrorDto> errors = AssortmentValidationConfig.getValidator().validate(dto, ValidationAction.ASSORTMENT_UPDATE);
+        if (errors.size() > 0){
+            return new ResponseDto<RespAssortmentDto>(errors).setStatus(ErrorStatus.UNPROCESSIBLE.statusName);
+        }
         errors.addAll(ConfigRepo.getRepositoryValidator().validate(dto.getDish(), ValidationAction.DISH_DELETE)); /// check by id
-
+        if (errors.size() > 0){
+            return new ResponseDto<RespAssortmentDto>(errors).setStatus(ErrorStatus.NOT_FOUND.statusName);
+        }
         for (Long l : dto.getRemarks()) {
             errors.addAll(ConfigRepo.getRepositoryValidator().validate(l, ValidationAction.REMARK_DEL));/// check by id
         }
         for (Long l : dto.getAdditions()) {
             errors.addAll(ConfigRepo.getRepositoryValidator().validate(l, ValidationAction.ADDITIONS_DEL));/// check by id
-            return new ResponseDto<>(errors);
+        }
+        if (errors.size() > 0){
+            return new ResponseDto<RespAssortmentDto>(errors).setStatus(ErrorStatus.NOT_FOUND.statusName);
         }
         assortmentRepository.update(Mappers.getMapper(AssortmentMapper.class).toAssortmentUpdateEntity(dto));
         AssortmentRespEntity respEntity = new AssortmentRespEntity();
@@ -86,6 +93,6 @@ public class AssortmentService {
         respEntity.setAdditions(add.get(shawarmaItemEntity));
         respEntity.setHalfAble(respEntity.getDish().isHalfAble());
         RespAssortmentDto result = Mappers.getMapper(AssortmentMapper.class).assortmentEntityToDto(respEntity);
-        return new ResponseDto<>(result);
+        return new ResponseDto<>(result).setStatus(ErrorStatus.OK.statusName);
     }
 }
