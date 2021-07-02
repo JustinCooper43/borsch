@@ -196,7 +196,7 @@ public class RepositoryShawarmaTypeImpl {
         String sql = "Select sh.id shawId,sh.[Name] shawName,sh.Cost shawCost,sh.Halfable shawHalf,sh.Active shawAct,\n" +
                 "a.id addId, a.[Name] addName, a.Active addAct\n" +
                 "from ShawarmaType sh\n" +
-                "join AdditionAllowedShawarmaType addAll on sh.id = addAll.ShawarmaTypeId and sh.Active = 'Y'\n" +
+                "join AdditionAllowedShawarmaType addAll on sh.id = addAll.ShawarmaTypeId and sh.Active = 'Y' And addAll.Active = 'Y'\n" +
                 "join Addition  a  on addAll.AllowedAdditionId = a.id and a.Active = 'Y'\n" +
                 "where sh.id in (:ids)";
         Map<ShawarmaItemEntity, List<GeneralPriceItemEntity>> additions = new HashMap<>();

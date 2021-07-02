@@ -12,9 +12,12 @@ public class AssortmentValidationConfig {
 
     private static final Validator assortmentValidator = new ValidatorImpl();
 
-    {
+    static {
         assortmentValidator.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.ASSORTMENT_UPDATE),
                 obj -> ((ReqAssortmentUpDto) obj).getDish() != null, "Dish Id is null", "Dish"));
+        assortmentValidator.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.ASSORTMENT_UPDATE),
+                obj -> ((ReqAssortmentUpDto) obj).getDish() != null && ((ReqAssortmentUpDto) obj).getDish() > 0, "Id dish must be grate than 0", "paging"));
+
     }
 
     public static Validator getValidator() {
