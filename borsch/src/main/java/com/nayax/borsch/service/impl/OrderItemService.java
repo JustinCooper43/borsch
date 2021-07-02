@@ -5,6 +5,7 @@ import com.nayax.borsch.mapper.OrderItemMapper;
 import com.nayax.borsch.model.dto.ErrorDto;
 import com.nayax.borsch.model.dto.PageDto;
 import com.nayax.borsch.model.dto.ResponseDto;
+import com.nayax.borsch.model.dto.order.request.ReqOrderItemAddDto;
 import com.nayax.borsch.model.dto.order.response.RespOrderItemDto;
 import com.nayax.borsch.model.entity.PageEntity;
 import com.nayax.borsch.model.entity.assortment.GeneralPriceItemEntity;
@@ -13,6 +14,8 @@ import com.nayax.borsch.repository.impl.OrderItemRepo;
 import com.nayax.borsch.repository.impl.OrderItemRepository;
 import com.nayax.borsch.repository.impl.RepositoryOrderSummaryImpl;
 import com.nayax.borsch.utility.PageDtoBuilder;
+import com.nayax.borsch.validation.config.*;
+import com.nayax.borsch.validation.enums.ValidationAction;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,6 +37,15 @@ public class OrderItemService {
 
 
     public ResponseDto<List<RespOrderItemDto>> getListOrder(Long userId, String dateString) {
+        List<ErrorDto> validationErrors = DateTimeValidatorConfig.getDateTimeValidator().validate(dateString, ValidationAction.DATE);
+        validationErrors.addAll(DrinkAdditionValidationConfig.getValidatorDrinkAdd().validate(userId, ValidationAction.USER_VERIFY_ID));
+        if (validationErrors.size() > 0) {
+            return new ResponseDto<>(validationErrors);
+        }
+        validationErrors.addAll(ConfigRepo.getRepositoryValidator().validate(userId, ValidationAction.USER_VERIFY_ID));
+        if (validationErrors.size() > 0) {
+            return new ResponseDto<>(validationErrors);
+        }
 
         LocalDate date = LocalDate.parse(dateString);
         List<OrderEntity> listOrders = orderItemRepo.getListOrders(userId, date);
@@ -71,39 +83,76 @@ public class OrderItemService {
         }
     }
 
-    public ResponseDto<RespOrderItemDto> addOrder(OrderEntity entity) {
+    public ResponseDto<RespOrderItemDto> addOrder(ReqOrderItemAddDto dto) {
+        List<ErrorDto> validationErrors = OrderItemValidationConfig.getOrderItemValidator().validate(dto, ValidationAction.ORDER_ITEM_ADD);
+        if (validationErrors.size() > 0) {
+            return new ResponseDto<>(validationErrors);
+        }
+
+        validationErrors = ConfigRepo.getRepositoryValidator().validate(dto.getUserId(), ValidationAction.USER_VERIFY_ID);
+        validationErrors.addAll(ConfigRepo.getRepositoryValidator().validate(dto.getDish(), ValidationAction.DISH_VERIFY_ID));
+        validationErrors.addAll(ConfigRepo.getRepositoryValidator().validate(dto.getDrink(), ValidationAction.DRINK_VERIFY_ID));
+        validationErrors.addAll(ConfigRepo.getRepositoryValidator().validate(dto.getRemark(), ValidationAction.REMARK_VERIFY_ID));
+        for (Long additionId : dto.getAdditions()) {
+            validationErrors.addAll(ConfigRepo.getRepositoryValidator().validate(additionId, ValidationAction.ADDITIONS_VERIFY_ID));
+        }
+        if (validationErrors.size() > 0) {
+            return new ResponseDto<>(validationErrors);
+        }
+
+        OrderEntity entity = Mappers.getMapper(OrderItemMapper.class).toAddEntity(dto);
         Optional<Long> latestOrderSummaryId = orderSummaryRepository.getLatestOrderSummaryId();
         if (latestOrderSummaryId.isPresent()) {
             entity.setOrderSummaryId(latestOrderSummaryId.get());
         } else {
             return new ResponseDto<>(List.of(new ErrorDto("No currently opened order", 422)));
         }
+
         OrderEntity order = orderItemRepository.add(entity);
         RespOrderItemDto orderDto = Mappers.getMapper(OrderItemMapper.class).toDto(order);
         return new ResponseDto<>(orderDto);
     }
 
     public ResponseDto<RespOrderItemDto> deleteOrder(Long id) {
+        List<ErrorDto> validationErrors = (DrinkAdditionValidationConfig.getValidatorDrinkAdd().validate(id, ValidationAction.ORDER_VERIFY_ID));
+        if (validationErrors.size() > 0) {
+            return new ResponseDto<>(validationErrors);
+        }
+        validationErrors.addAll(ConfigRepo.getRepositoryValidator().validate(id, ValidationAction.ORDER_VERIFY_ID));
+        if (validationErrors.size() > 0) {
+            return new ResponseDto<>(validationErrors);
+        }
+
         OrderEntity order = orderItemRepository.deleteById(id);
         RespOrderItemDto orderDto = Mappers.getMapper(OrderItemMapper.class).toDto(order);
         return new ResponseDto<>(orderDto);
     }
 
     public ResponseDto<PageDto<RespOrderItemDto>> getPagedHistory(Long userId, int page, int pageSize) {
+        List<ErrorDto> validationErrors = DrinkAdditionValidationConfig.getValidatorDrinkAdd().validate(userId, ValidationAction.USER_VERIFY_ID);
+        validationErrors.addAll(PageIdValidationConfig.getValidatorPageId().validate(page, ValidationAction.PAGING));
+        validationErrors.addAll(PageIdValidationConfig.getValidatorPageId().validate(pageSize, ValidationAction.PAGING));
+        if (validationErrors.size() > 0) {
+            return new ResponseDto<>(validationErrors);
+        }
+        validationErrors.addAll(ConfigRepo.getRepositoryValidator().validate(userId, ValidationAction.USER_VERIFY_ID));
+        if (validationErrors.size() > 0) {
+            return new ResponseDto<>(validationErrors);
+        }
+        int totalPages = PageDtoBuilder.getTotalPages(pageSize, orderItemRepository.getOrderCountByUserId(userId));
+        if (totalPages < page) {
+            validationErrors.add(new ErrorDto("Incorrect number page", "page"));
+            return new ResponseDto<>(validationErrors);
+        }
+
         PageEntity<OrderEntity> listEntity = orderItemRepo.getPagedHistory(userId, page, pageSize);
         if (listEntity.getResponseList().get(0).getOrderId() == null) {
-            return new ResponseDto<>(new PageDtoBuilder<RespOrderItemDto>()
-                    .page(new ArrayList<>())
-                    .currentPageNum(page)
-                    .elementsPerPage(pageSize)
-                    .build());
+            ResponseDto<PageDto<RespOrderItemDto>> response = new ResponseDto<>();
+            response.setStatus("404");
+            return response;
         }
         listEntity.setPage(page);
         listEntity.setPageSize(pageSize);
-        Integer totalElements = listEntity.getTotalElements();
-        int totalPages = totalElements % pageSize == 0 ?
-                totalElements / pageSize :
-                totalElements / pageSize + 1;
         listEntity.setTotalPages(totalPages);
         PageDto<RespOrderItemDto> listDto = Mappers.getMapper(OrderItemMapper.class).toPageDto(listEntity);
         return new ResponseDto<>(listDto);

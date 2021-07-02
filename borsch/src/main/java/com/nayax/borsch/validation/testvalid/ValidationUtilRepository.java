@@ -32,7 +32,7 @@ public class ValidationUtilRepository {
         String sql = "SELECT Email FROM User WHERE Email LIKE ? ";
 
         List<String> listEmail = jdbcTemplate.query(sql, new SingleColumnRowMapper<>(String.class), email);
-        return listEmail.size() == 1;
+        return listEmail.size() != 1;
     }
 
     private String getNameTable(TablesType tablesType) {
