@@ -15,6 +15,9 @@ import com.nayax.borsch.model.entity.user.ProfileEntity;
 import com.nayax.borsch.model.entity.user.UserEntity;
 import com.nayax.borsch.repository.impl.ProfileRepositoryImplementation;
 import com.nayax.borsch.repository.impl.RepositoryCashierImplementation;
+import com.nayax.borsch.validation.config.DishValidationConfig;
+import com.nayax.borsch.validation.config.ProfileConfigValid;
+import com.nayax.borsch.validation.enums.ValidationAction;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +36,11 @@ public class ProfileService {
     RepositoryCashierImplementation cashierRepository;
 
     public ResponseDto<RespProfileDto> add(ReqProfileAddDto dto) {
+
+        List<ErrorDto> errors = ProfileConfigValid.getValidatorProfile().validate(dto, ValidationAction.PROFILE_ADD);
+        if (errors.size() > 0) {
+            return new ResponseDto<>(errors);
+        }
         ProfileEntity entity = ProfileMapper.toAddEntity(dto);
         entity.getUserEntity().setActive("Y");
         RespProfileDto respProfileDto = ProfileMapper.toDto(profileRepository.add(entity));
@@ -40,6 +48,10 @@ public class ProfileService {
     }
 
     public ResponseDto<RespProfileDto> update(ReqProfileUpDto dto) {
+        List<ErrorDto> errors = ProfileConfigValid.getValidatorProfile().validate(dto, ValidationAction.PROFILE_UPDATE);
+        if (errors.size() > 0) {
+            return new ResponseDto<>(errors);
+        }
         ProfileEntity entity = ProfileMapper.toUpEntity(dto);
         Optional<CashierEntity> cashier = cashierRepository.findById(entity.getUserEntity().getId());
         entity.getCashierEntity().setUserId(entity.getUserEntity().getId());
@@ -59,6 +71,12 @@ public class ProfileService {
     }
 
     public ResponseDto<RespProfileDto> getById(Long id) {
+
+        List<ErrorDto> errors = ProfileConfigValid.getValidatorProfile().validate(id, ValidationAction.PROFILE_GET);
+        if (errors.size() > 0) {
+            return new ResponseDto<>(errors);
+        }
+
         Optional<ProfileEntity> entity = profileRepository.findById(id);
         ResponseDto<RespProfileDto> response = new ResponseDto<>();
         if (entity.isPresent()) {
