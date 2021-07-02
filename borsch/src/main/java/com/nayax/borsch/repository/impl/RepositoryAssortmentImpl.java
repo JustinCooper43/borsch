@@ -4,19 +4,15 @@ import com.nayax.borsch.model.entity.assortment.AssortmentRespEntity;
 import com.nayax.borsch.model.entity.assortment.AssortmentUpEntity;
 import com.nayax.borsch.model.entity.assortment.GeneralPriceItemEntity;
 import com.nayax.borsch.model.entity.assortment.ShawarmaItemEntity;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -64,7 +60,7 @@ public class RepositoryAssortmentImpl {
             return null;
             });
         if (listShawarmaId.size() != 0) {
-            Map<ShawarmaItemEntity, List<GeneralPriceItemEntity>> remarks = findAllRemarks(listShawarmaId);
+            Map<ShawarmaItemEntity, List<GeneralPriceItemEntity>> remarks = shawarmaType.getAllRemarks(listShawarmaId);
 
             for (ShawarmaItemEntity var : additions.keySet()){
                 AssortmentRespEntity entity = new AssortmentRespEntity();
@@ -76,36 +72,6 @@ public class RepositoryAssortmentImpl {
             }
         }
         return list;
-    }
-
-    public Map<ShawarmaItemEntity, List<GeneralPriceItemEntity>> findAllRemarks(Set<Long> ids) {
-        Map<ShawarmaItemEntity, List<GeneralPriceItemEntity>> remarks = new HashMap<>();
-        SqlParameterSource parameters = new MapSqlParameterSource("ids", ids);
-        String sql =
-                "  Select sh.id shawId,sh.[Name] shawName,sh.Cost shawCost,sh.Halfable shawHalf,sh.Active shawAct,\n" +
-                        "r.id remId, r.[Name] remName, r.Active remAct\n" +
-                        "from ShawarmaType sh\n" +
-                        "left join RemarkAllowedShawarmaType remAll on sh.id = remAll.ShawarmaTypeId and sh.Active = 'Y' and remAll.Active = 'Y'\n" +
-                        "left join Remark r on remAll.RemarkId = r.id and r.Active = 'Y' \n" +
-                        "where sh.id in (:ids)";
-        namedParameterJdbcTemplate.query(sql,parameters, (RowMapper<AssortmentRespEntity>) (rs, rowNum) -> {
-            ShawarmaItemEntity shawarma = new ShawarmaItemEntity();
-            shawarma.setId((Long) rs.getObject("shawId"));
-            shawarma.setName((String) rs.getObject("shawName"));
-            shawarma.setPrice((BigDecimal) rs.getObject("shawCost"));
-            shawarma.setHalfAble(rs.getInt("shawHalf") > 0);
-            remarks.putIfAbsent(shawarma, new ArrayList<>());
-
-            if (rs.getObject("remId") != null) {
-                GeneralPriceItemEntity remark = new GeneralPriceItemEntity();
-                remark.setId((Long) rs.getObject("remId"));
-                remark.setName((String) rs.getObject("remName"));
-                remark.setActive((String) rs.getObject("remAct"));
-                remarks.get(shawarma).add(remark);
-            }
-            return null;
-        });
-        return remarks;
     }
 
 
