@@ -131,15 +131,16 @@ public class OrderItemRepository {
                 " JOIN [OrderSummary] s ON s.id = [Order].OrderSummaryId " +
                 " WHERE [Order].UserId = ? " +
                 " AND s.StartTime BETWEEN ? AND ? ; ";
-        return Optional.ofNullable(jdbcTemplate.query(sql, (rs, rowNum) -> {
+        List<List<Long>> response = jdbcTemplate.query(sql, (rs, rowNum) -> {
             List<Long> orderWithCashier = new ArrayList<>(2);
             orderWithCashier.add(rs.getLong("id"));
             orderWithCashier.add(rs.getLong("CashierId"));
             return orderWithCashier;
-        }, entity.getUserId(), entity.getOrderDate(), entity.getOrderDate().plusDays(1)).get(0));
+        }, entity.getUserId(), entity.getOrderDate(), entity.getOrderDate().plusDays(1));
+        return response.size() == 0 ? Optional.empty() : Optional.of(response.get(0));
     }
 
-    public Integer getOrderCountByUserId(Long userId){
+    public Integer getOrderCountByUserId(Long userId) {
         String sql = " SELECT COUNT(id) response FROM [Order] WHERE UserId = ? ";
         return jdbcTemplate.query(sql, new ResultSetExtractor<>() {
             @Override
