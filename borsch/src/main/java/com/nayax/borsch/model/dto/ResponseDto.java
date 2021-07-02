@@ -14,8 +14,9 @@ public class ResponseDto<T> {
         return status;
     }
 
-    public void setStatus(String status) {
+    public ResponseDto<T> setStatus(String status) {
         this.status = status;
+        return this;
     }
 
     public ResponseDto(T data) {
