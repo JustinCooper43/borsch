@@ -12,7 +12,7 @@ public class DateTimeValidatorConfig {
     private static final Validator dateTimeValidator = new ValidatorImpl();
 
     static {
-        dateTimeValidator.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.DATE),
+        dateTimeValidator.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.DATE, ValidationAction.DATETIME),
                 Objects::nonNull, "Date is null", "date"));
         dateTimeValidator.add(SimpleValidatorComponent.getComponents(List.of(ValidationAction.DATE),
                 obj -> obj != null && ((String) obj).length() > 0, "Date is empty", "date"));

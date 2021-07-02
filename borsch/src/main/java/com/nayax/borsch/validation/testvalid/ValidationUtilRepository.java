@@ -51,4 +51,9 @@ public class ValidationUtilRepository {
         //There is at least one open order at given time
         return 0 < jdbcTemplate.query(sql, new SingleColumnRowMapper<>(Long.class), dateTime).size();
     }
+
+    public Boolean checkCashierForUserId(Long userId){
+        String sql = " SELECT id FROM Cashier WHERE UserId = ? AND Active = 'Y' ; ";
+        return 0 < jdbcTemplate.query(sql, new SingleColumnRowMapper<>(Long.class), userId).size();
+    }
 }
